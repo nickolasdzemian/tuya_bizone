@@ -1,29 +1,49 @@
 /* eslint-disable global-require */
 // основной код климата
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
-import { Divider, SwitchButton } from 'tuya-panel-kit';
+import { Divider, SwitchButton, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faSeedling, faInfoCircle, faListOl } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
 import ClimateMode from './climatemode';
 import ClimateInfo from './climateinfo';
+
+const TYDevice = TYSdk.device;
+
+const { ClimateSelector: ClimateSelectorCode } = dpCodes;
 
 const climateSw = Strings.getLang('climateSw');
 
 // один переключатель для режима климата
-export default class ClimateScene extends React.PureComponent {
-  constructor() {
-    super();
+class ClimateScene extends React.PureComponent {
+  static propTypes = {
+    ClimateSelector: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    ClimateSelector: false,
+  };
+  constructor(props) {
+    super(props);
     this.state = {};
-    this.updateIndex = this.updateIndex.bind(this);
   }
 
-  updateIndex() {
-    this.setState({});
+  // updateIndex() {
+  //   this.setState({});
+  // }
+
+  getData() {
+    const { ClimateSelector } = this.props;
+    console.log('ClimateSelector', ClimateSelector);
+    return ClimateSelector;
   }
 
   render() {
+    const { ClimateSelector } = this.props;
     return (
       <View style={styles.container}>
         <Divider />
@@ -38,9 +58,12 @@ export default class ClimateScene extends React.PureComponent {
             // height={20}
             tintColor="#ffb700"
             onTintColor="#90EE90"
-            value={this.state.value}
-            onValueChange={value => {
-              this.setState({ value });
+            value={this.getData()}
+            onValueChange={() => {
+              // this.setState({ value });
+              TYDevice.putDeviceData({
+                [ClimateSelectorCode]: !ClimateSelector,
+              });
             }}
           />
         </View>
@@ -83,3 +106,7 @@ const styles = StyleSheet.create({
     paddingRight: 14,
   },
 });
+
+export default connect(({ dpState }) => ({
+  ClimateSelector: dpState[ClimateSelectorCode],
+}))(ClimateScene);

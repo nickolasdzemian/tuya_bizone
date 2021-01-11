@@ -32,7 +32,7 @@ export default {
 
   // Общие
   // Включение режима климата
-  Climate_selector: 'climate',
+  ClimateSelector: 'climate',
   // Яркость
   Backlight_brightness: 'backlight',
   // Выбор режима для кнопок
