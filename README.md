@@ -53,4 +53,4 @@ $ yarn && yarn start
 
 ## License
 
-Copyright © 2020
+Copyright © 2021

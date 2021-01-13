@@ -1,27 +1,42 @@
 /* eslint-disable global-require */
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import React from 'react';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
-import { Divider, SwitchButton } from 'tuya-panel-kit';
+import { Divider, SwitchButton, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faDoorOpen, faBrain, faListOl } from '@fortawesome/free-solid-svg-icons';
+import dpCodes from '../../../config/dpCodes';
 import Strings from '../../../i18n';
 import Zone2Mode from './zone2mode';
+
+const TYDevice = TYSdk.device;
+const { Preheat2: Preheat2Code } = dpCodes;
 
 const windowSw = Strings.getLang('windowSw');
 const selflearnSw = Strings.getLang('selflearnSw');
 
-export default class ZoneIIScene extends React.PureComponent {
-  constructor() {
-    super();
+class ZoneIIScene extends React.PureComponent {
+  static propTypes = {
+    Preheat2: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    Preheat2: false,
+  };
+  constructor(props) {
+    super(props);
     this.state = {};
-    this.updateIndex = this.updateIndex.bind(this);
   }
 
-  updateIndex() {
-    this.setState({});
+  getData() {
+    const { Preheat2 } = this.props;
+    console.log('Preheat2', Preheat2);
+    return Preheat2;
   }
 
   render() {
+    const { Preheat2 } = this.props;
     return (
       <View style={styles.container}>
         <Divider />
@@ -53,8 +68,11 @@ export default class ZoneIIScene extends React.PureComponent {
             // height={20}
             onTintColor="#ff7300"
             value={this.state.value2}
-            onValueChange={value2 => {
-              this.setState({ value2 });
+            onValueChange={() => {
+              // this.setState({ value });
+              TYDevice.putDeviceData({
+                [Preheat2Code]: !Preheat2,
+              });
             }}
           />
         </View>
@@ -95,3 +113,7 @@ const styles = StyleSheet.create({
     paddingRight: 14,
   },
 });
+
+export default connect(({ dpState }) => ({
+  Preheat2: dpState[Preheat2Code],
+}))(ZoneIIScene);

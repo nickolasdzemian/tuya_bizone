@@ -2,31 +2,31 @@ export default {
   // ГЛАВНЫЙ ЭКРАН
 
   // Уведомление об ошибке датчиков
-  Fault_alarm: 'fault',
+  FaultAlarm: 'fault',
   // Статус открытого окна (счётчик)
-  Open_windows_status: 'open_wnd_statur_r',
+  OpenWindowStatus: 'open_wnd_statur_r',
   // Текущая температура ()
-  Report_temperature: 'report_temp',
+  ReportTemperature: 'report_temp',
   // Установленная температура в программном режиме/климате
-  Report_prog_temp: 'rep_prog_temp',
+  ReportProgTemp: 'rep_prog_temp',
   // Индикация ВКЛ реле I зона
-  Relay_1_flag: 'relay_1_flag',
+  Relay1flag: 'relay_1_flag',
   // Индикация ВКЛ реле II зона
-  Relay_2_flag: 'relay_2_flag',
+  Relay2flag: 'relay_2_flag',
   // Киловат-часы потребленные I зона
-  relay_power_1: 'relay_power_1',
+  RelayPower1: 'relay_power_1',
   // Киловат-часы потребленные II зона
-  reley_power_2: 'relay_power_2',
+  RelayPower2: 'relay_power_2',
   // |Установка температуры ручного поддержания| и ограничения по вохдуху
-  set_temperature: 'set_temp',
+  SetTemperature: 'set_temp',
   // Установка скорости вентилятора
-  Fan_speed: 'fan_speed',
+  FanSpeed: 'fan_speed',
   // ВКЛ и настройка таймера
-  Timer_settings: 'timer_setting',
+  TimerSettings: 'timer_setting',
   // Режим работы
-  Mode_channel: 'mode_ch',
+  ModeChannel: 'mode_ch',
   // ВКЛ I, II зоны и климата (кнопка Питания)
-  zone: 'zone',
+  Zone: 'zone',
 
   // НАСТРОЙКИ
 
@@ -34,47 +34,47 @@ export default {
   // Включение режима климата
   ClimateSelector: 'climate',
   // Яркость
-  Backlight_brightness: 'backlight',
+  Backlight: 'backlight',
   // Выбор режима для кнопок
-  Buttons_settings: 'sb_I_II',
+  ButtonSettings: 'sb_I_II',
   // Настройки кнопок-температуры
-  Preset_temperature: 'preset_temp',
+  PresetTemperature: 'preset_temp',
   // Настройки кнопок-таймера
-  Timer_preset: 'timer_preset',
+  TimerPreset: 'timer_preset',
   // Корректировка температуры воздуха
-  Temperature_corr: 'temp_correction',
+  TemperatureCorr: 'temp_correction',
   // Выбор типа выносного датичка I
-  Detector_1: 'detector_1',
+  Detector1: 'detector_1',
   // Выбор типа выносного датичка II
-  Detector_2: 'detector_2',
+  Detector2: 'detector_2',
   // Мощность нагрузки I зона
-  power_rate_1: 'power_rate_1',
+  PowerRate1: 'power_rate_1',
   // Мощность нагрузки II зона
-  power_rate_2: 'power_rate_2',
+  PowerRate2: 'power_rate_2',
 
   // Климат
   // По каким датчикам работать
-  Sensor_set_3: 'sensor_set_3',
+  SensorSet3: 'sensor_set_3',
 
   // Зона I
   // Установка температуры ручного поддержания и |ограничения по вохдуху|
   // set_temperature: 'set_temp',
   // По каким датчикам работать
-  Sensor_set_1: 'sensor_set_1',
+  SensorSet1: 'sensor_set_1',
   // ВКЛ открытого окна
-  Open_wnd_w: 'open_wnd_w',
+  OpenWndW: 'open_wnd_w',
   // Самообучение
-  preheat_1: 'preheat_1',
+  Preheat1: 'preheat_1',
 
   // Зона II
   // Установка температуры ручного поддержания и |ограничения по вохдуху|
   // set_temperature: 'set_temp',
   // По каким датчикам работать
-  Sensor_set_2: 'sensor_set_2',
+  SensorSet2: 'sensor_set_2',
   // ВКЛ открытого окна
   // Open_wnd_w: 'open_wnd_w',
   // Самообучение
-  preheat_2: 'preheat_2',
+  Preheat2: 'preheat_2',
 
   // ГРАФИКИ
   //
