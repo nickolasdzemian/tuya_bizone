@@ -66,7 +66,7 @@ class ZoneIScene extends React.PureComponent {
             // width={100}
             // height={20}
             onTintColor="#ffb700"
-            value={this.state.value2}
+            value={this.getData()}
             onValueChange={() => {
               // this.setState({ value });
               TYDevice.putDeviceData({
