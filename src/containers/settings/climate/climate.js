@@ -11,62 +11,84 @@ import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 import ClimateMode from './climatemode';
 import ClimateInfo from './climateinfo';
+// import ClimateChScene from './climatech';
 
 const TYDevice = TYSdk.device;
 
-const { ClimateSelector: ClimateSelectorCode } = dpCodes;
+const { ClimateSelector: ClimateSelectorCode, chSelector: chSelectorCode } = dpCodes;
 
-const climateSw = Strings.getLang('climateSw');
-
-// один переключатель для режима климата
+// включение режима климата и переключение режима каналов
 class ClimateScene extends React.PureComponent {
   static propTypes = {
     ClimateSelector: PropTypes.bool,
+    chSelector: PropTypes.bool,
   };
 
   static defaultProps = {
     ClimateSelector: false,
+    chSelector: false,
   };
+
   constructor(props) {
     super(props);
     this.state = {};
   }
 
-  // updateIndex() {
-  //   this.setState({});
-  // }
-
-  getData() {
+  getDataClimate() {
     const { ClimateSelector } = this.props;
-    console.log('ClimateSelector', ClimateSelector);
+    console.log('Climate', ClimateSelector);
     return ClimateSelector;
   }
 
+  getDataSelector() {
+    const { chSelector } = this.props;
+    console.log('ClimateCH', chSelector);
+    return chSelector;
+  }
+
   render() {
-    const { ClimateSelector } = this.props;
+    const { ClimateSelector, chSelector } = this.props;
     return (
       <View style={styles.container}>
         <Divider />
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} />
-            <Text style={styles.items}>{climateSw}</Text>
+            <Text style={styles.items}>{Strings.getLang('climateSw')}</Text>
           </SafeAreaView>
           <SwitchButton
             style={styles.switch}
-            // width={100}
-            // height={20}
             tintColor="#ffb700"
             onTintColor="#90EE90"
-            value={this.getData()}
+            value={this.getDataClimate()}
             onValueChange={() => {
-              // this.setState({ value });
               TYDevice.putDeviceData({
                 [ClimateSelectorCode]: !ClimateSelector,
               });
             }}
           />
         </View>
+        <Divider />
+        <View style={styles.view}>
+          <SafeAreaView style={styles.area}>
+            <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} />
+            <Text style={styles.items}>{Strings.getLang('climateSw')}</Text>
+          </SafeAreaView>
+          <SwitchButton
+            style={styles.switch}
+            tintColor="#ffb700"
+            onTintColor="#90EE90"
+            value={this.getDataSelector()}
+            onValueChange={() => {
+              TYDevice.putDeviceData({
+                [chSelectorCode]: !chSelector,
+              });
+            }}
+          />
+        </View>
+        {/* <SafeAreaView style={styles.area}>
+          <ClimateChScene />
+        </SafeAreaView> */}
         <SafeAreaView style={styles.area}>
           <FontAwesomeIcon icon={faListOl} color="#90EE90" size={20} />
           <ClimateMode />
@@ -109,4 +131,5 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   ClimateSelector: dpState[ClimateSelectorCode],
+  chSelector: dpState[chSelectorCode],
 }))(ClimateScene);
