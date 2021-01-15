@@ -6,7 +6,14 @@ import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { Divider, SwitchButton, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faSeedling, faInfoCircle, faListOl } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSeedling,
+  faInfoCircle,
+  faListOl,
+  faExchangeAlt,
+  faSnowflake,
+  faFireAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 import ClimateMode from './climatemode';
@@ -71,13 +78,28 @@ class ClimateScene extends React.PureComponent {
         <Divider />
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
-            <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} />
-            <Text style={styles.items}>{Strings.getLang('climateSw')}</Text>
+            <FontAwesomeIcon icon={faExchangeAlt} color="#90EE90" size={20} />
+            <Text style={styles.items}>{Strings.getLang('chSelector')}</Text>
+            {chSelector === false ? (
+              <SafeAreaView style={styles.полюшко}>
+                <Text style={styles.itemsCH}>I</Text>
+                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} />
+                <Text style={styles.itemsCH}>II</Text>
+                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} />
+              </SafeAreaView>
+            ) : (
+              <SafeAreaView style={styles.полюшко}>
+                <Text style={styles.itemsCH}>I</Text>
+                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} />
+                <Text style={styles.itemsCH}>II</Text>
+                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} />
+              </SafeAreaView>
+            )}
           </SafeAreaView>
           <SwitchButton
             style={styles.switch}
             tintColor="#ffb700"
-            onTintColor="#90EE90"
+            onTintColor="#ffb700"
             value={this.getDataSelector()}
             onValueChange={() => {
               TYDevice.putDeviceData({
@@ -111,6 +133,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 20,
+  },
+  полюшко: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // marginLeft: 20,
+  },
+  itemsCH: {
+    alignItems: 'center',
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 28,
+    paddingRight: 7,
+    paddingLeft: 14,
   },
   view: {
     flexDirection: 'row',

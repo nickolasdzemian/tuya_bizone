@@ -146,10 +146,11 @@ export default class MainReport extends React.PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
+    alignContent: 'center',
   },
   area: {
     alignItems: 'center',
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 5,
-    width: '90%',
+    width: 350,
     height: 50,
   },
   num: {

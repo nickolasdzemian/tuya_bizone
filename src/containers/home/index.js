@@ -9,36 +9,25 @@ import MainReport from './MainReport';
 import Climate from './climate/index';
 import Zones from './zones/index';
 
-const TYDevice = TYSdk.device;
 const { ClimateSelector: ClimateSelectorCode } = dpCodes;
 
-export default class ClimateMain extends React.PureComponent {
+class ClimateMain extends React.PureComponent {
   static propTypes = {
     ClimateSelector: PropTypes.bool,
   };
+
   static defaultProps = {
     ClimateSelector: false,
   };
 
-  getDataClimate() {
-    const { ClimateSelector } = this.props;
-    console.log('Climate', ClimateSelector);
-    return ClimateSelector;
-  }
-
-  // constructor(props) {
-  //   super(props);
-  //   // if (this.datapoint.state) - условие
-  //   if (getDataClimate) this.stateClimate = { isHidden: false };
-  // }
-
   render() {
+    const { ClimateSelector } = this.props;
     return (
       <View style={styles.container}>
         <ScrollView>
           <MainReport />
           <Divider />
-          {this.getDataClimate().false ? <Climate /> : <Zones />}
+          {ClimateSelector === true ? <Climate /> : <Zones />}
         </ScrollView>
       </View>
     );
@@ -52,3 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
   },
 });
+
+export default connect(({ dpState }) => ({
+  ClimateSelector: dpState[ClimateSelectorCode],
+}))(ClimateMain);

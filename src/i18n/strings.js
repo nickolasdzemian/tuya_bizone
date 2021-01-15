@@ -82,6 +82,7 @@ module.exports = {
     airflour2: 'Air + External sensor 2', 
     flour12: 'External sensors 1 + 2',
     airflour12: 'All sensors',
+    chSelector: 'Channel',
 
     // Settings Zones
     windowSw: 'Look up for open window',
@@ -89,6 +90,7 @@ module.exports = {
     zoneSens: 'Select controlling sensors',
     zone1: 'I zone',
     zone2: 'II zone',
+    cliwarn: 'The climate mode is on. Setup will no take effect.',
 
     //Сharts
     charts: 'Programm mode setup',
@@ -210,6 +212,7 @@ module.exports = {
     airflour2: 'Датчик воздуха + Внешний №2', 
     flour12: 'Внешние датчики 1 + 2',
     airflour12: 'Все доступные',
+    chSelector: 'Канал',
 
     // Settings Zones
     windowSw: 'Отслеживание открытого окна',
@@ -217,6 +220,7 @@ module.exports = {
     zoneSens: 'Выбрать управляющие датчики',
     zone1: 'I зона',
     zone2: 'II зона',
+    cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
 
     //Сharts
     charts: 'Настройки программного режима',
@@ -338,6 +342,7 @@ module.exports = {
     airflour2: 'Датчик воздуха + Внешний №2', 
     flour12: 'Внешние датчики 1 + 2',
     airflour12: 'Все доступные',
+    chSelector: 'Канал',
 
     // Settings Zones
     windowSw: 'Отслеживание открытого окна',
@@ -345,6 +350,7 @@ module.exports = {
     zoneSens: 'Выбрать управляющие датчики',
     zone1: 'I зона',
     zone2: 'II зона',
+    cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
 
     //Сharts
     charts: 'Настройки программного режима',

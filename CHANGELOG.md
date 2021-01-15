@@ -11,6 +11,13 @@ All notable changes to this project will be documented in this file. See [standa
 ### Known issues | Известные ограничения
 * !charts need been tested whis real device and data | графики необходимо тестировать с реальным устройством и данными
 
+#### 1.2.5
+* added channel mode selector
+* added home screen zones view deps mechanic
+* added preheat cloud dps
+* added climate cloud dps
+* added warning msg in Zones, when climate is on
+
 #### 1.2.4 RC1
 * fix little problems | незначительные правки
 * fixing some transaltions for better autofill | исправление некоторых переводов для лучшей адаптации расположения на экране
