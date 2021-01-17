@@ -2,10 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { Divider, TYSdk } from 'tuya-panel-kit';
 import dpCodes from '../../config/dpCodes';
-// import ButtonEX from './buttonEX';
-import MainReport from './MainReport';
+import ClimateReport from './ClimateReport';
+import ZoneReport from './ZoneReport';
 import Climate from './climate/index';
 import Zones from './zones/index';
 
@@ -25,9 +24,17 @@ class ClimateMain extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ScrollView>
-          <MainReport />
-          <Divider />
-          {ClimateSelector === true ? <Climate /> : <Zones />}
+          {ClimateSelector === true ? (
+            <View>
+              <ClimateReport />
+              <Climate />
+            </View>
+          ) : (
+            <View>
+              <ZoneReport />
+              <Zones />
+            </View>
+          )}
         </ScrollView>
       </View>
     );

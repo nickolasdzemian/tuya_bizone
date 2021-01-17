@@ -5,18 +5,24 @@ All notable changes to this project will be documented in this file. See [standa
 #### Datapoints!
 * Cloud mechanics didnt add into this UI | Механика работы с облаком еще не добавлена
 * Some actions could be tranform threw 'get_data' method | Возможно, некоторые действия должны передаваться через метод 'get_data'
-* International definition must be threw get_dp_lang method, now it's only simple strings | Международные переводы datapoint должны приводиться в интерфейсе через метод get_dp_lang, сейчас это только простые @i18Strings
+* International tranlations for dps must be threw get_dp_lang method, now it's only simple strings | Международные переводы datapoints должны производиться в интерфейсе через метод get_dp_lang, сейчас это только простые @i18Strings
 
 ## Home Screen | Главный экран
 ### Known issues | Известные ограничения
 * !charts need been tested whis real device and data | графики необходимо тестировать с реальным устройством и данными
 
 #### 1.2.5
-* added channel mode selector
-* added home screen zones view deps mechanic
-* added preheat cloud dps
-* added climate cloud dps
-* added warning msg in Zones, when climate is on
+* rebuild UI design for Climate mode homescreen | переписан домашний экран в режиме климата
+* added channel mode selector | добавлен переключатель каналов
+* added home screen zones view deps mechanic | добавлена механика зависимости отображения зон на главном экране
+* added preheat cloud dps | добавлено включение через облако режима преднагрева
+* added climate cloud dps | добавлено включение через облако режима климат-контроля
+* added relay state indication | добавлено отображение статуса реле
+* added warning msg in Zones, when climate is on --deleted 
+* added test funcion for OpenWindowStatus | добавлен тест функции "статус - открытое окно"
+* separating report UI for climate and zones on homescreen | выполнено разделение UI отчетов для климата и зон на домашнем экране
+* updated translations | обновлены переводы
+* fixed some icons positioning | исправлено расположение некоторых иконок
 
 #### 1.2.4 RC1
 * fix little problems | незначительные правки

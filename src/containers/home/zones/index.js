@@ -9,7 +9,6 @@ const Zones = () => (
   <View style={styles.container}>
     <Text style={styles.title1}>{Strings.getLang('zone1')}</Text>
     <Zone1 />
-    <Divider />
     <Text style={styles.title2}>{Strings.getLang('zone2')}</Text>
     <Zone2 />
   </View>
@@ -27,7 +26,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#ffb700',
     justifyContent: 'center',
-    paddingTop: 2,
+    paddingTop: 8,
   },
   title2: {
     textAlign: 'center',
@@ -35,7 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#ff7300',
     justifyContent: 'center',
-    paddingTop: 2,
+    paddingTop: 6,
   },
 });
 

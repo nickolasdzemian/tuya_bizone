@@ -82,17 +82,23 @@ class ClimateScene extends React.PureComponent {
             <Text style={styles.items}>{Strings.getLang('chSelector')}</Text>
             {chSelector === false ? (
               <SafeAreaView style={styles.полюшко}>
+                <Divider style={styles.divider} />
                 <Text style={styles.itemsCH}>I</Text>
-                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} />
+                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} marginRight={10} />
+                <Divider style={styles.divider} />
                 <Text style={styles.itemsCH}>II</Text>
-                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} />
+                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} marginRight={10} />
+                <Divider style={styles.divider} />
               </SafeAreaView>
             ) : (
               <SafeAreaView style={styles.полюшко}>
+                <Divider style={styles.divider} />
                 <Text style={styles.itemsCH}>I</Text>
-                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} />
+                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} marginRight={10} />
+                <Divider style={styles.divider} />
                 <Text style={styles.itemsCH}>II</Text>
-                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} />
+                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} marginRight={10} />
+                <Divider style={styles.divider} />
               </SafeAreaView>
             )}
           </SafeAreaView>
@@ -108,9 +114,6 @@ class ClimateScene extends React.PureComponent {
             }}
           />
         </View>
-        {/* <SafeAreaView style={styles.area}>
-          <ClimateChScene />
-        </SafeAreaView> */}
         <SafeAreaView style={styles.area}>
           <FontAwesomeIcon icon={faListOl} color="#90EE90" size={20} />
           <ClimateMode />
@@ -137,7 +140,10 @@ const styles = StyleSheet.create({
   полюшко: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginLeft: 20,
+    marginLeft: 10,
+  },
+  divider: {
+    flexDirection: 'column',
   },
   itemsCH: {
     alignItems: 'center',

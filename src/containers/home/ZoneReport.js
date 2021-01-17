@@ -1,5 +1,7 @@
-// отображение всех элементов типа (report only)
+// отображение всех элементов типа (report only) в многозонном режиме
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -10,33 +12,43 @@ import {
   faLightbulb,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../i18n';
+import dpCodes from '../../config/dpCodes';
 
-export default class MainReport extends React.PureComponent {
-  // в состояние данного конструктора вписываются значения datapoints,
+const {
+  Relay1flag: Relay1flagCode,
+  Relay2flag: Relay2flagCode,
+  OpenWindowStatus: OpenWindowStatusCode,
+} = dpCodes;
+
+class ZoneReport extends React.PureComponent {
+  static propTypes = {
+    Relay1flag: PropTypes.bool,
+    Relay2flag: PropTypes.bool,
+    OpenWindowStatus: PropTypes.number,
+  };
+
+  static defaultProps = {
+    Relay1flag: false,
+    Relay2flag: true,
+    OpenWindowStatus: 1,
+  };
+  // в состояние вписываются значения datapoints,
   // от которых будет зависеть отображается тот или иной компонент
-  // работает без DOM, отрисовка максимально быстрый
   constructor(props) {
     super(props);
-    // if (this.datapoint.state) - условие
+    this.state = {};
     this.stateA = { isHidden: true };
     this.stateZ1 = { isHidden: true }; // true - показывает компоненту, false - прятает
     this.stateZ2 = { isHidden: true };
-    this.stateR1 = { isHidden: true };
-    this.stateR2 = { isHidden: true };
     this.stateW1 = { isHidden: false };
     this.stateW2 = { isHidden: false };
     this.stateE1 = { isHidden: false };
     this.stateE2 = { isHidden: false };
   }
   render() {
+    const { Relay1flag, Relay2flag, OpenWindowStatus } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        {/* <ScrollView
-      horizontal={true}
-      indicatorStyle="white"
-      pinchGestureEnabled={true}
-      scrollBarThumbImage="#fff"
-    > */}
         {this.stateA.isHidden ? (
           <View style={styles.areaAir}>
             <View style={styles.air}>
@@ -59,8 +71,8 @@ export default class MainReport extends React.PureComponent {
         ) : null}
         <View style={styles.area}>
           <FontAwesomeIcon icon={faLightbulb} color="#ffb700" size={25} margin={10} />
-          <Text style={styles.titlekwh}>{Strings.getLang('pwr')}</Text>
-          {this.stateR1.isHidden ? (
+          <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
+          {Relay1flag === true ? (
             <Text style={styles.num}>{Strings.getLang('on')}</Text>
           ) : (
             <Text style={styles.num}>{Strings.getLang('off')}</Text>
@@ -83,8 +95,8 @@ export default class MainReport extends React.PureComponent {
         ) : null}
         <View style={styles.area}>
           <FontAwesomeIcon icon={faLightbulb} color="#ff7300" size={25} margin={10} />
-          <Text style={styles.titlekwh}>{Strings.getLang('pwr')}</Text>
-          {this.stateR2.isHidden ? (
+          <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
+          {Relay2flag === true ? (
             <Text style={styles.num}>{Strings.getLang('on')}</Text>
           ) : (
             <Text style={styles.num}>{Strings.getLang('off')}</Text>
@@ -94,17 +106,17 @@ export default class MainReport extends React.PureComponent {
             <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
           </View>
         </View>
-        {this.stateW1.isHidden ? (
+        {OpenWindowStatus === 0 ? null : (
           <View style={styles.area}>
             <FontAwesomeIcon icon={faDoorOpen} color="#00e1ff" size={25} margin={10} />
             <Text style={styles.titlekwh}>{Strings.getLang('wintitle')}</Text>
-            <Text style={styles.num}>29</Text>
+            <Text style={styles.num}>{this.state.OpenWindowStatus}</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('wintime')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
             </View>
           </View>
-        ) : null}
+        )}
         {this.stateW2.isHidden ? (
           <View style={styles.area}>
             <FontAwesomeIcon icon={faDoorOpen} color="#00d0ff" size={25} margin={10} />
@@ -138,7 +150,6 @@ export default class MainReport extends React.PureComponent {
             </View>
           </View>
         ) : null}
-        {/* </ScrollView> */}
       </SafeAreaView>
     );
   }
@@ -211,3 +222,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+export default connect(({ dpState }) => ({
+  Relay1flag: dpState[Relay1flagCode],
+  Relay2flag: dpState[Relay2flagCode],
+  OpenWindowStatus: dpState[OpenWindowStatusCode],
+}))(ZoneReport);

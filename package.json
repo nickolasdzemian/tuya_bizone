@@ -6,7 +6,7 @@
   "templateName": "BiZone Alpha (WiFi)",
   "pid": [],
   "uiid": "",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "prettier --write '**/*.{js,jsx,ts,tsx}'",
