@@ -17,6 +17,7 @@ import ButtonSet from './buttons/buttons-main';
 import AirCorrScene from './air-corr';
 import SensorsType from './sensors/sensorstype';
 import LoadCapacity from './loadcap/loadcap';
+import { version } from '../../../../package.json';
 
 const SettingScene = () => (
   <View style={styles.container}>
@@ -48,7 +49,12 @@ const SettingScene = () => (
     {/* <SafeAreaView style={styles.tinyLogo}>
       <Image style={styles.tinyLogo} source={require('../../../res/ATL.png')} />
     </SafeAreaView> */}
-    <Text style={styles.ver}>v 1.2.4 by nickolashka for development purposes only</Text>
+    <Text style={styles.ver}>
+      v {version} with Tuya cloud support {'\n'}
+      by nickolashka {'\n'}
+      for development purposes only{'\n'}
+      n.pozdnyakov@sst.ru
+    </Text>
   </View>
 );
 
@@ -59,7 +65,8 @@ const styles = StyleSheet.create({
     fontWeight: '100',
     fontSize: 10,
     alignSelf: 'center',
-    marginTop: 300,
+    marginTop: 290,
+    flexWrap: 'wrap',
   },
   container: {
     flex: 1,
