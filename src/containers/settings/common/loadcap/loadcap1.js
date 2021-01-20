@@ -1,20 +1,34 @@
 // мощность нагрузки для 1 зоны
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
-import { Slider, Stepper } from 'tuya-panel-kit';
+import { Slider, Stepper, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n';
+import dpCodes from '../../../../config/dpCodes';
 
-const loadcapacity10 = Strings.getLang('loadcapacity10');
+const TYDevice = TYSdk.device;
+const { PowerRate1: PowerRate1Code } = dpCodes;
 
-export default class LoadCapacity1 extends Component {
-  state = {
-    value1: 0,
+class LoadCapacity1 extends Component {
+  static propTypes = {
+    PowerRate1: PropTypes.number,
   };
+  static defaultProps = {
+    PowerRate1: 1000,
+  };
+  state = {
+    value: this.props.PowerRate1,
+  };
+
   // функция выбора мощности (с округлением до целого числа)
-  _handleComplete1 = value1 => {
-    this.setState({ value1: Math.round(value1) });
+  _handleComplete = value => {
+    this.setState({ value: Math.round(value) });
+    TYDevice.putDeviceData({
+      [PowerRate1Code]: value,
+    });
   };
 
   render = () => {
@@ -22,19 +36,21 @@ export default class LoadCapacity1 extends Component {
       <View style={styles.pickerContainer}>
         <View style={styles.title}>
           <FontAwesomeIcon icon={faBolt} color="#ffb700" size={25} />
-          <Text style={styles.title}>{loadcapacity10}</Text>
+          <Text style={styles.title}>{Strings.getLang('loadcapacity10')}</Text>
         </View>
-        <Text style={styles.buttontext}>{this.state.value1} W</Text>
+        <Text style={styles.buttontext}>{this.state.value} W</Text>
         <Slider.Horizontal
           style={{ width: '90%' }}
           canTouchTrack={true}
           maximumValue={3500}
+          stepValue={1}
+          scaleValue={0}
           minimumValue={0}
-          value={this.state.value1}
+          value={this.state.value}
           maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
           minimumTrackTintColor="#ffb700"
-          onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
-          onSlidingComplete={this._handleComplete1}
+          onValueChange={value => this.setState({ value: Math.round(value) })}
+          onSlidingComplete={this._handleComplete}
           marginBottom={20}
         />
         <Stepper
@@ -43,11 +59,11 @@ export default class LoadCapacity1 extends Component {
           inputStyle={{ color: 'transparent' }}
           style={{ paddingTop: 15, backgroundColor: '#fff' }}
           editable={false}
-          onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
+          onValueChange={this._handleComplete}
           max={3500}
           stepValue={1}
           min={0}
-          value={this.state.value1}
+          value={this.state.value}
         />
       </View>
     );
@@ -83,3 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default connect(({ dpState }) => ({
+  PowerRate1: dpState[PowerRate1Code],
+}))(LoadCapacity1);

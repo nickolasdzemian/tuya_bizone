@@ -10,6 +10,7 @@ import {
   faDoorOpen,
   faExclamationTriangle,
   faLightbulb,
+  faBorderNone,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../i18n';
 import dpCodes from '../../config/dpCodes';
@@ -18,6 +19,7 @@ const {
   Relay1flag: Relay1flagCode,
   Relay2flag: Relay2flagCode,
   OpenWindowStatus: OpenWindowStatusCode,
+  FaultAlarm: FaultAlarmCode,
 } = dpCodes;
 
 class ZoneReport extends React.PureComponent {
@@ -25,12 +27,14 @@ class ZoneReport extends React.PureComponent {
     Relay1flag: PropTypes.bool,
     Relay2flag: PropTypes.bool,
     OpenWindowStatus: PropTypes.number,
+    FaultAlarm: PropTypes.number,
   };
 
   static defaultProps = {
     Relay1flag: false,
     Relay2flag: true,
-    OpenWindowStatus: 1,
+    OpenWindowStatus: 0,
+    FaultAlarm: 0,
   };
   // в состояние вписываются значения datapoints,
   // от которых будет зависеть отображается тот или иной компонент
@@ -46,7 +50,7 @@ class ZoneReport extends React.PureComponent {
     this.stateE2 = { isHidden: false };
   }
   render() {
-    const { Relay1flag, Relay2flag, OpenWindowStatus } = this.props;
+    const { Relay1flag, Relay2flag, OpenWindowStatus, FaultAlarm } = this.props;
     return (
       <SafeAreaView style={styles.container}>
         {this.stateA.isHidden ? (
@@ -110,7 +114,7 @@ class ZoneReport extends React.PureComponent {
           <View style={styles.area}>
             <FontAwesomeIcon icon={faDoorOpen} color="#00e1ff" size={25} margin={10} />
             <Text style={styles.titlekwh}>{Strings.getLang('wintitle')}</Text>
-            <Text style={styles.num}>{this.state.OpenWindowStatus}</Text>
+            <Text style={styles.num}>{OpenWindowStatus}</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('wintime')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
@@ -128,28 +132,28 @@ class ZoneReport extends React.PureComponent {
             </View>
           </View>
         ) : null}
-        {this.stateE1.isHidden ? (
+        {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
           <View style={styles.area}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
             <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>☠</Text>
+            <Text style={styles.num}>E{FaultAlarm}</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
             </View>
           </View>
-        ) : null}
-        {this.stateE2.isHidden ? (
+        )}
+        {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
           <View style={styles.area}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
             <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>☠</Text>
+            <Text style={styles.num}>E{FaultAlarm}</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
             </View>
           </View>
-        ) : null}
+        )}
       </SafeAreaView>
     );
   }
@@ -227,4 +231,5 @@ export default connect(({ dpState }) => ({
   Relay1flag: dpState[Relay1flagCode],
   Relay2flag: dpState[Relay2flagCode],
   OpenWindowStatus: dpState[OpenWindowStatusCode],
+  FaultAlarm: dpState[FaultAlarmCode],
 }))(ZoneReport);

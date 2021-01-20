@@ -6,8 +6,6 @@ import Strings from '../../../../i18n';
 import LoadCapacity1 from './loadcap1';
 import LoadCapacity2 from './loadcap2';
 
-const loadcapacity = Strings.getLang('loadcapacity');
-const loadcapacity1 = Strings.getLang('loadcapacity1');
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
 
@@ -16,7 +14,7 @@ export default class LoadCapacity extends Component {
     return [
       {
         key: 'custom',
-        title: loadcapacity,
+        title: Strings.getLang('loadcapacity'),
         onPress: () => {
           Popup.custom({
             content: (
@@ -26,9 +24,10 @@ export default class LoadCapacity extends Component {
                 <LoadCapacity2 />
               </ScrollView>
             ),
-            title: loadcapacity1,
+            title: Strings.getLang('loadcapacity1'),
             cancelText,
             confirmText,
+            // motionType: 'none',
             onMaskPress: ({ close }) => {
               close();
             },

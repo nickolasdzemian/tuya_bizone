@@ -11,18 +11,24 @@ All notable changes to this project will be documented in this file. See [standa
 ### Known issues | Известные ограничения
 * !charts need been tested whis real device and data | графики необходимо тестировать с реальным устройством и данными
 
-#### 1.2.5
+#### 1.2.5 Cloud Beta
 * rebuild UI design for Climate mode homescreen | переписан домашний экран в режиме климата
+* added scale & step params to sliders | добавлены параметры масштабирования и шага в функц. слайдеров
+* updated translations | обновлены переводы
+* fixed some icons positioning | исправлено расположение некоторых иконок
+* fix NaN in brightness slider | исправлено неопред. знач. в слайдере яркости
+##### Cloud func. | Функции облака
 * added channel mode selector | добавлен переключатель каналов
 * added home screen zones view deps mechanic | добавлена механика зависимости отображения зон на главном экране
 * added preheat cloud dps | добавлено включение через облако режима преднагрева
 * added climate cloud dps | добавлено включение через облако режима климат-контроля
 * added relay state indication | добавлено отображение статуса реле
 * added warning msg in Zones, when climate is on --deleted 
-* added test funcion for OpenWindowStatus | добавлен тест функции "статус - открытое окно"
+* added funcion for OpenWindowStatus | добавлена функция "статус - открытое окно"
+* added temperature correction control for air sensor | добавлено управление корректировкой датчика температуры воздуха
+* added brightness controll | добавлено управление яркостью
+* added load capacity cloud setting | добавлена настройка мощности нагрузки через облачный сервер
 * separating report UI for climate and zones on homescreen | выполнено разделение UI отчетов для климата и зон на домашнем экране
-* updated translations | обновлены переводы
-* fixed some icons positioning | исправлено расположение некоторых иконок
 
 #### 1.2.4 RC1
 * fix little problems | незначительные правки
@@ -42,7 +48,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 #### 1.2.2
 * removed unnesessary consts | удалены ненужные константы
-* !!!updated translations mechanic | обновлен механизм получения переводов
+* updated translations mechanic | обновлен механизм получения переводов
 * improove performance | увеличена производительность
 * added homescreen | добавлен главный экран
 * added maths avoiding from crossing end-values | добавление математического недопущения перекрывающих крайних пределов

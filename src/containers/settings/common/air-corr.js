@@ -1,19 +1,37 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { TYFlatList, Popup } from 'tuya-panel-kit';
+import { connect } from 'react-redux';
+import { TYFlatList, Popup, TYSdk } from 'tuya-panel-kit';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
+
+const TYDevice = TYSdk.device;
+const { TemperatureCorr: TemperatureCorrCode } = dpCodes;
 
 const aircorr = Strings.getLang('aircorr');
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
 
-export default class AirCorrScene extends Component {
-  state = {
-    numberValue: 0,
+class AirCorrScene extends Component {
+  static propTypes = {
+    TemperatureCorr: PropTypes.number,
   };
+  static defaultProps = {
+    TemperatureCorr: 0,
+  };
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  getDataCorr() {
+    const { TemperatureCorr } = this.props;
+    return TemperatureCorr;
+  }
+
   get data() {
     return [
       {
-        key: 'numberSelector.slider',
+        key: TemperatureCorrCode,
         title: aircorr,
         onPress: () => {
           Popup.numberSelector({
@@ -21,7 +39,7 @@ export default class AirCorrScene extends Component {
             cancelText,
             confirmText,
             type: 'slider',
-            value: this.state.numberValue,
+            value: this.getDataCorr(),
             maximumTrackTintColor: 'rgba(47, 47, 47, 0.5)',
             minimumTrackTintColor: '#FF7300',
             min: -9,
@@ -30,8 +48,10 @@ export default class AirCorrScene extends Component {
               close();
             },
             onConfirm: (value, { close }) => {
-              this.setState({ numberValue: value });
-              if (value < 10) {
+              TYDevice.putDeviceData({
+                [TemperatureCorrCode]: value,
+              });
+              if (value < 11) {
                 close();
               } else {
                 return false;
@@ -47,3 +67,7 @@ export default class AirCorrScene extends Component {
     return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
   }
 }
+
+export default connect(({ dpState }) => ({
+  TemperatureCorr: dpState[TemperatureCorrCode],
+}))(AirCorrScene);
