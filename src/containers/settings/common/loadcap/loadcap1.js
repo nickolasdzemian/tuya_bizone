@@ -44,7 +44,6 @@ class LoadCapacity1 extends Component {
           canTouchTrack={true}
           maximumValue={3500}
           stepValue={1}
-          scaleValue={0}
           minimumValue={0}
           value={this.state.value}
           maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
