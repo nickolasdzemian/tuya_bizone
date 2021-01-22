@@ -1,7 +1,14 @@
 // выбор датчиков для климат-режима
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { TYFlatList, Popup } from 'tuya-panel-kit';
+import { connect } from 'react-redux';
+import { TYFlatList, Popup, TYSdk } from 'tuya-panel-kit';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
+
+const TYDevice = TYSdk.device;
+
+const { SensorSet3: SensorSet3Code } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
@@ -10,30 +17,35 @@ const confirmText = Strings.getLang('confirmText');
 const climatemodet = Strings.getLang('climatemodet');
 const climatemode = Strings.getLang('climatemode');
 
-// определение переводов для каждого режима
-const air = Strings.getLang('air');
-const flour1 = Strings.getLang('flour1');
-const flour2 = Strings.getLang('flour2');
-const airflour1 = Strings.getLang('airflour1');
-const airflour2 = Strings.getLang('airflour2');
-const flour12 = Strings.getLang('flour12');
-const airflour12 = Strings.getLang('airflour12');
-
-// определение массива с режимами
-const set = new Set([air, flour1, flour2, flour12, airflour1, airflour2, airflour12]);
+// определение массива с режимами (для удобства режим = string)
+const set = new Set([
+  'air',
+  'flour_1',
+  'flour_1',
+  'flour_2',
+  'flour_12',
+  'air_flour_1',
+  'air_flour_2',
+  'air_flour_12',
+]);
 Array.from(set);
 
-// разбор массива в список
-const tabRadios = Array.from(set).map(v => {
-  return { key: `${v}`, title: `${v}`, value: `${v}` };
-});
-
-export default class ClimateMode extends Component {
+class ClimateMode extends Component {
+  static propTypes = {
+    SensorSet3: PropTypes.string,
+  };
+  static defaultProps = {
+    SensorSet3: 'air_flour_12',
+  };
   state = {
-    listValue: airflour12,
+    listValue: this.props.SensorSet3,
   };
 
   get data() {
+    // разбор массива в список и вывод
+    const tabRadios = Array.from(set).map(v => {
+      return { key: `${v}`, title: `${Strings.getLang(v)}`, value: `${this.props.SensorSet3}` };
+    });
     return [
       {
         key: 'Popup.list.radio',
@@ -61,6 +73,9 @@ export default class ClimateMode extends Component {
             onSelect: (value, { close }) => {
               console.log('radio value :', value);
               this.setState({ listValue: value });
+              TYDevice.putDeviceData({
+                [SensorSet3Code]: value,
+              });
               // close();
             },
           });
@@ -73,3 +88,7 @@ export default class ClimateMode extends Component {
     return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
   }
 }
+
+export default connect(({ dpState }) => ({
+  SensorSet3: dpState[SensorSet3Code],
+}))(ClimateMode);

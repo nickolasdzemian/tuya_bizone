@@ -18,6 +18,10 @@ const {
   chSelector: chSelectorCode,
   Relay1flag: Relay1flagCode,
   Relay2flag: Relay2flagCode,
+  RelayPower1: RelayPower1Code,
+  RelayPower2: RelayPower2Code,
+  FaultAlarm: FaultAlarmCode,
+  ReportTemperature: ReportTemperatureCode,
 } = dpCodes;
 
 class ClimateReport extends React.PureComponent {
@@ -25,12 +29,20 @@ class ClimateReport extends React.PureComponent {
     chSelector: PropTypes.bool,
     Relay1flag: PropTypes.bool,
     Relay2flag: PropTypes.bool,
+    RelayPower1: PropTypes.number,
+    RelayPower2: PropTypes.number,
+    FaultAlarm: PropTypes.number,
+    ReportTemperature: PropTypes.string,
   };
 
   static defaultProps = {
     chSelector: false,
     Relay1flag: false,
     Relay2flag: true,
+    RelayPower1: 0,
+    RelayPower2: 0,
+    FaultAlarm: 0,
+    ReportTemperature: '112233',
   };
 
   constructor(props) {
@@ -40,7 +52,19 @@ class ClimateReport extends React.PureComponent {
     this.stateE2 = { isHidden: false };
   }
   render() {
-    const { chSelector, Relay1flag, Relay2flag } = this.props;
+    const { chSelector, Relay1flag, Relay2flag, RelayPower1, RelayPower2, FaultAlarm } = this.props;
+
+    const t = this.props.ReportTemperature;
+    console.log(t, 't');
+    const t1 = t.substring(0, 2);
+    const t10 = parseInt(t1, 16);
+    const t2 = t.substring(2, 4);
+    const t20 = parseInt(t2, 16);
+    const t3 = t.substring(4, 6);
+    const t30 = parseInt(t3, 16);
+    const tC = Math.round(t10 + t20 + t30) / 3;
+    console.log(tC, 'tC');
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.areaAir}>
@@ -57,7 +81,7 @@ class ClimateReport extends React.PureComponent {
           <Text style={styles.titleE2}>{Strings.getLang('climateSetTemp')}</Text>
           <View style={styles.air}>
             <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
-            <Text style={styles.num}>30°C</Text>
+            <Text style={styles.num}>{tC}°C</Text>
           </View>
           <Text style={styles.titleE}>{Strings.getLang('climateTemp')}</Text>
         </View>
@@ -74,7 +98,9 @@ class ClimateReport extends React.PureComponent {
             <Text style={styles.num}>{Strings.getLang('off')}</Text>
           )}
           <View>
-            <Text style={styles.titlekwh}>1250 {Strings.getLang('kwh')}</Text>
+            <Text style={styles.titlekwh}>
+              {RelayPower1} {Strings.getLang('kwh')}
+            </Text>
           </View>
         </View>
         <View style={styles.areaPWR}>
@@ -90,31 +116,33 @@ class ClimateReport extends React.PureComponent {
             <Text style={styles.num}>{Strings.getLang('off')}</Text>
           )}
           <View>
-            <Text style={styles.titlekwh}>1250 {Strings.getLang('kwh')}</Text>
+            <Text style={styles.titlekwh}>
+              {RelayPower2} {Strings.getLang('kwh')}
+            </Text>
           </View>
         </View>
-        {this.stateE1.isHidden ? (
+        {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
           <View style={styles.area}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
             <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>☠</Text>
+            <Text style={styles.num}>E{FaultAlarm}</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
             </View>
           </View>
-        ) : null}
-        {this.stateE2.isHidden ? (
+        )}
+        {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
           <View style={styles.area}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
             <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>☠</Text>
+            <Text style={styles.num}>E{FaultAlarm}</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
             </View>
           </View>
-        ) : null}
+        )}
       </SafeAreaView>
     );
   }
@@ -212,4 +240,8 @@ export default connect(({ dpState }) => ({
   chSelector: dpState[chSelectorCode],
   Relay1flag: dpState[Relay1flagCode],
   Relay2flag: dpState[Relay2flagCode],
+  RelayPower1: dpState[RelayPower1Code],
+  RelayPower2: dpState[RelayPower2Code],
+  FaultAlarm: dpState[FaultAlarmCode],
+  ReportTemperature: dpState[ReportTemperatureCode],
 }))(ClimateReport);

@@ -12,8 +12,11 @@ All notable changes to this project will be documented in this file. See [standa
 * !charts need been tested whis real device and data | графики необходимо тестировать с реальным устройством и данными
 
 #### 1.2.6 Cloud Beta
+* fixed max items in sensors set | исправлено макс. кол-во в настройках датчиков
 ##### Cloud func. | Функции облака
 * added separate report temperature from cloud string | добавлено раздельное отображение температуры из строки с облака
+* added control of sensors | добавлено управление дачтиками
+
 #### 1.2.5 Cloud Beta
 * rebuild UI design for Climate mode homescreen | переписан домашний экран в режиме климата
 * added scale & step params to sliders | добавлены параметры масштабирования и шага в функц. слайдеров

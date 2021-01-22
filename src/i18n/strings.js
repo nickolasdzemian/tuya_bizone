@@ -79,12 +79,12 @@ module.exports = {
     climateinfot: 'Info',
     climateinfo: 'When climate control mode is on, operating in Zone I and Zone II settings will not take any effect or may be switched off. Be sure what are you doing. Visit Pornhub for more information.',
     air: 'Air sensor',
-    flour1: 'External sensor 1',
-    flour2: 'External sensor 2',
-    airflour1: 'Air + External sensor 1',
-    airflour2: 'Air + External sensor 2', 
-    flour12: 'External sensors 1 + 2',
-    airflour12: 'All sensors',
+    flour_1: 'External sensor 1',
+    flour_2: 'External sensor 2',
+    air_flour_1: 'Air + External sensor 1',
+    air_flour_2: 'Air + External sensor 2', 
+    flour_12: 'External sensors 1 + 2',
+    air_flour_12: 'All sensors',
     chSelector: 'Channel',
 
     // Settings Zones
@@ -94,6 +94,9 @@ module.exports = {
     zone1: 'I zone',
     zone2: 'II zone',
     cliwarn: 'The climate mode is on. Setup will no take effect.',
+    air: 'Air sensor',
+    flour: 'Zone external sensor',
+    air_flour: 'Air + external sensor',
 
     //Сharts
     charts: 'Programm mode setup',
@@ -212,12 +215,12 @@ module.exports = {
     climateinfot: 'Информация',
     climateinfo: 'Когда режим климат-контроля включен, конфигурирование Зоны 1 и Зоны 2 не будет иметь эффекта. Настройки для зон не будут сохранены. Будьте внимательны при переключении режима управления!',
     air: 'Датчик воздуха',
-    flour1: 'Внешний датчик 1',
-    flour2: 'Внешний датчик 2',
-    airflour1: 'Датчик воздуха + Внешний №1',
-    airflour2: 'Датчик воздуха + Внешний №2', 
-    flour12: 'Внешние датчики 1 + 2',
-    airflour12: 'Все доступные',
+    flour_1: 'Внешний датчик 1',
+    flour_2: 'Внешний датчик 2',
+    air_flour_1: 'Датчик воздуха + Внешний №1',
+    air_flour_2: 'Датчик воздуха + Внешний №2', 
+    flour_12: 'Внешние датчики 1 + 2',
+    air_flour_12: 'Все доступные',
     chSelector: 'Канал',
 
     // Settings Zones
@@ -227,6 +230,9 @@ module.exports = {
     zone1: 'I зона',
     zone2: 'II зона',
     cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
+    air: 'Датчик воздуха',
+    flour: 'Внешний датчик зоны',
+    air_flour: 'Датчик воздуха + Внешний',
 
     //Сharts
     charts: 'Настройки программного режима',
@@ -345,12 +351,12 @@ module.exports = {
     climateinfot: 'Информация',
     climateinfo: 'Когда режим климат-контроля включен, конфигурирование Зоны 1 и Зоны 2 не будет иметь эффекта. Настройки для зон не будут сохранены. Будьте внимательны при переключении режима управления!',
     air: 'Датчик воздуха',
-    flour1: 'Внешний датчик 1',
-    flour2: 'Внешний датчик 2',
-    airflour1: 'Датчик воздуха + Внешний №1',
-    airflour2: 'Датчик воздуха + Внешний №2', 
-    flour12: 'Внешние датчики 1 + 2',
-    airflour12: 'Все доступные',
+    flour_1: 'Внешний датчик 1',
+    flour_2: 'Внешний датчик 2',
+    air_flour_1: 'Датчик воздуха + Внешний №1',
+    air_flour_2: 'Датчик воздуха + Внешний №2', 
+    flour_12: 'Внешние датчики 1 + 2',
+    air_flour_12: 'Все доступные',
     chSelector: 'Канал',
 
     // Settings Zones
@@ -360,6 +366,9 @@ module.exports = {
     zone1: 'I зона',
     zone2: 'II зона',
     cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
+    air: 'Датчик воздуха',
+    flour: 'Внешний датчик зоны',
+    air_flour: 'Датчик воздуха + Внешний',
 
     //Сharts
     charts: 'Настройки программного режима',

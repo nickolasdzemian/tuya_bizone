@@ -1,7 +1,6 @@
 // отображение всех элементов типа (report only) в многозонном режиме
 import PropTypes from 'prop-types';
 import React from 'react';
-import _ from 'lodash';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -11,7 +10,6 @@ import {
   faDoorOpen,
   faExclamationTriangle,
   faLightbulb,
-  faBorderNone,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../i18n';
 import dpCodes from '../../config/dpCodes';
@@ -68,8 +66,8 @@ class ZoneReport extends React.PureComponent {
       RelayPower2,
       OpenWindowStatus,
       FaultAlarm,
-      ReportTemperature,
     } = this.props;
+
     // const t = parseInt(ReportTemperature, 16);
     const t = this.props.ReportTemperature;
     console.log(t, 't');
@@ -85,13 +83,14 @@ class ZoneReport extends React.PureComponent {
     console.log(t3, 't3');
     const t30 = parseInt(t3, 16);
     console.log(t30, 't30');
+
     return (
       <SafeAreaView style={styles.container}>
         {this.stateA.isHidden ? (
           <View style={styles.areaAir}>
             <View style={styles.air}>
               <FontAwesomeIcon icon={faBacon} color="#00d0ff" size={20} marginRight={5} />
-              <Text style={styles.num}>{t30}</Text>
+              <Text style={styles.num}>{t30}°C</Text>
             </View>
             <Text style={styles.titleE}>{Strings.getLang('airtemp')}</Text>
           </View>
@@ -100,7 +99,7 @@ class ZoneReport extends React.PureComponent {
           <View style={styles.area}>
             <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={25} margin={10} />
             <Text style={styles.titlekwh}>20°C</Text>
-            <Text style={styles.num}>{t10}</Text>
+            <Text style={styles.num}>{t10}°C</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
@@ -126,7 +125,7 @@ class ZoneReport extends React.PureComponent {
           <View style={styles.area}>
             <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={25} margin={10} />
             <Text style={styles.titlekwh}>30°C</Text>
-            <Text style={styles.num}>{t20}</Text>
+            <Text style={styles.num}>{t20}°C</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
