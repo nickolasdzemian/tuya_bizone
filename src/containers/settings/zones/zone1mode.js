@@ -1,4 +1,5 @@
 // Зона 1 - выбор датчиков для работы
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TYFlatList, Popup, TYSdk } from 'tuya-panel-kit';
@@ -11,36 +12,52 @@ const { SensorSet1: SensorSet1Code } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
-// const selected = Strings.getLang('selected');
 
 const climatemode = Strings.getLang('climatemode');
 const zoneSens = Strings.getLang('zoneSens');
 
-// определение массива данных
-const set = new Set(['air', 'flour', 'air_flour']);
-Array.from(set);
-
-// разбор массива и вывод списка и селектора
-const tabRadios = Array.from(set).map(v => {
-  return { key: `${v}`, title: `${Strings.getLang(v)}`, value: `${v}` };
-});
+// определение массива с датчиками
+const set = [
+  {
+    key: 'air',
+    title: Strings.getLang('air'),
+    value: 'air',
+  },
+  {
+    key: 'flour',
+    title: Strings.getLang('flour'),
+    value: 'flour',
+  },
+  {
+    key: 'air_flour',
+    title: Strings.getLang('air_flour'),
+    value: 'air_flour',
+  },
+];
 
 class Zone1Mode extends Component {
-  state = {
-    // инициализированное значение
-    listValue: 'air_flour_1',
+  static propTypes = {
+    SensorSet1: PropTypes.string,
   };
+  static defaultProps = {
+    SensorSet1: 'air_flour',
+  };
+
+  getDataSensors() {
+    const { SensorSet1 } = this.props;
+    return SensorSet1;
+  }
 
   get data() {
     return [
       {
-        key: 'Popup.list.radio',
+        key: this.getDataSensors(),
         title: zoneSens,
         onPress: () => {
           Popup.list({
             type: 'radio',
             maxItemNum: 3,
-            dataSource: tabRadios, // сорцы для данных - можно вставить state из массива прям сюда
+            dataSource: set,
             iconTintColor: '#ffb700',
             title: [climatemode],
             cancelText,
@@ -50,15 +67,13 @@ class Zone1Mode extends Component {
               console.log('Select climate --none');
               close();
             },
-            value: this.state.listValue,
+            value: this.getDataSensors(),
             footerType: 'singleCancel',
             onMaskPress: ({ close }) => {
               close();
             },
             // выбор и сохранение значения из списка по нажатию
             onSelect: (value, { close }) => {
-              console.log('radio value :', value);
-              this.setState({ listValue: value });
               TYDevice.putDeviceData({
                 [SensorSet1Code]: value,
               });

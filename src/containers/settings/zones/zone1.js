@@ -12,7 +12,7 @@ import Strings from '../../../i18n';
 import Zone1Mode from './zone1mode';
 
 const TYDevice = TYSdk.device;
-const { Preheat1: Preheat1Code } = dpCodes;
+const { Preheat1: Preheat1Code, OpenWndW: OpenWndWCode } = dpCodes;
 
 const windowSw = Strings.getLang('windowSw');
 const selflearnSw = Strings.getLang('selflearnSw');
@@ -20,10 +20,12 @@ const selflearnSw = Strings.getLang('selflearnSw');
 class ZoneIScene extends React.PureComponent {
   static propTypes = {
     Preheat1: PropTypes.bool,
+    OpenWndW: PropTypes.string,
   };
 
   static defaultProps = {
     Preheat1: false,
+    OpenWndW: '00',
   };
   constructor(props) {
     super(props);
@@ -32,12 +34,21 @@ class ZoneIScene extends React.PureComponent {
 
   getData() {
     const { Preheat1 } = this.props;
-    console.log('Preheat1', Preheat1);
     return Preheat1;
   }
 
+  getDataW() {
+    const { OpenWndW } = this.props;
+    return OpenWndW;
+  }
+
   render() {
-    const { Preheat1 } = this.props;
+    const { Preheat1, OpenWndW } = this.props;
+    const W = this.props.OpenWndW;
+    console.log(W, 'W');
+    const W1 = W.substring(0, 1);
+    console.log(W1, 'W1');
+    Boolean.valueOf(W);
     return (
       <View style={styles.container}>
         <Divider />
@@ -51,8 +62,12 @@ class ZoneIScene extends React.PureComponent {
             // width={100}
             // height={20}
             onTintColor="#ffb700"
-            value={this.state.value1}
-            // onValueChange=
+            value={this.getDataW()}
+            onValueChange={() => {
+              TYDevice.putDeviceData({
+                [OpenWndWCode]: !OpenWndW,
+              });
+            }}
           />
         </View>
         <Divider />
@@ -68,7 +83,6 @@ class ZoneIScene extends React.PureComponent {
             onTintColor="#ffb700"
             value={this.getData()}
             onValueChange={() => {
-              // this.setState({ value });
               TYDevice.putDeviceData({
                 [Preheat1Code]: !Preheat1,
               });
@@ -115,4 +129,5 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   Preheat1: dpState[Preheat1Code],
+  OpenWndW: dpState[OpenWndWCode],
 }))(ZoneIScene);

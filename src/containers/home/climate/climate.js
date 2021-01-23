@@ -1,27 +1,52 @@
 // отображение всех элементов типа (report only)
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
-import { Slider, Stepper, TabBar } from 'tuya-panel-kit';
+import { Slider, Stepper, TabBar, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFan, faHandPointUp } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
 
-const fan0 = Strings.getLang('fan0');
-const fan1 = Strings.getLang('fan1');
-const fan2 = Strings.getLang('fan2');
-const fan3 = Strings.getLang('fan3');
-const fan4 = Strings.getLang('fan4');
+const TYDevice = TYSdk.device;
+const { FanSpeed: FanSpeedCode } = dpCodes;
 
-// определение массива данных с переводом
-const fan = new Set([fan0, fan1, fan2, fan3, fan4]);
-Array.from(fan);
+const fan = [
+  {
+    key: 'FAN_OFF',
+    title: Strings.getLang('FAN_OFF'),
+    value: 'FAN_OFF',
+  },
+  {
+    key: 'FAN_LOW',
+    title: Strings.getLang('FAN_LOW'),
+    value: 'FAN_LOW',
+  },
+  {
+    key: 'FAN_MID',
+    title: Strings.getLang('FAN_MID'),
+    value: 'FAN_MID',
+  },
+  {
+    key: 'FAN_HIGH',
+    title: Strings.getLang('FAN_HIGH'),
+    value: 'FAN_HIGH',
+  },
+  {
+    key: 'FAN_AUTO',
+    title: Strings.getLang('FAN_AUTO'),
+    value: 'FAN_AUTO',
+  },
+];
 
-// разбор массива и вывод списка и селектора
-const fanRadios = Array.from(fan).map(v => {
-  return { key: `${v}`, title: `${v}` };
-});
-
-export default class ClimateMain extends React.PureComponent {
+class ClimateMain extends React.PureComponent {
+  static propTypes = {
+    FanSpeed: PropTypes.string,
+  };
+  static defaultProps = {
+    FanSpeed: 'FAN_OFF',
+  };
   // в состояние данного конструктора вписываются значения datapoints,
   // от которых будет зависеть отображается тот или иной компонент
   // работает без DOM, отрисовка максимально быстрый
@@ -33,8 +58,20 @@ export default class ClimateMain extends React.PureComponent {
     this.statePower = { isHidden: false };
 
     this.state = { valueM0: 0 };
-    this.state = { tab: 'fan0' };
+    this.state = { tab: 'FAN_OFF' };
   }
+
+  getDataFan() {
+    const { FanSpeed } = this.props;
+    return FanSpeed;
+  }
+
+  changeDataFan = value => {
+    this.setState({ tab: value });
+    TYDevice.putDeviceData({
+      [FanSpeedCode]: value,
+    });
+  };
 
   _handleCompleteM0 = valueM0 => {
     this.setState({ valueM0: Math.round(valueM0) });
@@ -43,12 +80,6 @@ export default class ClimateMain extends React.PureComponent {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <ScrollView
-      horizontal={true}
-      indicatorStyle="white"
-      pinchGestureEnabled={true}
-      scrollBarThumbImage="#fff"
-    > */}
         {this.stateCM.isHidden ? (
           <View style={styles.area}>
             <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
@@ -90,23 +121,22 @@ export default class ClimateMain extends React.PureComponent {
           <Text style={styles.titlekwh}>{Strings.getLang('fantitle')}</Text>
           <View style={styles.title}>
             <FontAwesomeIcon icon={faFan} color="#00e1ff" size={25} marginRight={10} />
-            <Text style={styles.num}>{this.state.tab}</Text>
+            <Text style={styles.num}>{Strings.getLang(this.props.FanSpeed)}</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.context}>Lo</Text>
             <TabBar
               activeColor="#00e1ff"
               type="radio"
-              tabs={fanRadios}
-              activeKey={this.state.tab}
-              onChange={value => this.setState({ tab: value })}
+              tabs={fan}
+              activeKey={this.getDataFan()}
+              onChange={this.changeDataFan}
               style={styles.bar}
               gutter={1}
             />
             <Text style={styles.context}>Hi</Text>
           </View>
         </View>
-        {/* </ScrollView> */}
       </SafeAreaView>
     );
   }
@@ -183,3 +213,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 });
+
+export default connect(({ dpState }) => ({
+  FanSpeed: dpState[FanSpeedCode],
+}))(ClimateMain);

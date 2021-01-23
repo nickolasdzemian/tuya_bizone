@@ -1,40 +1,63 @@
+// Зона 2 - выбор датчиков для работы
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { TYFlatList, Popup } from 'tuya-panel-kit';
+import { connect } from 'react-redux';
+import { TYFlatList, Popup, TYSdk } from 'tuya-panel-kit';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
+
+const TYDevice = TYSdk.device;
+
+const { SensorSet2: SensorSet2Code } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
-// const selected = Strings.getLang('selected');
 
 const climatemode = Strings.getLang('climatemode');
 const zoneSens = Strings.getLang('zoneSens');
 
-const air = Strings.getLang('air');
-const flour2 = Strings.getLang('flour2');
-const airflour2 = Strings.getLang('airflour2');
+// определение массива с датчиками
+const set = [
+  {
+    key: 'air',
+    title: Strings.getLang('air'),
+    value: 'air',
+  },
+  {
+    key: 'flour',
+    title: Strings.getLang('flour'),
+    value: 'flour',
+  },
+  {
+    key: 'air_flour',
+    title: Strings.getLang('air_flour'),
+    value: 'air_flour',
+  },
+];
 
-const set = new Set([air, flour2, airflour2]);
-Array.from(set);
-
-const tabRadios = Array.from(set).map(v => {
-  return { key: `${v}`, title: `${v}`, value: `${v}` };
-});
-
-export default class Zone2Mode extends Component {
-  state = {
-    listValue: airflour2,
+class Zone2Mode extends Component {
+  static propTypes = {
+    SensorSet2: PropTypes.string,
   };
+  static defaultProps = {
+    SensorSet2: 'air_flour',
+  };
+
+  getDataSensors() {
+    const { SensorSet2 } = this.props;
+    return SensorSet2;
+  }
 
   get data() {
     return [
       {
-        key: 'Popup.list.radio',
+        key: this.getDataSensors(),
         title: zoneSens,
         onPress: () => {
           Popup.list({
             type: 'radio',
-            maxItemNum: 7,
-            dataSource: tabRadios,
+            maxItemNum: 3,
+            dataSource: set,
             iconTintColor: '#FF7300',
             title: [climatemode],
             cancelText,
@@ -44,14 +67,15 @@ export default class Zone2Mode extends Component {
               console.log('Select climate --none');
               close();
             },
-            value: this.state.listValue,
+            value: this.getDataSensors(),
             footerType: 'singleCancel',
             onMaskPress: ({ close }) => {
               close();
             },
             onSelect: (value, { close }) => {
-              console.log('radio value :', value);
-              this.setState({ listValue: value });
+              TYDevice.putDeviceData({
+                [SensorSet2Code]: value,
+              });
               // close();
             },
           });
@@ -64,3 +88,7 @@ export default class Zone2Mode extends Component {
     return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
   }
 }
+
+export default connect(({ dpState }) => ({
+  SensorSet2: dpState[SensorSet2Code],
+}))(Zone2Mode);

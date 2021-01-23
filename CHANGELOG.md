@@ -2,20 +2,19 @@
 # Changelog | Список изменений
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
-#### Datapoints!
-* Cloud mechanics didnt add into this UI | Механика работы с облаком еще не добавлена
-* Some actions could be tranform threw 'get_data' method | Возможно, некоторые действия должны передаваться через метод 'get_data'
-* International tranlations for dps must be threw get_dp_lang method, now it's only simple strings | Международные переводы datapoints должны производиться в интерфейсе через метод get_dp_lang, сейчас это только простые @i18Strings
 
-## Home Screen | Главный экран
 ### Known issues | Известные ограничения
 * !charts need been tested whis real device and data | графики необходимо тестировать с реальным устройством и данными
 
 #### 1.2.6 Cloud Beta
+* clean up some useless code | подчищен неиспользуемый код
+* added two way data transfering for real-time data displaying | добавлен двусторонний обмен для отображения данных в реальном времени
+* added function for confirmation in pop-up dialog withot close animation) | добавлена функция "подтвердить" в диалоговые окна без анимации
 * fixed max items in sensors set | исправлено макс. кол-во в настройках датчиков
 ##### Cloud func. | Функции облака
 * added separate report temperature from cloud string | добавлено раздельное отображение температуры из строки с облака
 * added control of sensors | добавлено управление дачтиками
+* added fan speed control | добавлено управление скоростью вентилятора
 
 #### 1.2.5 Cloud Beta
 * rebuild UI design for Climate mode homescreen | переписан домашний экран в режиме климата
@@ -42,6 +41,7 @@ All notable changes to this project will be documented in this file. See [standa
 * fix displaying RU on iOS | исправлено отображение RU на платформе iOS
 * updated air icon | обновлена иконка воздуха
 
+## Home Screen | Главный экран
 #### 1.2.3 RC1
 * added navi to every chart setting | добавлена навигация к каждой настройке графиков
 * added funcs that're controlling UI (depending on dp) | добавлен функционал, который контролирует отображение интерфейса в зависимости от dp
@@ -79,7 +79,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### Known issues | Известные ограничения
 * !visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
 * !force close app when slider has no any values to set due to limitations | принудительное завершение работы если слайдер не имеет значений из-за ограничений пределов
-* function for confirmation in pop-up dialog hasn't been added yet (close animation) | функция "подтвердить" еще не добавлена в диалоговые окна (анимация при закрывании)
 
 #### 1.0.8
 * tryed to upgrade to React 16.8.3|RN 0.59.10 -- failed

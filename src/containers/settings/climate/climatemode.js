@@ -12,23 +12,48 @@ const { SensorSet3: SensorSet3Code } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
-// const selected = Strings.getLang('selected');
 
 const climatemodet = Strings.getLang('climatemodet');
 const climatemode = Strings.getLang('climatemode');
 
-// определение массива с режимами (для удобства режим = string)
-const set = new Set([
-  'air',
-  'flour_1',
-  'flour_1',
-  'flour_2',
-  'flour_12',
-  'air_flour_1',
-  'air_flour_2',
-  'air_flour_12',
-]);
-Array.from(set);
+// определение массива с режимами
+const set = [
+  {
+    key: 'air',
+    title: Strings.getLang('air'),
+    value: 'air',
+  },
+  {
+    key: 'flour_1',
+    title: Strings.getLang('flour_1'),
+    value: 'flour_1',
+  },
+  {
+    key: 'flour_2',
+    title: Strings.getLang('flour_2'),
+    value: 'flour_2',
+  },
+  {
+    key: 'flour_12',
+    title: Strings.getLang('flour_12'),
+    value: 'flour_12',
+  },
+  {
+    key: 'air_flour_1',
+    title: Strings.getLang('air_flour_1'),
+    value: 'air_flour_1',
+  },
+  {
+    key: 'air_flour_2',
+    title: Strings.getLang('air_flour_2'),
+    value: 'air_flour_2',
+  },
+  {
+    key: 'air_flour_12',
+    title: Strings.getLang('air_flour_12'),
+    value: 'air_flour_12',
+  },
+];
 
 class ClimateMode extends Component {
   static propTypes = {
@@ -37,24 +62,22 @@ class ClimateMode extends Component {
   static defaultProps = {
     SensorSet3: 'air_flour_12',
   };
-  state = {
-    listValue: this.props.SensorSet3,
-  };
+
+  getDataSensors() {
+    const { SensorSet3 } = this.props;
+    return SensorSet3;
+  }
 
   get data() {
-    // разбор массива в список и вывод
-    const tabRadios = Array.from(set).map(v => {
-      return { key: `${v}`, title: `${Strings.getLang(v)}`, value: `${this.props.SensorSet3}` };
-    });
     return [
       {
-        key: 'Popup.list.radio',
+        key: this.getDataSensors(),
         title: climatemodet,
         onPress: () => {
           Popup.list({
             type: 'radio',
             maxItemNum: 7,
-            dataSource: tabRadios,
+            dataSource: set,
             iconTintColor: '#90EE90',
             title: [climatemode],
             cancelText,
@@ -64,15 +87,13 @@ class ClimateMode extends Component {
               console.log('Select climate --none');
               close();
             },
-            value: this.state.listValue,
+            value: this.getDataSensors(),
             footerType: 'singleCancel',
             onMaskPress: ({ close }) => {
               close();
             },
             // выбор режима по нажатию на него
             onSelect: (value, { close }) => {
-              console.log('radio value :', value);
-              this.setState({ listValue: value });
               TYDevice.putDeviceData({
                 [SensorSet3Code]: value,
               });
