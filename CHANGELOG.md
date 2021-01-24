@@ -4,17 +4,21 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ### Known issues | Известные ограничения
-* !charts need been tested whis real device and data | графики необходимо тестировать с реальным устройством и данными
+* !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
 
 #### 1.2.6 Cloud Beta
 * clean up some useless code | подчищен неиспользуемый код
+* rebuild climate power controller to footer | контроллер климата перестроен в подвал
 * added two way data transfering for real-time data displaying | добавлен двусторонний обмен для отображения данных в реальном времени
 * added function for confirmation in pop-up dialog withot close animation) | добавлена функция "подтвердить" в диалоговые окна без анимации
+* added relay state displaying in climate mode (with depending on channel selector pos.) | добавлено отображение статуса реле в климат-режиме (с зависимостью от положения переключателя канала)
 * fixed max items in sensors set | исправлено макс. кол-во в настройках датчиков
+* fixed slider position in climate mode | исправлено положение слайдера в режиме климата
 ##### Cloud func. | Функции облака
 * added separate report temperature from cloud string | добавлено раздельное отображение температуры из строки с облака
 * added control of sensors | добавлено управление дачтиками
 * added fan speed control | добавлено управление скоростью вентилятора
+* added type selection for ext. sensors | добавлен выбор типа внешн. датчиков
 
 #### 1.2.5 Cloud Beta
 * rebuild UI design for Climate mode homescreen | переписан домашний экран в режиме климата

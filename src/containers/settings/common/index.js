@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 290,
     flexWrap: 'wrap',
+    letterSpacing: 1,
   },
   container: {
     flex: 1,

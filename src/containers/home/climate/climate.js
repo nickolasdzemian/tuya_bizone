@@ -40,7 +40,7 @@ const fan = [
   },
 ];
 
-class ClimateMain extends React.PureComponent {
+class ClimateM extends React.PureComponent {
   static propTypes = {
     FanSpeed: PropTypes.string,
   };
@@ -58,7 +58,7 @@ class ClimateMain extends React.PureComponent {
     this.statePower = { isHidden: false };
 
     this.state = { valueM0: 0 };
-    this.state = { tab: 'FAN_OFF' };
+    // this.state = { tab: 'FAN_OFF' };
   }
 
   getDataFan() {
@@ -67,7 +67,7 @@ class ClimateMain extends React.PureComponent {
   }
 
   changeDataFan = value => {
-    this.setState({ tab: value });
+    // this.setState({ tab: value });
     TYDevice.putDeviceData({
       [FanSpeedCode]: value,
     });
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: '90%',
-    height: 150,
+    height: 155,
   },
   num: {
     textAlign: 'center',
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   FanSpeed: dpState[FanSpeedCode],
-}))(ClimateMain);
+}))(ClimateM);

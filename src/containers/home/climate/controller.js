@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { TYSdk, Popup } from 'tuya-panel-kit';
+import { Utils, TYSdk, Popup } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChartBar, faTasks, faCog, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
+
+const { convertX: cx, convertY: cy } = Utils.RatioUtils;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: '10%',
+    marginBottom: 20,
   },
   areaContols: {
     flexDirection: 'row',

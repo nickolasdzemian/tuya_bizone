@@ -5,8 +5,9 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import dpCodes from '../../config/dpCodes';
 import ClimateReport from './ClimateReport';
 import ZoneReport from './ZoneReport';
-import Climate from './climate/index';
+import ClimateM from './climate/climate';
 import Zones from './zones/index';
+import ClimateController from './climate/controller';
 
 const { ClimateSelector: ClimateSelectorCode } = dpCodes;
 
@@ -27,7 +28,7 @@ class ClimateMain extends React.PureComponent {
           {ClimateSelector === true ? (
             <View>
               <ClimateReport />
-              <Climate />
+              <ClimateM />
             </View>
           ) : (
             <View>
@@ -36,6 +37,7 @@ class ClimateMain extends React.PureComponent {
             </View>
           )}
         </ScrollView>
+        {ClimateSelector === true ? <ClimateController /> : null}
       </View>
     );
   }

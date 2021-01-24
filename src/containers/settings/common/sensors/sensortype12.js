@@ -1,32 +1,59 @@
 // выбор типа дачтика для 1 и 2 зоны
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
-import { Picker } from 'tuya-panel-kit';
+import { Picker, TYSdk } from 'tuya-panel-kit';
 import Strings from '../../../../i18n';
+import dpCodes from '../../../../config/dpCodes';
+
+const TYDevice = TYSdk.device;
+const { Detector1: Detector1Code, Detector2: Detector2Code } = dpCodes;
 
 const sensortype1 = Strings.getLang('sensortype1');
 const sensortype2 = Strings.getLang('sensortype2');
 
-export default class PickSensorType1Scene extends Component {
+class PickSensorType1Scene extends Component {
+  static propTypes = {
+    Detector1: PropTypes.string,
+    Detector2: PropTypes.string,
+  };
+  static defaultProps = {
+    Detector1: 'Teplolux',
+    Detector2: 'Teplolux',
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       // определение списков
       sensor1: ['AuBe', 'Warmup', 'Teplolux', 'DEVI', 'Eberle', 'Ensto'],
-      value1: 'Teplolux',
       sensor2: ['AuBe', 'Warmup', 'Teplolux', 'DEVI', 'Eberle', 'Ensto'],
-      value2: 'Teplolux',
     };
   }
-  // функция выбора с логированием
+
+  // функция получения текущ. знач.
+  getDataS1() {
+    const { Detector1 } = this.props;
+    return Detector1;
+  }
+
+  getDataS2() {
+    const { Detector2 } = this.props;
+    return Detector2;
+  }
+
+  // функция выбора
   _handleChange1 = value1 => {
-    this.setState({ value1 });
-    console.log(value1);
+    TYDevice.putDeviceData({
+      [Detector1Code]: value1,
+    });
   };
 
   _handleChange2 = value2 => {
-    this.setState({ value2 });
-    console.log(value2);
+    TYDevice.putDeviceData({
+      [Detector2Code]: value2,
+    });
   };
 
   render = () => {
@@ -35,9 +62,10 @@ export default class PickSensorType1Scene extends Component {
         <View>
           <Text style={styles.title}>{sensortype1}</Text>
           <Picker
+            loop={true}
             style={[styles.picker]}
             itemStyle={styles.pickerItem}
-            selectedValue={this.state.value1}
+            selectedValue={this.getDataS1()}
             onValueChange={this._handleChange1}
             selectedItemTextColor="#ffb700"
           >
@@ -50,9 +78,10 @@ export default class PickSensorType1Scene extends Component {
         <View>
           <Text style={styles.title}>{sensortype2}</Text>
           <Picker
+            loop={true}
             style={[styles.picker]}
             itemStyle={styles.pickerItem}
-            selectedValue={this.state.value2}
+            selectedValue={this.getDataS2()}
             onValueChange={this._handleChange2}
             selectedItemTextColor="#FF7300"
           >
@@ -101,3 +130,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default connect(({ dpState }) => ({
+  Detector1: dpState[Detector1Code],
+  Detector2: dpState[Detector2Code],
+}))(PickSensorType1Scene);

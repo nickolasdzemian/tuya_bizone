@@ -39,16 +39,16 @@ class ZoneIScene extends React.PureComponent {
 
   getDataW() {
     const { OpenWndW } = this.props;
+    const W = this.props.OpenWndW;
+    console.log(W, 'W');
+    const W1 = W.substring(0, 2);
+    console.log(W1, 'W1');
+    // W1 === '0100' === '0101' ? Boolean.valueOf(this.state, true) : Boolean.valueOf(this.state, false);
     return OpenWndW;
   }
 
   render() {
-    const { Preheat1, OpenWndW } = this.props;
-    const W = this.props.OpenWndW;
-    console.log(W, 'W');
-    const W1 = W.substring(0, 1);
-    console.log(W1, 'W1');
-    Boolean.valueOf(W);
+    const { Preheat1 } = this.props;
     return (
       <View style={styles.container}>
         <Divider />
@@ -59,8 +59,6 @@ class ZoneIScene extends React.PureComponent {
           </SafeAreaView>
           <SwitchButton
             style={styles.switch}
-            // width={100}
-            // height={20}
             onTintColor="#ffb700"
             value={this.getDataW()}
             onValueChange={() => {
@@ -78,8 +76,6 @@ class ZoneIScene extends React.PureComponent {
           </SafeAreaView>
           <SwitchButton
             style={styles.switch}
-            // width={100}
-            // height={20}
             onTintColor="#ffb700"
             value={this.getData()}
             onValueChange={() => {
