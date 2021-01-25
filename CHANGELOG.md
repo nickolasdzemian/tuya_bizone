@@ -6,11 +6,17 @@ All notable changes to this project will be documented in this file. See [standa
 ### Known issues | Известные ограничения
 * !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
 
+#### 1.2.7 Cloud Beta
+* added display dependency on selected contolling sensors for climate average temp | добавлена зависимость отображения средней температуры климата от выбранных управляющих датчиков
+* added math.round for average climate temp | добавлено округление для средней температуры климата
+#### Cloud func. | Функции облака
+* added power on/off for climate mode | добавлено вкл/выкл питания для режима климата
+
 #### 1.2.6 Cloud Beta
 * clean up some useless code | подчищен неиспользуемый код
 * rebuild climate power controller to footer | контроллер климата перестроен в подвал
 * added two way data transfering for real-time data displaying | добавлен двусторонний обмен для отображения данных в реальном времени
-* added function for confirmation in pop-up dialog withot close animation) | добавлена функция "подтвердить" в диалоговые окна без анимации
+* added function for confirmation in pop-up dialog withot close animation | добавлена функция "подтвердить" в диалоговые окна без анимации
 * added relay state displaying in climate mode (with depending on channel selector pos.) | добавлено отображение статуса реле в климат-режиме (с зависимостью от положения переключателя канала)
 * fixed max items in sensors set | исправлено макс. кол-во в настройках датчиков
 * fixed slider position in climate mode | исправлено положение слайдера в режиме климата

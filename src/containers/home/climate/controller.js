@@ -1,11 +1,16 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Utils, TYSdk, Popup } from 'tuya-panel-kit';
+import { TYSdk, Popup } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChartBar, faTasks, faCog, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
 
-const { convertX: cx, convertY: cy } = Utils.RatioUtils;
+const TYDevice = TYSdk.device;
+
+const { Zone: ZoneCode } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
@@ -24,7 +29,15 @@ const tabModes = Array.from(set).map(v => {
   return { key: `${v}`, title: `${v}`, value: `${v}` };
 });
 
-export default class ClimateController extends React.PureComponent {
+class ClimateController extends React.PureComponent {
+  static propTypes = {
+    Zone: PropTypes.string,
+  };
+
+  static defaultProps = {
+    Zone: '010101',
+  };
+
   constructor(props) {
     super(props);
     this.statePower = { isHidden: false };
@@ -59,6 +72,22 @@ export default class ClimateController extends React.PureComponent {
     });
   };
 
+  changeDataZone = () => {
+    const { Zone } = this.props;
+    const I = Zone.substring(0, 4);
+    const C = Zone.substring(4, 6);
+    const C0 = C.replace(C, '00');
+    const C1 = C.replace(C, '01');
+    const C00 = String(I + C0);
+    console.log(C00, 'final0');
+    const C01 = String(I + C1);
+    console.log(C01, 'final1');
+    if (C === '01')
+      TYDevice.putDeviceData({
+        [ZoneCode]: C00,
+      });
+  };
+
   // функции навиготора
   goToSettingsPage = () => {
     TYSdk.Navigator.push({
@@ -75,11 +104,13 @@ export default class ClimateController extends React.PureComponent {
   };
 
   render() {
+    const { Zone } = this.props;
+    const C = Zone.substring(4, 6);
     return (
       <View style={styles.container}>
         <View style={styles.areaContols}>
-          <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
-            {this.statePower.isHidden ? (
+          <TouchableOpacity onPress={this.changeDataZone} style={styles.touch}>
+            {C === '00' ? (
               <FontAwesomeIcon icon={faPowerOff} color="#ff7300" size={30} margin={10} />
             ) : (
               <FontAwesomeIcon icon={faPowerOff} color="#d6d6d6" size={30} margin={10} />
@@ -137,3 +168,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default connect(({ dpState }) => ({
+  Zone: dpState[ZoneCode],
+}))(ClimateController);

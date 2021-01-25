@@ -1,5 +1,6 @@
 // отображение всех элементов типа (report only) в режиме климат-контроля
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
@@ -21,6 +22,7 @@ const {
   RelayPower1: RelayPower1Code,
   RelayPower2: RelayPower2Code,
   FaultAlarm: FaultAlarmCode,
+  SensorSet3: SensorSet3Code,
   ReportTemperature: ReportTemperatureCode,
 } = dpCodes;
 
@@ -32,6 +34,7 @@ class ClimateReport extends React.PureComponent {
     RelayPower1: PropTypes.number,
     RelayPower2: PropTypes.number,
     FaultAlarm: PropTypes.number,
+    SensorSet3: PropTypes.string,
     ReportTemperature: PropTypes.string,
   };
 
@@ -42,6 +45,7 @@ class ClimateReport extends React.PureComponent {
     RelayPower1: 0,
     RelayPower2: 0,
     FaultAlarm: 0,
+    SensorSet3: 'air_flour_12',
     ReportTemperature: '112233',
   };
 
@@ -52,7 +56,15 @@ class ClimateReport extends React.PureComponent {
     this.stateE2 = { isHidden: false };
   }
   render() {
-    const { chSelector, Relay1flag, Relay2flag, RelayPower1, RelayPower2, FaultAlarm } = this.props;
+    const {
+      chSelector,
+      Relay1flag,
+      Relay2flag,
+      RelayPower1,
+      RelayPower2,
+      FaultAlarm,
+      SensorSet3,
+    } = this.props;
 
     const t = this.props.ReportTemperature;
     console.log(t, 't');
@@ -62,7 +74,24 @@ class ClimateReport extends React.PureComponent {
     const t20 = parseInt(t2, 16);
     const t3 = t.substring(4, 6);
     const t30 = parseInt(t3, 16);
-    const tC = Math.round(t10 + t20 + t30) / 3;
+
+    // eslint-disable-next-line prettier/prettier
+    const tC =
+      SensorSet3 === 'air_flour_12'
+        ? (t10 + t20 + t30) / 3
+        : SensorSet3 === 'air_flour_1'
+          ? (t10 + t30) / 2
+          : SensorSet3 === 'air_flour_2'
+            ? (t20 + t30) / 2
+            : SensorSet3 === 'flour_12'
+              ? (t10 + t20) / 2
+              : SensorSet3 === 'air'
+                ? t30
+                : SensorSet3 === 'flour_1'
+                  ? t10
+                  : SensorSet3 === 'flour_2'
+                    ? t20
+                    : '!';
     console.log(tC, 'tC');
 
     return (
@@ -81,7 +110,7 @@ class ClimateReport extends React.PureComponent {
           <Text style={styles.titleE2}>{Strings.getLang('climateSetTemp')}</Text>
           <View style={styles.air}>
             <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
-            <Text style={styles.num}>{tC}°C</Text>
+            <Text style={styles.num}>{Math.round(tC)}°C</Text>
           </View>
           <Text style={styles.titleE}>{Strings.getLang('climateTemp')}</Text>
         </View>
@@ -244,4 +273,5 @@ export default connect(({ dpState }) => ({
   RelayPower2: dpState[RelayPower2Code],
   FaultAlarm: dpState[FaultAlarmCode],
   ReportTemperature: dpState[ReportTemperatureCode],
+  SensorSet3: dpState[SensorSet3Code],
 }))(ClimateReport);
