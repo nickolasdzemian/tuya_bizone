@@ -79,13 +79,14 @@ class ClimateController extends React.PureComponent {
     const C0 = C.replace(C, '00');
     const C1 = C.replace(C, '01');
     const C00 = String(I + C0);
-    console.log(C00, 'final0');
     const C01 = String(I + C1);
-    console.log(C01, 'final1');
     if (C === '01')
       TYDevice.putDeviceData({
         [ZoneCode]: C00,
       });
+    TYDevice.putDeviceData({
+      [ZoneCode]: C01,
+    });
   };
 
   // функции навиготора
@@ -110,7 +111,7 @@ class ClimateController extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.areaContols}>
           <TouchableOpacity onPress={this.changeDataZone} style={styles.touch}>
-            {C === '00' ? (
+            {C === '01' ? (
               <FontAwesomeIcon icon={faPowerOff} color="#ff7300" size={30} margin={10} />
             ) : (
               <FontAwesomeIcon icon={faPowerOff} color="#d6d6d6" size={30} margin={10} />
@@ -118,11 +119,19 @@ class ClimateController extends React.PureComponent {
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToClimateChart} style={styles.touch}>
-            <FontAwesomeIcon icon={faChartBar} color="#ff7300" size={30} margin={10} />
+            {C === '01' ? (
+              <FontAwesomeIcon icon={faChartBar} color="#ff7300" size={30} margin={10} />
+            ) : (
+              <FontAwesomeIcon icon={faChartBar} color="#d6d6d6" size={30} margin={10} />
+            )}
             <Text style={styles.title}>{Strings.getLang('prog')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
-            <FontAwesomeIcon icon={faTasks} color="#ff7300" size={30} margin={10} />
+            {C === '01' ? (
+              <FontAwesomeIcon icon={faTasks} color="#ff7300" size={30} margin={10} />
+            ) : (
+              <FontAwesomeIcon icon={faTasks} color="#d6d6d6" size={30} margin={10} />
+            )}
             <Text style={styles.title}>{Strings.getLang('mode')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>

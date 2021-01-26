@@ -10,7 +10,7 @@ import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 
 const TYDevice = TYSdk.device;
-const { FanSpeed: FanSpeedCode } = dpCodes;
+const { FanSpeed: FanSpeedCode, Zone: ZoneCode, SetTemperature: SetTemperatureCode } = dpCodes;
 
 const fan = [
   {
@@ -43,9 +43,13 @@ const fan = [
 class ClimateM extends React.PureComponent {
   static propTypes = {
     FanSpeed: PropTypes.string,
+    Zone: PropTypes.string,
+    SetTemperature: PropTypes.number,
   };
   static defaultProps = {
     FanSpeed: 'FAN_OFF',
+    Zone: '010101',
+    SetTemperature: '1E1E141414',
   };
   // в состояние данного конструктора вписываются значения datapoints,
   // от которых будет зависеть отображается тот или иной компонент
@@ -54,8 +58,6 @@ class ClimateM extends React.PureComponent {
     super(props);
     // if (this.datapoint.state) - условие
     this.stateCM = { isHidden: true };
-    this.stateC = { isHidden: true };
-    this.statePower = { isHidden: false };
 
     this.state = { valueM0: 0 };
     // this.state = { tab: 'FAN_OFF' };
@@ -73,50 +75,82 @@ class ClimateM extends React.PureComponent {
     });
   };
 
+  _changeDataTemp = () => {
+    // this.setState({ valueM0: Math.round(this.valueM0) });
+    const { SetTemperature } = this.props;
+    const I = SetTemperature.substring(0, 8);
+    const Tset = this.state.valueM0;
+    // плявит
+    const Tsend = Tset.toString(16);
+    const Tfin = String(I + Tsend);
+    // не плявит, ибо 0
+    const Zorro = '00';
+    const Tfin0 = String(I + Zorro);
+    // плявит обратно, ибо не 0 и не плявит
+    const Tminus = 255 - Tset;
+    const TsendMinus = Tminus.toString(16);
+    const TfinMin = String(I + TsendMinus);
+    Tset > 0 ?
+      TYDevice.putDeviceData({
+        [SetTemperatureCode]: Tfin,
+      })
+      : Tset === 0 ?
+        TYDevice.putDeviceData({
+          [SetTemperatureCode]: Tfin0,
+        })
+        : Tset < 0 ?
+          TYDevice.putDeviceData({
+            [SetTemperatureCode]: TfinMin,
+          })
+          : null;
+  };
+
   _handleCompleteM0 = valueM0 => {
     this.setState({ valueM0: Math.round(valueM0) });
   };
 
   render() {
-    return (
+    const { Zone, SetTemperature } = this.props;
+    const C = Zone.substring(4, 6);
+    const T3 = SetTemperature.substring(8, 10);
+    const VAL = parseInt(T3, 16);
+    return C === '01' ? (
       <SafeAreaView style={styles.container}>
-        {this.stateCM.isHidden ? (
-          <View style={styles.area}>
-            <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
-            <View style={styles.title}>
-              <FontAwesomeIcon icon={faHandPointUp} color="#90EE90" size={25} marginRight={10} />
-              <Text style={styles.num}>{this.state.valueM0}°C</Text>
-            </View>
-            <View style={styles.title}>
-              <Text style={styles.context}>-15</Text>
-              <Slider.Horizontal
-                style={styles.slider}
-                canTouchTrack={true}
-                maximumValue={80}
-                minimumValue={-15}
-                value={this.state.valueM0}
-                maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-                minimumTrackTintColor="#90EE90"
-                onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
-                onSlidingComplete={this._handleCompleteM0}
-              />
-              <Text style={styles.context}>+80</Text>
-            </View>
-            <Stepper
-              buttonType="ellipse"
-              buttonStyle={{ size: 'small' }}
-              ellipseIconColor="#90EE90"
-              style={styles.stepper}
-              inputStyle={{ color: 'transparent' }}
-              editable={false}
-              onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
-              max={80}
-              stepValue={1}
-              min={-15}
-              value={this.state.valueM0}
-            />
+        <View style={styles.area}>
+          <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
+          <View style={styles.title}>
+            <FontAwesomeIcon icon={faHandPointUp} color="#90EE90" size={25} marginRight={10} />
+            <Text style={styles.num}>{this.state.valueM0}°C</Text>
           </View>
-        ) : null}
+          <View style={styles.title}>
+            <Text style={styles.context}>-15</Text>
+            <Slider.Horizontal
+              style={styles.slider}
+              canTouchTrack={true}
+              maximumValue={80}
+              minimumValue={-15}
+              value={this.state.valueM0}
+              maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
+              minimumTrackTintColor="#90EE90"
+              onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
+              onSlidingComplete={this._changeDataTemp}
+            />
+            <Text style={styles.context}>+80</Text>
+          </View>
+          <Stepper
+            buttonType="ellipse"
+            buttonStyle={{ size: 'small' }}
+            ellipseIconColor="#90EE90"
+            style={styles.stepper}
+            inputStyle={{ color: 'transparent' }}
+            editable={false}
+            onValueChange={this._changeDataTemp}
+            max={80}
+            stepValue={1}
+            min={-15}
+            value={this.state.valueM0}
+          />
+        </View>
         <View style={styles.area}>
           <Text style={styles.titlekwh}>{Strings.getLang('fantitle')}</Text>
           <View style={styles.title}>
@@ -138,7 +172,7 @@ class ClimateM extends React.PureComponent {
           </View>
         </View>
       </SafeAreaView>
-    );
+    ) : null;
   }
 }
 
@@ -216,4 +250,6 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   FanSpeed: dpState[FanSpeedCode],
+  Zone: dpState[ZoneCode],
+  SetTemperature: dpState[SetTemperatureCode],
 }))(ClimateM);
