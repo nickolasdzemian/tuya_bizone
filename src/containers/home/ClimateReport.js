@@ -67,30 +67,32 @@ class ClimateReport extends React.PureComponent {
     } = this.props;
 
     const t = this.props.ReportTemperature;
-    console.log(t, 't');
     const t1 = t.substring(0, 2);
     const t10 = parseInt(t1, 16);
+    const t11 = t10 > 100 ? -(256 - t10) : t10;
     const t2 = t.substring(2, 4);
     const t20 = parseInt(t2, 16);
+    const t22 = t20 > 100 ? -(256 - t20) : t20;
     const t3 = t.substring(4, 6);
     const t30 = parseInt(t3, 16);
+    const t33 = t30 > 100 ? -(256 - t30) : t30;
 
     // eslint-disable-next-line prettier/prettier
     const tC =
       SensorSet3 === 'air_flour_12'
-        ? (t10 + t20 + t30) / 3
+        ? (t11 + t22 + t33) / 3
         : SensorSet3 === 'air_flour_1'
-          ? (t10 + t30) / 2
+          ? (t11 + t33) / 2
           : SensorSet3 === 'air_flour_2'
-            ? (t20 + t30) / 2
+            ? (t22 + t33) / 2
             : SensorSet3 === 'flour_12'
-              ? (t10 + t20) / 2
+              ? (t11 + t22) / 2
               : SensorSet3 === 'air'
-                ? t30
+                ? t33
                 : SensorSet3 === 'flour_1'
-                  ? t10
+                  ? t11
                   : SensorSet3 === 'flour_2'
-                    ? t20
+                    ? t22
                     : '!';
     console.log(tC, 'tC');
 

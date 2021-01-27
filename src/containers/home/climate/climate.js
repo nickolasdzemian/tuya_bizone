@@ -1,6 +1,7 @@
 // отображение всех элементов типа (report only)
 import PropTypes from 'prop-types';
 import React from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { Slider, Stepper, TabBar, TYSdk } from 'tuya-panel-kit';
@@ -44,28 +45,34 @@ class ClimateM extends React.PureComponent {
   static propTypes = {
     FanSpeed: PropTypes.string,
     Zone: PropTypes.string,
-    SetTemperature: PropTypes.number,
+    SetTemperature: PropTypes.string,
   };
   static defaultProps = {
     FanSpeed: 'FAN_OFF',
     Zone: '010101',
     SetTemperature: '1E1E141414',
   };
-  // в состояние данного конструктора вписываются значения datapoints,
-  // от которых будет зависеть отображается тот или иной компонент
-  // работает без DOM, отрисовка максимально быстрый
   constructor(props) {
     super(props);
-    // if (this.datapoint.state) - условие
     this.stateCM = { isHidden: true };
 
-    this.state = { valueM0: 0 };
-    // this.state = { tab: 'FAN_OFF' };
+    const { SetTemperature } = this.props;
+    const T = SetTemperature.substring(8, 10);
+    const V = parseInt(T, 16);
+    this.state = { valueM0: V > 100 ? 256 - V : V };
   }
 
   getDataFan() {
     const { FanSpeed } = this.props;
     return FanSpeed;
+  }
+
+  getDataTemp() {
+    const { SetTemperature } = this.props;
+    const T = SetTemperature.substring(8, 10);
+    const V = parseInt(T, 16);
+    const valueM0 = V > 100 ? 256 - V : V;
+    return valueM0;
   }
 
   changeDataFan = value => {
@@ -75,31 +82,42 @@ class ClimateM extends React.PureComponent {
     });
   };
 
-  _changeDataTemp = () => {
-    // this.setState({ valueM0: Math.round(this.valueM0) });
+  _changeDataTemp = valueM0 => {
+    console.log(this.T, 'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
+    console.log(this.V, 'VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+    console.log(this.state.valueM0, 'VALUEVALUEVALUE');
+    this.setState({ valueM0: Math.round(valueM0) });
     const { SetTemperature } = this.props;
     const I = SetTemperature.substring(0, 8);
-    const Tset = this.state.valueM0;
+    const Tset = Math.round(valueM0);
+    console.log(Tset, 'VALUE');
     // плявит
     const Tsend = Tset.toString(16);
-    const Tfin = String(I + Tsend);
+    console.log(Tsend, 'Tsend');
+    const ZorroOne = '0';
+    const Tfin = Tset < 10 ? String(I + ZorroOne + Tsend) : String(I + Tsend);
+    console.log(Tfin, 'Tfin');
     // не плявит, ибо 0
     const Zorro = '00';
     const Tfin0 = String(I + Zorro);
+    console.log(Tfin0, 'Tfin0');
     // плявит обратно, ибо не 0 и не плявит
-    const Tminus = 255 - Tset;
+    const Tminus = 256 + Tset;
+    console.log(Tminus, 'Tminus');
     const TsendMinus = Tminus.toString(16);
+    console.log(TsendMinus, 'TsendMinus');
     const TfinMin = String(I + TsendMinus);
-    Tset > 0 ?
-      TYDevice.putDeviceData({
+    console.log(TfinMin, 'TfinMin');
+    Tset > 0
+      ? TYDevice.putDeviceData({
         [SetTemperatureCode]: Tfin,
       })
-      : Tset === 0 ?
-        TYDevice.putDeviceData({
+      : Tset === 0
+        ? TYDevice.putDeviceData({
           [SetTemperatureCode]: Tfin0,
         })
-        : Tset < 0 ?
-          TYDevice.putDeviceData({
+        : Tset < 0
+          ? TYDevice.putDeviceData({
             [SetTemperatureCode]: TfinMin,
           })
           : null;
@@ -120,7 +138,9 @@ class ClimateM extends React.PureComponent {
           <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
           <View style={styles.title}>
             <FontAwesomeIcon icon={faHandPointUp} color="#90EE90" size={25} marginRight={10} />
-            <Text style={styles.num}>{this.state.valueM0}°C</Text>
+            <Text style={styles.num}>
+              {this.state.valueM0 > 100 ? 256 - this.state.valueM0 : this.state.valueM0}°C
+            </Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.context}>-15</Text>
@@ -128,8 +148,9 @@ class ClimateM extends React.PureComponent {
               style={styles.slider}
               canTouchTrack={true}
               maximumValue={80}
+              stepValue={1}
               minimumValue={-15}
-              value={this.state.valueM0}
+              value={this.getDataTemp()}
               maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
               minimumTrackTintColor="#90EE90"
               onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
@@ -139,7 +160,6 @@ class ClimateM extends React.PureComponent {
           </View>
           <Stepper
             buttonType="ellipse"
-            buttonStyle={{ size: 'small' }}
             ellipseIconColor="#90EE90"
             style={styles.stepper}
             inputStyle={{ color: 'transparent' }}

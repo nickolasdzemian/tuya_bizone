@@ -68,21 +68,16 @@ class ZoneReport extends React.PureComponent {
       FaultAlarm,
     } = this.props;
 
-    // const t = parseInt(ReportTemperature, 16);
     const t = this.props.ReportTemperature;
-    console.log(t, 't');
     const t1 = t.substring(0, 2);
-    console.log(t1, 't1');
     const t10 = parseInt(t1, 16);
-    console.log(t10, 't10');
+    const t11 = t10 > 100 ? -(256 - t10) : t10;
     const t2 = t.substring(2, 4);
-    console.log(t2, 't2');
     const t20 = parseInt(t2, 16);
-    console.log(t20, 't20');
+    const t22 = t20 > 100 ? -(256 - t20) : t20;
     const t3 = t.substring(4, 6);
-    console.log(t3, 't3');
     const t30 = parseInt(t3, 16);
-    console.log(t30, 't30');
+    const t33 = t30 > 100 ? -(256 - t30) : t30;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -90,7 +85,7 @@ class ZoneReport extends React.PureComponent {
           <View style={styles.areaAir}>
             <View style={styles.air}>
               <FontAwesomeIcon icon={faBacon} color="#00d0ff" size={20} marginRight={5} />
-              <Text style={styles.num}>{t30}°C</Text>
+              <Text style={styles.num}>{t33}°C</Text>
             </View>
             <Text style={styles.titleE}>{Strings.getLang('airtemp')}</Text>
           </View>
@@ -99,7 +94,7 @@ class ZoneReport extends React.PureComponent {
           <View style={styles.area}>
             <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={25} margin={10} />
             <Text style={styles.titlekwh}>20°C</Text>
-            <Text style={styles.num}>{t10}°C</Text>
+            <Text style={styles.num}>{t11}°C</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
@@ -125,7 +120,7 @@ class ZoneReport extends React.PureComponent {
           <View style={styles.area}>
             <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={25} margin={10} />
             <Text style={styles.titlekwh}>30°C</Text>
-            <Text style={styles.num}>{t20}°C</Text>
+            <Text style={styles.num}>{t22}°C</Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
