@@ -72,7 +72,7 @@ class ClimateController extends React.PureComponent {
     });
   };
 
-  changeDataZone = () => {
+  changePowerZone = () => {
     const { Zone } = this.props;
     const I = Zone.substring(0, 4);
     const C = Zone.substring(4, 6);
@@ -110,7 +110,7 @@ class ClimateController extends React.PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.areaContols}>
-          <TouchableOpacity onPress={this.changeDataZone} style={styles.touch}>
+          <TouchableOpacity onPress={this.changePowerZone} style={styles.touch}>
             {C === '01' ? (
               <FontAwesomeIcon icon={faPowerOff} color="#ff7300" size={30} margin={10} />
             ) : (

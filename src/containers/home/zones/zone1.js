@@ -1,7 +1,8 @@
-// отображение всех элементов типа (report only)
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
-import { Slider, Stepper, Popup, TYSdk } from 'tuya-panel-kit';
+import { TYSdk, Slider, Stepper, Popup } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faHandPointUp,
@@ -12,6 +13,11 @@ import {
   faStopwatch20,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
+
+const TYDevice = TYSdk.device;
+
+const { Zone: ZoneCode } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
@@ -33,13 +39,17 @@ const tabModes = Array.from(set).map(v => {
   return { key: `${v}`, title: `${v}`, value: `${v}` };
 });
 
-export default class Zone1 extends React.PureComponent {
-  // в состояние данного конструктора вписываются значения datapoints,
-  // от которых будет зависеть отображается тот или иной компонент
-  // работает без DOM, отрисовка максимально быстрый
+class Zone1 extends React.PureComponent {
+  static propTypes = {
+    Zone: PropTypes.string,
+  };
+
+  static defaultProps = {
+    Zone: '010101',
+  };
+
   constructor(props) {
     super(props);
-    // if (this.datapoint.state) - условие
     this.stateCM = { isHidden: true };
     this.stateC = { isHidden: true };
     this.statePower = { isHidden: false };
@@ -104,6 +114,23 @@ export default class Zone1 extends React.PureComponent {
     );
   };
 
+  changePowerZone1 = () => {
+    const { Zone } = this.props;
+    const I = Zone.substring(2, 6);
+    const C = Zone.substring(0, 2);
+    const C0 = '00';
+    const C1 = '01';
+    const C00 = String(C0 + I);
+    const C01 = String(C1 + I);
+    if (C === '01')
+      TYDevice.putDeviceData({
+        [ZoneCode]: C00,
+      });
+    TYDevice.putDeviceData({
+      [ZoneCode]: C01,
+    });
+  };
+
   // уйнкция выбора режима
   onPressMode = () => {
     Popup.list({
@@ -134,14 +161,10 @@ export default class Zone1 extends React.PureComponent {
   };
 
   render() {
+    const { Zone } = this.props;
+    const C = Zone.substring(0, 2);
     return (
       <SafeAreaView style={styles.container}>
-        {/* <ScrollView
-      horizontal={true}
-      indicatorStyle="white"
-      pinchGestureEnabled={true}
-      scrollBarThumbImage="#fff"
-    > */}
         {this.stateCM.isHidden ? (
           <View style={styles.area}>
             <View style={styles.sel}>
@@ -180,8 +203,8 @@ export default class Zone1 extends React.PureComponent {
           </View>
         ) : null}
         <View style={styles.areaContols}>
-          <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
-            {this.statePower.isHidden ? (
+          <TouchableOpacity onPress={this.changePowerZone1} style={styles.touch}>
+            {C === '01' ? (
               <FontAwesomeIcon icon={faPowerOff} color="#ffb700" size={30} margin={5} />
             ) : (
               <FontAwesomeIcon icon={faPowerOff} color="#d6d6d6" size={30} margin={5} />
@@ -189,7 +212,7 @@ export default class Zone1 extends React.PureComponent {
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.timer1} style={styles.touch}>
-            {this.stateTimerOn.isHidden ? (
+            {C === '01' ? (
               <FontAwesomeIcon icon={faStopwatch20} color="#ffb700" size={30} margin={5} />
             ) : (
               <FontAwesomeIcon icon={faStopwatch20} color="#d6d6d6" size={30} margin={5} />
@@ -197,11 +220,19 @@ export default class Zone1 extends React.PureComponent {
             <Text style={styles.title}>{Strings.getLang('ttimer')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToZoneChart} style={styles.touch}>
-            <FontAwesomeIcon icon={faChartBar} color="#ffb700" size={30} margin={5} />
+            {C === '01' ? (
+              <FontAwesomeIcon icon={faChartBar} color="#ffb700" size={30} margin={5} />
+            ) : (
+              <FontAwesomeIcon icon={faChartBar} color="#d6d6d6" size={30} margin={5} />
+            )}
             <Text style={styles.title}>{Strings.getLang('prog')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
-            <FontAwesomeIcon icon={faTasks} color="#ffb700" size={30} margin={5} />
+            {C === '01' ? (
+              <FontAwesomeIcon icon={faTasks} color="#ffb700" size={30} margin={5} />
+            ) : (
+              <FontAwesomeIcon icon={faTasks} color="#d6d6d6" size={30} margin={5} />
+            )}
             <Text style={styles.title}>{Strings.getLang('mode')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
@@ -209,7 +240,6 @@ export default class Zone1 extends React.PureComponent {
             <Text style={styles.title}>{Strings.getLang('settings')}</Text>
           </TouchableOpacity>
         </View>
-        {/* </ScrollView> */}
       </SafeAreaView>
     );
   }
@@ -307,3 +337,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
 });
+
+export default connect(({ dpState }) => ({
+  Zone: dpState[ZoneCode],
+}))(Zone1);

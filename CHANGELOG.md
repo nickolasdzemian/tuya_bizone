@@ -9,8 +9,13 @@ All notable changes to this project will be documented in this file. See [standa
 #### 1.2.7 Cloud Beta
 * added display dependency on selected contolling sensors for climate average temp | добавлена зависимость отображения средней температуры климата от выбранных управляющих датчиков
 * added math.round for average climate temp | добавлено округление для средней температуры климата
+* added error handler for climate report temp | добавлена обработка ошибок для температуры климата
+* fixed states in climate mode | исправлены состояния для климат-режима
 #### Cloud func. | Функции облака
 * added power on/off for climate mode | добавлено вкл/выкл питания для режима климата
+* added power on/off for Zone 1 | добавлено вкл/выкл питания для первой зоны
+* added manual temp slider for climate mode | добавлена ручная регулировка температуры слайдером для климат-режима
+* added manual temp stepper selector for climate mode | добавлена ручная пошаговая регулировка температуры для климат-режима
 
 #### 1.2.6 Cloud Beta
 * clean up some useless code | подчищен неиспользуемый код

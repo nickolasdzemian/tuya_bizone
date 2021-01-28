@@ -3,10 +3,10 @@
   "license": "MIT",
   "author": "nickolashka",
   "name": "2sex",
-  "templateName": "BiZone Alpha (WiFi)",
+  "templateName": "BiZone Beta (WiFi)",
   "pid": [],
   "uiid": "",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "prettier --write '**/*.{js,jsx,ts,tsx}'",

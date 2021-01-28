@@ -1,7 +1,6 @@
-// отображение всех элементов типа (report only)
+// установка температуры поддержания и настройка вентилятора для климат-режима
 import PropTypes from 'prop-types';
-import React from 'react';
-import _ from 'lodash';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { Slider, Stepper, TabBar, TYSdk } from 'tuya-panel-kit';
@@ -13,6 +12,7 @@ import dpCodes from '../../../config/dpCodes';
 const TYDevice = TYSdk.device;
 const { FanSpeed: FanSpeedCode, Zone: ZoneCode, SetTemperature: SetTemperatureCode } = dpCodes;
 
+// режимы вентилятора
 const fan = [
   {
     key: 'FAN_OFF',
@@ -41,7 +41,7 @@ const fan = [
   },
 ];
 
-class ClimateM extends React.PureComponent {
+class ClimateM extends PureComponent {
   static propTypes = {
     FanSpeed: PropTypes.string,
     Zone: PropTypes.string,
@@ -52,16 +52,19 @@ class ClimateM extends React.PureComponent {
     Zone: '010101',
     SetTemperature: '1E1E141414',
   };
+
+  // this.state = { valueM0: V > 100 ? V - 256 : V };
+
   constructor(props) {
     super(props);
-    this.stateCM = { isHidden: true };
-
+    // инициализация и текущий state для slidera
     const { SetTemperature } = this.props;
     const T = SetTemperature.substring(8, 10);
     const V = parseInt(T, 16);
-    this.state = { valueM0: V > 100 ? 256 - V : V };
+    this.state = { valueM0: V > 100 ? V - 256 : V };
   }
 
+  // получение текущих stateов для регуляторов
   getDataFan() {
     const { FanSpeed } = this.props;
     return FanSpeed;
@@ -71,10 +74,11 @@ class ClimateM extends React.PureComponent {
     const { SetTemperature } = this.props;
     const T = SetTemperature.substring(8, 10);
     const V = parseInt(T, 16);
-    const valueM0 = V > 100 ? 256 - V : V;
+    const valueM0 = V > 100 ? V - 256 : V;
     return valueM0;
   }
 
+  // отправка данных по изменению в переключателях
   changeDataFan = value => {
     // this.setState({ tab: value });
     TYDevice.putDeviceData({
@@ -83,31 +87,22 @@ class ClimateM extends React.PureComponent {
   };
 
   _changeDataTemp = valueM0 => {
-    console.log(this.T, 'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
-    console.log(this.V, 'VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
-    console.log(this.state.valueM0, 'VALUEVALUEVALUE');
     this.setState({ valueM0: Math.round(valueM0) });
     const { SetTemperature } = this.props;
     const I = SetTemperature.substring(0, 8);
     const Tset = Math.round(valueM0);
-    console.log(Tset, 'VALUE');
     // плявит
     const Tsend = Tset.toString(16);
-    console.log(Tsend, 'Tsend');
     const ZorroOne = '0';
-    const Tfin = Tset < 10 ? String(I + ZorroOne + Tsend) : String(I + Tsend);
-    console.log(Tfin, 'Tfin');
+    const Tfin = Tset < 16 ? String(I + ZorroOne + Tsend) : String(I + Tsend);
     // не плявит, ибо 0
     const Zorro = '00';
     const Tfin0 = String(I + Zorro);
-    console.log(Tfin0, 'Tfin0');
     // плявит обратно, ибо не 0 и не плявит
     const Tminus = 256 + Tset;
-    console.log(Tminus, 'Tminus');
     const TsendMinus = Tminus.toString(16);
-    console.log(TsendMinus, 'TsendMinus');
     const TfinMin = String(I + TsendMinus);
-    console.log(TfinMin, 'TfinMin');
+    // eslint-disable-next-line no-unused-expressions
     Tset > 0
       ? TYDevice.putDeviceData({
         [SetTemperatureCode]: Tfin,
@@ -123,24 +118,16 @@ class ClimateM extends React.PureComponent {
           : null;
   };
 
-  _handleCompleteM0 = valueM0 => {
-    this.setState({ valueM0: Math.round(valueM0) });
-  };
-
   render() {
-    const { Zone, SetTemperature } = this.props;
+    const { Zone } = this.props;
     const C = Zone.substring(4, 6);
-    const T3 = SetTemperature.substring(8, 10);
-    const VAL = parseInt(T3, 16);
     return C === '01' ? (
       <SafeAreaView style={styles.container}>
         <View style={styles.area}>
           <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
           <View style={styles.title}>
             <FontAwesomeIcon icon={faHandPointUp} color="#90EE90" size={25} marginRight={10} />
-            <Text style={styles.num}>
-              {this.state.valueM0 > 100 ? 256 - this.state.valueM0 : this.state.valueM0}°C
-            </Text>
+            <Text style={styles.num}>{this.state.valueM0}°C</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.context}>-15</Text>
@@ -168,7 +155,7 @@ class ClimateM extends React.PureComponent {
             max={80}
             stepValue={1}
             min={-15}
-            value={this.state.valueM0}
+            value={this.getDataTemp()}
           />
         </View>
         <View style={styles.area}>

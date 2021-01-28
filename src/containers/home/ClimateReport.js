@@ -112,7 +112,7 @@ class ClimateReport extends React.PureComponent {
           <Text style={styles.titleE2}>{Strings.getLang('climateSetTemp')}</Text>
           <View style={styles.air}>
             <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
-            <Text style={styles.num}>{Math.round(tC)}°C</Text>
+            <Text style={styles.num}>{FaultAlarm === 0 ? Math.round(tC) : '--'}°C</Text>
           </View>
           <Text style={styles.titleE}>{Strings.getLang('climateTemp')}</Text>
         </View>
