@@ -60,11 +60,9 @@ class ZoneIScene extends React.PureComponent {
           <SwitchButton
             style={styles.switch}
             onTintColor="#ffb700"
-            value={this.getDataW()}
-            onValueChange={() => {
-              TYDevice.putDeviceData({
-                [OpenWndWCode]: !OpenWndW,
-              });
+            value={this.state.value1}
+            onValueChange={value1 => {
+              this.setState({ value1 });
             }}
           />
         </View>

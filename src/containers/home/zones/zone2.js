@@ -1,5 +1,6 @@
-// отображение всех элементов типа (report only)
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Slider, Stepper, Popup, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -12,6 +13,11 @@ import {
   faStopwatch20,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
+import dpCodes from '../../../config/dpCodes';
+
+const TYDevice = TYSdk.device;
+
+const { Zone: ZoneCode, SetTemperature: SetTemperatureCode } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
@@ -33,10 +39,17 @@ const tabModes = Array.from(set).map(v => {
   return { key: `${v}`, title: `${v}`, value: `${v}` };
 });
 
-export default class Zone2 extends React.PureComponent {
-  // в состояние данного конструктора вписываются значения datapoints,
-  // от которых будет зависеть отображается тот или иной компонент
-  // работает без DOM, отрисовка максимально быстрый
+class Zone2 extends React.PureComponent {
+  static propTypes = {
+    Zone: PropTypes.string,
+    SetTemperature: PropTypes.string,
+  };
+
+  static defaultProps = {
+    Zone: '010101',
+    SetTemperature: '1E1E141414',
+  };
+
   constructor(props) {
     super(props);
     // if (this.datapoint.state) - условие
@@ -48,8 +61,81 @@ export default class Zone2 extends React.PureComponent {
 
     this.state = { countdown: 60, countdownSwitchValue: true };
 
-    this.state = { valueZ1: 0 };
+    const { SetTemperature } = this.props;
+    const T = SetTemperature.substring(6, 8);
+    const V = parseInt(T, 16);
+    this.state = { valueZ2: V > 100 ? V - 256 : V };
   }
+
+  // уйнкция выбора режима
+  onPressMode = () => {
+    Popup.list({
+      type: 'radio',
+      maxItemNum: 3,
+      dataSource: tabModes, // сорцы для данных - можно вставить state из массива прям сюда
+      iconTintColor: '#ff7300',
+      title: [mode],
+      cancelText,
+      confirmText,
+      showBack: false,
+      onBack: ({ close }) => {
+        console.log('Select climate --none');
+        close();
+      },
+      value: this.state.listValue,
+      footerType: 'singleCancel',
+      onMaskPress: ({ close }) => {
+        close();
+      },
+      // выбор и сохранение значения из списка по нажатию
+      onSelect: (value, { close }) => {
+        console.log('radio value :', value);
+        this.setState({ listValue: value });
+        // close();
+      },
+    });
+  };
+
+  getDataTemp() {
+    const { SetTemperature } = this.props;
+    const T = SetTemperature.substring(6, 8);
+    const V = parseInt(T, 16);
+    const valueZ2 = V > 100 ? V - 256 : V;
+    return valueZ2;
+  }
+
+  _changeDataTemp = valueZ2 => {
+    this.setState({ valueZ2: Math.round(valueZ2) });
+    const { SetTemperature } = this.props;
+    const I = SetTemperature.substring(0, 6);
+    const II = SetTemperature.substring(8, 10);
+    const Tset = Math.round(valueZ2);
+    // плявит
+    const Tsend = Tset.toString(16);
+    const ZorroOne = '0';
+    const Tfin = Tset < 16 ? String(I + ZorroOne + Tsend + II) : String(I + Tsend + II);
+    // не плявит, ибо 0
+    const Zorro = '00';
+    const Tfin0 = String(I + Zorro + II);
+    // плявит обратно, ибо не 0 и не плявит
+    const Tminus = 256 + Tset;
+    const TsendMinus = Tminus.toString(16);
+    const TfinMin = String(I + TsendMinus + II);
+    // eslint-disable-next-line no-unused-expressions
+    Tset > 0
+      ? TYDevice.putDeviceData({
+        [SetTemperatureCode]: Tfin,
+      })
+      : Tset === 0
+        ? TYDevice.putDeviceData({
+          [SetTemperatureCode]: Tfin0,
+        })
+        : Tset < 0
+          ? TYDevice.putDeviceData({
+            [SetTemperatureCode]: TfinMin,
+          })
+          : null;
+  };
 
   // функции навиготора
   goToSettingsPage = () => {
@@ -64,11 +150,6 @@ export default class Zone2 extends React.PureComponent {
       id: 'ChartZone2Scene',
       title: Strings.getLang('charts'),
     });
-  };
-
-  // йункция слайдера
-  _handleCompleteZ1 = valueZ1 => {
-    this.setState({ valueZ1: Math.round(valueZ1) });
   };
 
   // йункция таймера
@@ -104,50 +185,36 @@ export default class Zone2 extends React.PureComponent {
     );
   };
 
-  // уйнкция выбора режима
-  onPressMode = () => {
-    Popup.list({
-      type: 'radio',
-      maxItemNum: 3,
-      dataSource: tabModes, // сорцы для данных - можно вставить state из массива прям сюда
-      iconTintColor: '#ff7300',
-      title: [mode],
-      cancelText,
-      confirmText,
-      showBack: false,
-      onBack: ({ close }) => {
-        console.log('Select climate --none');
-        close();
-      },
-      value: this.state.listValue,
-      footerType: 'singleCancel',
-      onMaskPress: ({ close }) => {
-        close();
-      },
-      // выбор и сохранение значения из списка по нажатию
-      onSelect: (value, { close }) => {
-        console.log('radio value :', value);
-        this.setState({ listValue: value });
-        // close();
-      },
+  // 'питание'
+  changePowerZone2 = () => {
+    const { Zone } = this.props;
+    const I = Zone.substring(0, 2);
+    const II = Zone.substring(4, 6);
+    const C = Zone.substring(2, 4);
+    const C0 = '00';
+    const C1 = '01';
+    const C00 = String(I + C0 + II);
+    const C01 = String(I + C1 + II);
+    if (C === '01')
+      TYDevice.putDeviceData({
+        [ZoneCode]: C00,
+      });
+    TYDevice.putDeviceData({
+      [ZoneCode]: C01,
     });
   };
 
   render() {
+    const { Zone } = this.props;
+    const C = Zone.substring(2, 4);
     return (
       <SafeAreaView style={styles.container}>
-        {/* <ScrollView
-      horizontal={true}
-      indicatorStyle="white"
-      pinchGestureEnabled={true}
-      scrollBarThumbImage="#fff"
-    > */}
-        {this.stateCM.isHidden ? (
+        {C === '01' ? (
           <View style={styles.area}>
             <View style={styles.sel}>
               <FontAwesomeIcon icon={faHandPointUp} color="#ff7300" size={16} marginRight={5} />
               <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}:</Text>
-              <Text style={styles.num}> {this.state.valueZ1}°C</Text>
+              <Text style={styles.num}> {this.state.valueZ2}°C</Text>
             </View>
             <View style={styles.title}>
               <Text style={styles.context}>-15</Text>
@@ -155,12 +222,13 @@ export default class Zone2 extends React.PureComponent {
                 style={styles.slider}
                 canTouchTrack={true}
                 maximumValue={80}
+                stepValue={1}
                 minimumValue={-15}
-                value={this.state.valueZ1}
+                value={this.getDataTemp()}
                 maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
                 minimumTrackTintColor="#ff7300"
-                onValueChange={valueZ1 => this.setState({ valueZ1: Math.round(valueZ1) })}
-                onSlidingComplete={this._handleCompleteZ1}
+                onValueChange={valueZ2 => this.setState({ valueZ2: Math.round(valueZ2) })}
+                onSlidingComplete={this._changeDataTemp}
               />
               <Text style={styles.context}>+80</Text>
             </View>
@@ -171,37 +239,49 @@ export default class Zone2 extends React.PureComponent {
               style={styles.stepper}
               inputStyle={{ color: 'transparent' }}
               editable={false}
-              onValueChange={valueZ1 => this.setState({ valueZ1: Math.round(valueZ1) })}
+              onValueChange={this._changeDataTemp}
               max={80}
               stepValue={1}
               min={-15}
-              value={this.state.valueZ1}
+              value={this.getDataTemp()}
             />
           </View>
         ) : null}
         <View style={styles.areaContols}>
-          <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
-            {this.statePower.isHidden ? (
-              <FontAwesomeIcon icon={faPowerOff} color="#ff7300" size={30} margin={5} />
-            ) : (
-              <FontAwesomeIcon icon={faPowerOff} color="#d6d6d6" size={30} margin={5} />
-            )}
+          <TouchableOpacity onPress={this.changePowerZone2} style={styles.touch}>
+            <FontAwesomeIcon
+              icon={faPowerOff}
+              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={5}
+            />
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.timer1} style={styles.touch}>
-            {this.stateTimerOn.isHidden ? (
-              <FontAwesomeIcon icon={faStopwatch20} color="#ff7300" size={30} margin={5} />
-            ) : (
-              <FontAwesomeIcon icon={faStopwatch20} color="#d6d6d6" size={30} margin={5} />
-            )}
+            <FontAwesomeIcon
+              icon={faStopwatch20}
+              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={5}
+            />
             <Text style={styles.title}>{Strings.getLang('ttimer')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToZoneChart} style={styles.touch}>
-            <FontAwesomeIcon icon={faChartBar} color="#ff7300" size={30} margin={5} />
+            <FontAwesomeIcon
+              icon={faChartBar}
+              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={5}
+            />
             <Text style={styles.title}>{Strings.getLang('prog')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
-            <FontAwesomeIcon icon={faTasks} color="#ff7300" size={30} margin={5} />
+            <FontAwesomeIcon
+              icon={faTasks}
+              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={5}
+            />
             <Text style={styles.title}>{Strings.getLang('mode')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
@@ -209,7 +289,6 @@ export default class Zone2 extends React.PureComponent {
             <Text style={styles.title}>{Strings.getLang('settings')}</Text>
           </TouchableOpacity>
         </View>
-        {/* </ScrollView> */}
       </SafeAreaView>
     );
   }
@@ -307,3 +386,8 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
 });
+
+export default connect(({ dpState }) => ({
+  Zone: dpState[ZoneCode],
+  SetTemperature: dpState[SetTemperatureCode],
+}))(Zone2);

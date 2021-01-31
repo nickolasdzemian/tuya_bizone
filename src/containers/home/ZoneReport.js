@@ -22,6 +22,8 @@ const {
   OpenWindowStatus: OpenWindowStatusCode,
   FaultAlarm: FaultAlarmCode,
   ReportTemperature: ReportTemperatureCode,
+  SensorSet1: SensorSet1Code,
+  SensorSet2: SensorSet2Code,
 } = dpCodes;
 
 class ZoneReport extends React.PureComponent {
@@ -33,6 +35,8 @@ class ZoneReport extends React.PureComponent {
     OpenWindowStatus: PropTypes.number,
     FaultAlarm: PropTypes.number,
     ReportTemperature: PropTypes.string,
+    SensorSet1: PropTypes.string,
+    SensorSet2: PropTypes.string,
   };
 
   static defaultProps = {
@@ -43,6 +47,8 @@ class ZoneReport extends React.PureComponent {
     OpenWindowStatus: 0,
     FaultAlarm: 0,
     ReportTemperature: '112233',
+    SensorSet1: 'air_flour',
+    SensorSet2: 'air_flour',
   };
   // в состояние вписываются значения datapoints,
   // от которых будет зависеть отображается тот или иной компонент
@@ -52,10 +58,6 @@ class ZoneReport extends React.PureComponent {
     this.stateA = { isHidden: true };
     this.stateZ1 = { isHidden: true }; // true - показывает компоненту, false - прятает
     this.stateZ2 = { isHidden: true };
-    this.stateW1 = { isHidden: false };
-    this.stateW2 = { isHidden: false };
-    this.stateE1 = { isHidden: false };
-    this.stateE2 = { isHidden: false };
   }
 
   render() {
@@ -66,35 +68,39 @@ class ZoneReport extends React.PureComponent {
       RelayPower2,
       OpenWindowStatus,
       FaultAlarm,
+      SensorSet1,
+      SensorSet2,
     } = this.props;
 
     const t = this.props.ReportTemperature;
     const t1 = t.substring(0, 2);
     const t10 = parseInt(t1, 16);
-    const t11 = t10 > 100 ? -(256 - t10) : t10;
+    const t11 = SensorSet1 === 'air' ? '--' : t10 > 100 ? -(256 - t10) : t10;
     const t2 = t.substring(2, 4);
     const t20 = parseInt(t2, 16);
-    const t22 = t20 > 100 ? -(256 - t20) : t20;
+    const t22 = SensorSet2 === 'air' ? '--' : t20 > 100 ? -(256 - t20) : t20;
     const t3 = t.substring(4, 6);
     const t30 = parseInt(t3, 16);
     const t33 = t30 > 100 ? -(256 - t30) : t30;
 
     return (
       <SafeAreaView style={styles.container}>
-        {this.stateA.isHidden ? (
+        {SensorSet1 === 'flour' && SensorSet2 === 'flour' ? null : (
           <View style={styles.areaAir}>
             <View style={styles.air}>
-              <FontAwesomeIcon icon={faBacon} color="#00d0ff" size={20} marginRight={5} />
+              <FontAwesomeIcon icon={faBacon} color="#00d0ff" size={20} marginRight={10} />
               <Text style={styles.num}>{t33}°C</Text>
             </View>
             <Text style={styles.titleE}>{Strings.getLang('airtemp')}</Text>
           </View>
-        ) : null}
+        )}
         {this.stateZ1.isHidden ? (
           <View style={styles.area}>
             <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={25} margin={10} />
             <Text style={styles.titlekwh}>20°C</Text>
-            <Text style={styles.num}>{t11}°C</Text>
+            <Text style={styles.num}>
+              {FaultAlarm === 0 ? t11 : FaultAlarm === 4 ? t11 : FaultAlarm === 8 ? t11 : '--'}°C
+            </Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
@@ -104,11 +110,9 @@ class ZoneReport extends React.PureComponent {
         <View style={styles.area}>
           <FontAwesomeIcon icon={faLightbulb} color="#ffb700" size={25} margin={10} />
           <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          {Relay1flag === true ? (
-            <Text style={styles.num}>{Strings.getLang('on')}</Text>
-          ) : (
-            <Text style={styles.num}>{Strings.getLang('off')}</Text>
-          )}
+          <Text style={styles.num}>
+            {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
+          </Text>
           <View>
             <Text style={styles.titlekwh}>
               {RelayPower1} {Strings.getLang('kwh')}
@@ -120,7 +124,9 @@ class ZoneReport extends React.PureComponent {
           <View style={styles.area}>
             <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={25} margin={10} />
             <Text style={styles.titlekwh}>30°C</Text>
-            <Text style={styles.num}>{t22}°C</Text>
+            <Text style={styles.num}>
+              {FaultAlarm === 0 ? t22 : FaultAlarm === 1 ? t22 : FaultAlarm === 2 ? t22 : '--'}°C
+            </Text>
             <View>
               <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
@@ -130,11 +136,9 @@ class ZoneReport extends React.PureComponent {
         <View style={styles.area}>
           <FontAwesomeIcon icon={faLightbulb} color="#ff7300" size={25} margin={10} />
           <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          {Relay2flag === true ? (
-            <Text style={styles.num}>{Strings.getLang('on')}</Text>
-          ) : (
-            <Text style={styles.num}>{Strings.getLang('off')}</Text>
-          )}
+          <Text style={styles.num}>
+            {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
+          </Text>
           <View>
             <Text style={styles.titlekwh}>
               {RelayPower2} {Strings.getLang('kwh')}
@@ -143,32 +147,21 @@ class ZoneReport extends React.PureComponent {
           </View>
         </View>
         {OpenWindowStatus === 0 ? null : (
-          <View style={styles.area}>
-            <FontAwesomeIcon icon={faDoorOpen} color="#00e1ff" size={25} margin={10} />
-            <Text style={styles.titlekwh}>{Strings.getLang('wintitle')}</Text>
-            <Text style={styles.num}>{OpenWindowStatus}</Text>
-            <View>
-              <Text style={styles.title}>{Strings.getLang('wintime')}</Text>
-              <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
+          <View style={styles.areaWindow}>
+            <Text style={styles.titleWWW}>{Strings.getLang('wintitle')}</Text>
+            <View style={styles.air}>
+              <FontAwesomeIcon icon={faDoorOpen} color="#00e1ff" size={25} marginRight={10} />
+              <Text style={styles.num}>{OpenWindowStatus}</Text>
             </View>
+            <Text style={styles.titleE}>{Strings.getLang('wintime')}</Text>
+            <View>{/* <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text> */}</View>
           </View>
         )}
-        {this.stateW2.isHidden ? (
-          <View style={styles.area}>
-            <FontAwesomeIcon icon={faDoorOpen} color="#00d0ff" size={25} margin={10} />
-            <Text style={styles.titlekwh}>{Strings.getLang('wintitle')}</Text>
-            <Text style={styles.num}>18</Text>
-            <View>
-              <Text style={styles.title}>{Strings.getLang('wintime')}</Text>
-              <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
-            </View>
-          </View>
-        ) : null}
         {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
-          <View style={styles.area}>
+          <View style={styles.areaERR}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>E{FaultAlarm}</Text>
+            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
@@ -176,10 +169,10 @@ class ZoneReport extends React.PureComponent {
           </View>
         )}
         {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
-          <View style={styles.area}>
+          <View style={styles.areaERR}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>E{FaultAlarm}</Text>
+            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
@@ -219,6 +212,26 @@ const styles = StyleSheet.create({
     width: 350,
     height: 50,
   },
+  areaWindow: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    margin: 5,
+    width: 350,
+    height: 80,
+  },
+  areaERR: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    margin: 5,
+    width: 170,
+    height: 118,
+  },
   num: {
     textAlign: 'center',
     fontWeight: 'bold',
@@ -249,6 +262,14 @@ const styles = StyleSheet.create({
     color: 'black',
     justifyContent: 'center',
   },
+  titleWWW: {
+    textAlign: 'center',
+    fontWeight: '500',
+    fontSize: 10,
+    color: 'black',
+    justifyContent: 'center',
+    marginTop: 5,
+  },
   titleE: {
     textAlign: 'center',
     fontWeight: '200',
@@ -267,4 +288,6 @@ export default connect(({ dpState }) => ({
   OpenWindowStatus: dpState[OpenWindowStatusCode],
   FaultAlarm: dpState[FaultAlarmCode],
   ReportTemperature: dpState[ReportTemperatureCode],
+  SensorSet1: dpState[SensorSet1Code],
+  SensorSet2: dpState[SensorSet2Code],
 }))(ZoneReport);

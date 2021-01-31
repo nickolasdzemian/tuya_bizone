@@ -7,10 +7,6 @@ for docs, please visit [tuya docs](https://docs.tuya.com)
 ### This panel is based on Tyua SmartLock template
 ### This package is using prefix '5.1' at the beginning of it's name
 
-## Datapoints!
-* Mechanics didnt add into this UI
-* Unternational definition must be threw get_dp_lang method, now it's only strings
-
 ## Dependencies for manual installation
 react-native-vector-icons
 @fortawesome/free-solid-svg-icons

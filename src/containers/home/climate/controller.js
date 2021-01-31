@@ -111,27 +111,30 @@ class ClimateController extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.areaContols}>
           <TouchableOpacity onPress={this.changePowerZone} style={styles.touch}>
-            {C === '01' ? (
-              <FontAwesomeIcon icon={faPowerOff} color="#ff7300" size={30} margin={10} />
-            ) : (
-              <FontAwesomeIcon icon={faPowerOff} color="#d6d6d6" size={30} margin={10} />
-            )}
+            <FontAwesomeIcon
+              icon={faPowerOff}
+              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={10}
+            />
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToClimateChart} style={styles.touch}>
-            {C === '01' ? (
-              <FontAwesomeIcon icon={faChartBar} color="#ff7300" size={30} margin={10} />
-            ) : (
-              <FontAwesomeIcon icon={faChartBar} color="#d6d6d6" size={30} margin={10} />
-            )}
+            <FontAwesomeIcon
+              icon={faChartBar}
+              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={10}
+            />
             <Text style={styles.title}>{Strings.getLang('prog')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
-            {C === '01' ? (
-              <FontAwesomeIcon icon={faTasks} color="#ff7300" size={30} margin={10} />
-            ) : (
-              <FontAwesomeIcon icon={faTasks} color="#d6d6d6" size={30} margin={10} />
-            )}
+            <FontAwesomeIcon
+              icon={faTasks}
+              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={10}
+            />
             <Text style={styles.title}>{Strings.getLang('mode')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>

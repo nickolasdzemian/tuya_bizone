@@ -6,16 +6,25 @@ All notable changes to this project will be documented in this file. See [standa
 ### Known issues | Известные ограничения
 * !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
 
-#### 1.2.7 Cloud Beta
+#### 1.2.7 Cloud RC2 Beta Show-room|Выставка
+* rebuilt climate grid in reports | перестроена сетка в отображении
 * added display dependency on selected contolling sensors for climate average temp | добавлена зависимость отображения средней температуры климата от выбранных управляющих датчиков
 * added math.round for average climate temp | добавлено округление для средней температуры климата
-* added error handler for climate report temp | добавлена обработка ошибок для температуры климата
+* added sensor error handler for climate report temp | добавлена обработка ошибок датчика для температуры климата
+* added sensor error handler for zones report temp | добавлена обработка ошибок датчика для температур зон
+* added t report display dependency on selected mode | добавлена зависимость отображения температуры от выбранного режима
+* added render optimisation for colored icons | добавлена оптимизация для цветных иконок
+* changed some translations for RU | изменены некоторые переводы для RU
+* changed some sizes of elements for better dispaying on diff. devices | изменены размеры нек. элементов для лучшего отображения на различн. устройствах
 * fixed states in climate mode | исправлены состояния для климат-режима
+* fixed get_data func | исправлены функции получения данных
 #### Cloud func. | Функции облака
 * added power on/off for climate mode | добавлено вкл/выкл питания для режима климата
 * added power on/off for Zone 1 | добавлено вкл/выкл питания для первой зоны
+* added power on/off for Zone 2 | добавлено вкл/выкл питания для второй зоны
 * added manual temp slider for climate mode | добавлена ручная регулировка температуры слайдером для климат-режима
 * added manual temp stepper selector for climate mode | добавлена ручная пошаговая регулировка температуры для климат-режима
+* added manual temperature selection for Zone 1 and Zone 2 | добавлен ручной выбор температуры для Зоны 1 и Зоны 2
 
 #### 1.2.6 Cloud Beta
 * clean up some useless code | подчищен неиспользуемый код

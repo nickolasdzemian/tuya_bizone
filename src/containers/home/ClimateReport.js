@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-  faTemperatureLow,
   faExclamationTriangle,
   faSeedling,
   faSnowflake,
@@ -52,8 +51,6 @@ class ClimateReport extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
-    this.stateE1 = { isHidden: false };
-    this.stateE2 = { isHidden: false };
   }
   render() {
     const {
@@ -100,17 +97,6 @@ class ClimateReport extends React.PureComponent {
       <SafeAreaView style={styles.container}>
         <View style={styles.areaAir}>
           <View style={styles.air}>
-            <FontAwesomeIcon
-              icon={faTemperatureLow}
-              color="#90EE90"
-              size={10}
-              marginBottom={5}
-              marginRight={5}
-            />
-            <Text style={styles.titlekwh}>20°C</Text>
-          </View>
-          <Text style={styles.titleE2}>{Strings.getLang('climateSetTemp')}</Text>
-          <View style={styles.air}>
             <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
             <Text style={styles.num}>{FaultAlarm === 0 ? Math.round(tC) : '--'}°C</Text>
           </View>
@@ -123,11 +109,9 @@ class ClimateReport extends React.PureComponent {
             <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
           )}
           <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          {Relay1flag === true ? (
-            <Text style={styles.num}>{Strings.getLang('on')}</Text>
-          ) : (
-            <Text style={styles.num}>{Strings.getLang('off')}</Text>
-          )}
+          <Text style={styles.num}>
+            {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
+          </Text>
           <View>
             <Text style={styles.titlekwh}>
               {RelayPower1} {Strings.getLang('kwh')}
@@ -141,11 +125,9 @@ class ClimateReport extends React.PureComponent {
             <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
           )}
           <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          {Relay2flag === true ? (
-            <Text style={styles.num}>{Strings.getLang('on')}</Text>
-          ) : (
-            <Text style={styles.num}>{Strings.getLang('off')}</Text>
-          )}
+          <Text style={styles.num}>
+            {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
+          </Text>
           <View>
             <Text style={styles.titlekwh}>
               {RelayPower2} {Strings.getLang('kwh')}
@@ -153,10 +135,10 @@ class ClimateReport extends React.PureComponent {
           </View>
         </View>
         {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
-          <View style={styles.area}>
+          <View style={styles.areaPWR}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>E{FaultAlarm}</Text>
+            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
@@ -164,10 +146,10 @@ class ClimateReport extends React.PureComponent {
           </View>
         )}
         {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
-          <View style={styles.area}>
+          <View style={styles.areaPWR}>
             <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.titlekwh}>{Strings.getLang('alarma')}</Text>
-            <Text style={styles.num}>E{FaultAlarm}</Text>
+            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
             <View>
               <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
@@ -187,16 +169,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignContent: 'center',
   },
-  area: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    margin: 5,
-    width: 80,
-    height: 130,
-  },
+  // area: {
+  //   alignItems: 'center',
+  //   alignContent: 'center',
+  //   justifyContent: 'space-between',
+  //   backgroundColor: '#fff',
+  //   borderRadius: 12,
+  //   margin: 5,
+  //   width: 80,
+  //   height: 130,
+  // },
   areaAir: {
     alignItems: 'center',
     alignContent: 'center',
@@ -205,7 +187,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: 350,
-    height: 100,
+    height: 60,
   },
   areaPWR: {
     alignItems: 'center',
@@ -257,14 +239,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 5,
   },
-  titleE2: {
-    textAlign: 'center',
-    fontWeight: '200',
-    fontSize: 8,
-    color: 'black',
-    justifyContent: 'center',
-    marginBottom: 5,
-  },
+  // titleE2: {
+  //   textAlign: 'center',
+  //   fontWeight: '200',
+  //   fontSize: 8,
+  //   color: 'black',
+  //   justifyContent: 'center',
+  //   marginBottom: 5,
+  // },
 });
 
 export default connect(({ dpState }) => ({
