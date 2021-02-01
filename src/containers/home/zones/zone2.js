@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: '90%',
-    height: 130,
+    height: 145,
   },
   areaContols: {
     flexDirection: 'row',

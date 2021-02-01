@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: '90%',
-    height: 155,
+    height: 170,
   },
   num: {
     textAlign: 'center',

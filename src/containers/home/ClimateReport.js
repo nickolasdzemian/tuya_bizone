@@ -94,69 +94,73 @@ class ClimateReport extends React.PureComponent {
     console.log(tC, 'tC');
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.areaAir}>
-          <View style={styles.air}>
-            <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
-            <Text style={styles.num}>{FaultAlarm === 0 ? Math.round(tC) : '--'}°C</Text>
+      <View>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.areaAir}>
+            <View style={styles.air}>
+              <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
+              <Text style={styles.num}>{FaultAlarm === 0 ? Math.round(tC) : '--'}°C</Text>
+            </View>
+            <Text style={styles.titleE}>{Strings.getLang('climateTemp')}</Text>
           </View>
-          <Text style={styles.titleE}>{Strings.getLang('climateTemp')}</Text>
-        </View>
-        <View style={styles.areaPWR}>
-          {chSelector === false ? (
-            <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} margin={10} />
-          ) : (
-            <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
-          )}
-          <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          <Text style={styles.num}>
-            {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-          </Text>
-          <View>
-            <Text style={styles.titlekwh}>
-              {RelayPower1} {Strings.getLang('kwh')}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.areaPWR}>
-          {chSelector === true ? (
-            <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} margin={10} />
-          ) : (
-            <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
-          )}
-          <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          <Text style={styles.num}>
-            {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-          </Text>
-          <View>
-            <Text style={styles.titlekwh}>
-              {RelayPower2} {Strings.getLang('kwh')}
-            </Text>
-          </View>
-        </View>
-        {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
+        </SafeAreaView>
+        <SafeAreaView style={styles.container}>
           <View style={styles.areaPWR}>
-            <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
-            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
+            {chSelector === false ? (
+              <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} margin={10} />
+            ) : (
+              <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
+            )}
+            <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
+            <Text style={styles.num}>
+              {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
+            </Text>
             <View>
-              <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
-              <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
+              <Text style={styles.titlekwh}>
+                {RelayPower1} {Strings.getLang('kwh')}
+              </Text>
             </View>
           </View>
-        )}
-        {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
           <View style={styles.areaPWR}>
-            <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
-            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
+            {chSelector === true ? (
+              <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} margin={10} />
+            ) : (
+              <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
+            )}
+            <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
+            <Text style={styles.num}>
+              {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
+            </Text>
             <View>
-              <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
-              <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
+              <Text style={styles.titlekwh}>
+                {RelayPower2} {Strings.getLang('kwh')}
+              </Text>
             </View>
           </View>
-        )}
-      </SafeAreaView>
+          {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
+            <View style={styles.areaPWR}>
+              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
+              <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+              {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
+              <View>
+                <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
+                <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
+              </View>
+            </View>
+          )}
+          {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
+            <View style={styles.areaPWR}>
+              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
+              <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+              {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
+              <View>
+                <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
+                <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
+              </View>
+            </View>
+          )}
+        </SafeAreaView>
+      </View>
     );
   }
 }

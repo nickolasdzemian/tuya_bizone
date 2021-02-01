@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file. See [standa
 ### Known issues | Известные ограничения
 * !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
 
+#### 1.2.8 Cloud RC2 Beta Show-room|Выставка
+* fix dimensions for normal tablet support | исправлены разрешения для нормальной поддержки планшетов
+* fix sizes and positions for normal rablet support | исправлены размеры и положения для нормальной поддержки планшетов
+
 #### 1.2.7 Cloud RC2 Beta Show-room|Выставка
 * rebuilt climate grid in reports | перестроена сетка в отображении
 * added display dependency on selected contolling sensors for climate average temp | добавлена зависимость отображения средней температуры климата от выбранных управляющих датчиков

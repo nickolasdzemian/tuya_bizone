@@ -84,102 +84,110 @@ class ZoneReport extends React.PureComponent {
     const t33 = t30 > 100 ? -(256 - t30) : t30;
 
     return (
-      <SafeAreaView style={styles.container}>
-        {SensorSet1 === 'flour' && SensorSet2 === 'flour' ? null : (
-          <View style={styles.areaAir}>
-            <View style={styles.air}>
-              <FontAwesomeIcon icon={faBacon} color="#00d0ff" size={20} marginRight={10} />
-              <Text style={styles.num}>{t33}°C</Text>
+      <View>
+        <SafeAreaView style={styles.container}>
+          {SensorSet1 === 'flour' && SensorSet2 === 'flour' ? null : (
+            <View style={styles.areaAir}>
+              <View style={styles.air}>
+                <FontAwesomeIcon icon={faBacon} color="#00d0ff" size={20} marginRight={10} />
+                <Text style={styles.num}>{t33}°C</Text>
+              </View>
+              <Text style={styles.titleE}>{Strings.getLang('airtemp')}</Text>
             </View>
-            <Text style={styles.titleE}>{Strings.getLang('airtemp')}</Text>
-          </View>
-        )}
-        {this.stateZ1.isHidden ? (
+          )}
+        </SafeAreaView>
+        <SafeAreaView style={styles.container}>
+          {this.stateZ1.isHidden ? (
+            <View style={styles.area}>
+              <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={25} margin={10} />
+              <Text style={styles.titlekwh}>20°C</Text>
+              <Text style={styles.num}>
+                {FaultAlarm === 0 ? t11 : FaultAlarm === 4 ? t11 : FaultAlarm === 8 ? t11 : '--'}°C
+              </Text>
+              <View>
+                <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
+                <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
+              </View>
+            </View>
+          ) : null}
           <View style={styles.area}>
-            <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={25} margin={10} />
-            <Text style={styles.titlekwh}>20°C</Text>
+            <FontAwesomeIcon icon={faLightbulb} color="#ffb700" size={25} margin={10} />
+            <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
             <Text style={styles.num}>
-              {FaultAlarm === 0 ? t11 : FaultAlarm === 4 ? t11 : FaultAlarm === 8 ? t11 : '--'}°C
+              {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
             </Text>
             <View>
-              <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
+              <Text style={styles.titlekwh}>
+                {RelayPower1} {Strings.getLang('kwh')}
+              </Text>
               <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
             </View>
           </View>
-        ) : null}
-        <View style={styles.area}>
-          <FontAwesomeIcon icon={faLightbulb} color="#ffb700" size={25} margin={10} />
-          <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          <Text style={styles.num}>
-            {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-          </Text>
-          <View>
-            <Text style={styles.titlekwh}>
-              {RelayPower1} {Strings.getLang('kwh')}
-            </Text>
-            <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
-          </View>
-        </View>
-        {this.stateZ2.isHidden ? (
+          {this.stateZ2.isHidden ? (
+            <View style={styles.area}>
+              <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={25} margin={10} />
+              <Text style={styles.titlekwh}>30°C</Text>
+              <Text style={styles.num}>
+                {FaultAlarm === 0 ? t22 : FaultAlarm === 1 ? t22 : FaultAlarm === 2 ? t22 : '--'}°C
+              </Text>
+              <View>
+                <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
+                <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
+              </View>
+            </View>
+          ) : null}
           <View style={styles.area}>
-            <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={25} margin={10} />
-            <Text style={styles.titlekwh}>30°C</Text>
+            <FontAwesomeIcon icon={faLightbulb} color="#ff7300" size={25} margin={10} />
+            <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
             <Text style={styles.num}>
-              {FaultAlarm === 0 ? t22 : FaultAlarm === 1 ? t22 : FaultAlarm === 2 ? t22 : '--'}°C
+              {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
             </Text>
             <View>
-              <Text style={styles.title}>{Strings.getLang('now_temp')}</Text>
+              <Text style={styles.titlekwh}>
+                {RelayPower2} {Strings.getLang('kwh')}
+              </Text>
               <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
             </View>
           </View>
-        ) : null}
-        <View style={styles.area}>
-          <FontAwesomeIcon icon={faLightbulb} color="#ff7300" size={25} margin={10} />
-          <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
-          <Text style={styles.num}>
-            {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-          </Text>
-          <View>
-            <Text style={styles.titlekwh}>
-              {RelayPower2} {Strings.getLang('kwh')}
-            </Text>
-            <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
-          </View>
-        </View>
-        {OpenWindowStatus === 0 ? null : (
-          <View style={styles.areaWindow}>
-            <Text style={styles.titleWWW}>{Strings.getLang('wintitle')}</Text>
-            <View style={styles.air}>
-              <FontAwesomeIcon icon={faDoorOpen} color="#00e1ff" size={25} marginRight={10} />
-              <Text style={styles.num}>{OpenWindowStatus}</Text>
+        </SafeAreaView>
+        <SafeAreaView style={styles.container}>
+          {OpenWindowStatus === 0 ? null : (
+            <View style={styles.areaWindow}>
+              <Text style={styles.titleWWW}>{Strings.getLang('wintitle')}</Text>
+              <View style={styles.air}>
+                <FontAwesomeIcon icon={faDoorOpen} color="#00e1ff" size={25} marginRight={10} />
+                <Text style={styles.num}>{OpenWindowStatus}</Text>
+              </View>
+              <Text style={styles.titleE}>{Strings.getLang('wintime')}</Text>
+              <View>{/* <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text> */}</View>
             </View>
-            <Text style={styles.titleE}>{Strings.getLang('wintime')}</Text>
-            <View>{/* <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text> */}</View>
-          </View>
-        )}
-        {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
-          <View style={styles.areaERR}>
-            <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
-            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
-            <View>
-              <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
-              <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
+          )}
+        </SafeAreaView>
+        <SafeAreaView style={styles.container}>
+          {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
+            <View style={styles.areaERR}>
+              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
+              <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+              {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
+              <View>
+                <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
+                <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
+              </View>
             </View>
-          </View>
-        )}
-        {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
-          <View style={styles.areaERR}>
-            <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-            <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
-            {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
-            <View>
-              <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
-              <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
+          )}
+          {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
+            <View style={styles.areaERR}>
+              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
+              <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+              {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
+              <View>
+                <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
+                <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
+              </View>
             </View>
-          </View>
-        )}
-      </SafeAreaView>
+          )}
+        </SafeAreaView>
+      </View>
     );
   }
 }
