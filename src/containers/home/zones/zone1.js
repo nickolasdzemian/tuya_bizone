@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { TYSdk, Slider, Stepper, Popup } from 'tuya-panel-kit';
@@ -14,6 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
+import Zone1Silder from './zone1silder';
 
 const TYDevice = TYSdk.device;
 
@@ -39,7 +40,7 @@ const tabModes = Array.from(set).map(v => {
   return { key: `${v}`, title: `${v}`, value: `${v}` };
 });
 
-class Zone1 extends Component {
+class Zone1 extends PureComponent {
   static propTypes = {
     Zone: PropTypes.string,
     SetTemperature: PropTypes.string,
@@ -52,8 +53,8 @@ class Zone1 extends Component {
 
   constructor(props) {
     super(props);
-    const { SetTemperature } = this.props;
-    const T = SetTemperature.substring(4, 6);
+    // shouldComponentUpdate(nextProps, nextState);
+    const T = this.props.SetTemperature.substring(4, 6);
     const V = parseInt(T, 16);
     this.state = { valueZ1: V > 100 ? V - 256 : V };
 
@@ -94,8 +95,7 @@ class Zone1 extends Component {
   };
 
   getDataTemp() {
-    const { SetTemperature } = this.props;
-    const T = SetTemperature.substring(4, 6);
+    const T = this.props.SetTemperature.substring(4, 6);
     const V = parseInt(T, 16);
     const valueZ1 = V > 100 ? V - 256 : V;
     return valueZ1;
@@ -103,9 +103,8 @@ class Zone1 extends Component {
 
   _changeDataTemp = valueZ1 => {
     this.setState({ valueZ1: Math.round(valueZ1) }, () => {
-      const { SetTemperature } = this.props;
-      const I = SetTemperature.substring(0, 4);
-      const II = SetTemperature.substring(6, 10);
+      const I = this.props.SetTemperature.substring(0, 4);
+      const II = this.props.SetTemperature.substring(6, 10);
       const Tset = Math.round(valueZ1);
       // плявит
       const Tsend = Tset.toString(16);
@@ -185,9 +184,8 @@ class Zone1 extends Component {
 
   // 'питание'
   changePowerZone1 = () => {
-    const { Zone } = this.props;
-    const I = Zone.substring(2, 6);
-    const C = Zone.substring(0, 2);
+    const I = this.props.Zone.substring(2, 6);
+    const C = this.props.Zone.substring(0, 2);
     const C0 = '00';
     const C1 = '01';
     const C00 = String(C0 + I);
@@ -202,10 +200,10 @@ class Zone1 extends Component {
   };
 
   render() {
-    const { Zone } = this.props;
-    const C = Zone.substring(0, 2);
+    const C = this.props.Zone.substring(0, 2);
     return (
       <SafeAreaView style={styles.container}>
+        <Zone1Silder />
         {C === '01' ? (
           <View style={styles.area}>
             <View style={styles.sel}>

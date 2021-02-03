@@ -58,21 +58,19 @@ class ClimateM extends PureComponent {
   constructor(props) {
     super(props);
     // инициализация и текущий state для slidera
-    const { SetTemperature } = this.props;
-    const T = SetTemperature.substring(8, 10);
+    const T = this.props.SetTemperature.substring(8, 10);
     const V = parseInt(T, 16);
     this.state = { valueM0: V > 100 ? V - 256 : V };
   }
 
   // получение текущих stateов для регуляторов
-  getDataFan() {
-    const { FanSpeed } = this.props;
-    return FanSpeed;
-  }
+  // getDataFan() {
+  //   const { FanSpeed } = this.props;
+  //   return FanSpeed;
+  // }
 
   getDataTemp() {
-    const { SetTemperature } = this.props;
-    const T = SetTemperature.substring(8, 10);
+    const T = this.props.SetTemperature.substring(8, 10);
     const V = parseInt(T, 16);
     const valueM0 = V > 100 ? V - 256 : V;
     return valueM0;
@@ -88,8 +86,7 @@ class ClimateM extends PureComponent {
 
   _changeDataTemp = valueM0 => {
     this.setState({ valueM0: Math.round(valueM0) });
-    const { SetTemperature } = this.props;
-    const I = SetTemperature.substring(0, 8);
+    const I = this.props.SetTemperature.substring(0, 8);
     const Tset = Math.round(valueM0);
     // плявит
     const Tsend = Tset.toString(16);
@@ -119,8 +116,7 @@ class ClimateM extends PureComponent {
   };
 
   render() {
-    const { Zone } = this.props;
-    const C = Zone.substring(4, 6);
+    const C = this.props.Zone.substring(4, 6);
     return C === '01' ? (
       <SafeAreaView style={styles.container}>
         <View style={styles.area}>
@@ -170,7 +166,7 @@ class ClimateM extends PureComponent {
               activeColor="#00e1ff"
               type="radio"
               tabs={fan}
-              activeKey={this.getDataFan()}
+              activeKey={this.props.FanSpeed}
               onChange={this.changeDataFan}
               style={styles.bar}
               gutter={1}
