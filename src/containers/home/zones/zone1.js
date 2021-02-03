@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { TYSdk, Slider, Stepper, Popup } from 'tuya-panel-kit';
@@ -39,7 +39,7 @@ const tabModes = Array.from(set).map(v => {
   return { key: `${v}`, title: `${v}`, value: `${v}` };
 });
 
-class Zone1 extends React.PureComponent {
+class Zone1 extends Component {
   static propTypes = {
     Zone: PropTypes.string,
     SetTemperature: PropTypes.string,
@@ -52,18 +52,16 @@ class Zone1 extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.stateCM = { isHidden: true };
-    this.stateC = { isHidden: true };
-    this.statePower = { isHidden: false };
-    this.stateTimerOn = { isHidden: false };
-    this.state = { listValue: manualmode };
-
-    this.state = { countdown: 60, countdownSwitchValue: true };
-
     const { SetTemperature } = this.props;
     const T = SetTemperature.substring(4, 6);
     const V = parseInt(T, 16);
     this.state = { valueZ1: V > 100 ? V - 256 : V };
+
+    this.stateTimerOn = { isHidden: false };
+
+    this.stateMode = { listValue: manualmode };
+
+    this.stateTimer = { countdown: 60, countdownSwitchValue: true };
   }
 
   // уйнкция выбора режима
@@ -81,7 +79,7 @@ class Zone1 extends React.PureComponent {
         console.log('Select climate --none');
         close();
       },
-      value: this.state.listValue,
+      value: this.stateMode.listValue,
       footerType: 'singleCancel',
       onMaskPress: ({ close }) => {
         close();
@@ -89,7 +87,7 @@ class Zone1 extends React.PureComponent {
       // выбор и сохранение значения из списка по нажатию
       onSelect: (value, { close }) => {
         console.log('radio value :', value);
-        this.setState({ listValue: value });
+        this.setStateMode({ listValue: value });
         // close();
       },
     });
@@ -104,36 +102,37 @@ class Zone1 extends React.PureComponent {
   }
 
   _changeDataTemp = valueZ1 => {
-    this.setState({ valueZ1: Math.round(valueZ1) });
-    const { SetTemperature } = this.props;
-    const I = SetTemperature.substring(0, 4);
-    const II = SetTemperature.substring(6, 10);
-    const Tset = Math.round(valueZ1);
-    // плявит
-    const Tsend = Tset.toString(16);
-    const ZorroOne = '0';
-    const Tfin = Tset < 16 ? String(I + ZorroOne + Tsend + II) : String(I + Tsend + II);
-    // не плявит, ибо 0
-    const Zorro = '00';
-    const Tfin0 = String(I + Zorro + II);
-    // плявит обратно, ибо не 0 и не плявит
-    const Tminus = 256 + Tset;
-    const TsendMinus = Tminus.toString(16);
-    const TfinMin = String(I + TsendMinus + II);
-    // eslint-disable-next-line no-unused-expressions
-    Tset > 0
-      ? TYDevice.putDeviceData({
-        [SetTemperatureCode]: Tfin,
-      })
-      : Tset === 0
+    this.setState({ valueZ1: Math.round(valueZ1) }, () => {
+      const { SetTemperature } = this.props;
+      const I = SetTemperature.substring(0, 4);
+      const II = SetTemperature.substring(6, 10);
+      const Tset = Math.round(valueZ1);
+      // плявит
+      const Tsend = Tset.toString(16);
+      const ZorroOne = '0';
+      const Tfin = Tset < 16 ? String(I + ZorroOne + Tsend + II) : String(I + Tsend + II);
+      // не плявит, ибо 0
+      const Zorro = '00';
+      const Tfin0 = String(I + Zorro + II);
+      // плявит обратно, ибо не 0 и не плявит
+      const Tminus = 256 + Tset;
+      const TsendMinus = Tminus.toString(16);
+      const TfinMin = String(I + TsendMinus + II);
+      // eslint-disable-next-line no-unused-expressions
+      Tset > 0
         ? TYDevice.putDeviceData({
-          [SetTemperatureCode]: Tfin0,
+          [SetTemperatureCode]: Tfin,
         })
-        : Tset < 0
+        : Tset === 0
           ? TYDevice.putDeviceData({
-            [SetTemperatureCode]: TfinMin,
+            [SetTemperatureCode]: Tfin0,
           })
-          : null;
+          : Tset < 0
+            ? TYDevice.putDeviceData({
+              [SetTemperatureCode]: TfinMin,
+            })
+            : null;
+    });
   };
 
   // функции навиготора
@@ -161,14 +160,14 @@ class Zone1 extends React.PureComponent {
         hourText: hrss,
         minuteText: minss,
         max: 1466,
-        value: this.state.countdown,
-        switchValue: this.state.countdownSwitchValue,
-        onSwitchValueChange: value => this.setState({ countdownSwitchValue: value }),
+        value: this.stateTimer.countdown,
+        switchValue: this.stateTimer.countdownSwitchValue,
+        onSwitchValueChange: value => this.setStateTimer({ countdownSwitchValue: value }),
         onMaskPress: ({ close }) => {
           close();
         },
         onConfirm: (data, { close }) => {
-          this.setState({ countdown: data.value });
+          this.setStateTimer({ countdown: data.value });
           if (data.value < 100) {
             console.log('return', data.value);
             return;

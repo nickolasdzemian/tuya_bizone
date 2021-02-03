@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Slider, Stepper, Popup, TYSdk } from 'tuya-panel-kit';
@@ -39,7 +39,7 @@ const tabModes = Array.from(set).map(v => {
   return { key: `${v}`, title: `${v}`, value: `${v}` };
 });
 
-class Zone2 extends React.PureComponent {
+class Zone2 extends PureComponent {
   static propTypes = {
     Zone: PropTypes.string,
     SetTemperature: PropTypes.string,
