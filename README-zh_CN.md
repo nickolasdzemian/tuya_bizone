@@ -1,4 +1,4 @@
-# Tuya Panel SmartLock Template
+# Tuya 'BiZone' thermostat panel（React Native 0.59）
 
 [English](./README.md) | 简体中文
 
@@ -9,22 +9,21 @@
 ## 手动下载
 
 ```bash
-$ curl https://codeload.github.com/TuyaInc/tuya-panel-kit-template/tar.gz/develop | tar -xz --strip=2 tuya-panel-kit-template-develop/examples/smartLock
-$ mv smartLock tuya-panel-smartLock-example
-$ cd tuya-panel-smartLock-example
+$ curl https://codeload.github.com/tuya/tuya-panel-demo/tar.gz/master | tar -xz --strip=2 tuya-panel-demo-master/examples/basic-ts-0.59
+$ mv basic tuya-panel-basic-ts-0.59-example
+$ cd tuya-panel-basic-ts-0.59-example
 ```
 
 ## 介绍
 
-该模板工程为WiFi门锁模板，可支持以下功能:
-1. 开门记录查看
-2. 告警消息查看
-3. 童锁、反锁、电量显示
-4. 保护天数
+该模板工程为 React Native 0.59 版本的 TS 基础模板，可启动所有涂鸦产品，用于调试当前产品的功能点，此外支持以下功能：
+
+1. Path Alias;
+2. React、Redux Hooks;
 
 您可以通过涂鸦 App 扫描以下二维码进行预览。
 
-![SmartLock](https://images.tuyacn.com/rms-static/a56b0770-bb89-11ea-96f0-cda03b175b6c-1593601044839.png?tyName=smartLock.png)
+![Basic-0.59](https://images.tuyacn.com/rms-static/91fab3d0-392d-11eb-8584-77b31b3e78b8-1607415345037.png?tyName=basic-0.59.png)
 
 ## 快速运行
 
@@ -34,13 +33,6 @@ $ npm install && npm run start
 $ yarn && yarn start
 ```
 
-## 使用接口
-
-* [tuya.m.device.lock.active.period](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
-* [tuya.m.device.lock.alarm.unread](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
-* [tuya.m.scale.history.list](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
-* [tuya.m.device.lock.alarm.list](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
-
 ## 许可证
 
-Copyright © 2020
+Copyright © 2021

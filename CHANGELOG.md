@@ -5,10 +5,28 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Known issues | Известные ограничения
 * !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
+* !visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
+* !force close app when slider has no any values to set due to limitations | принудительное завершение работы если слайдер не имеет значений из-за ограничений пределов
+
+
+#### 2.0.1
+* added selected temperature report in climate programm mode | добавлено отображение выбранной температуры в программном режиме климата
+* added UI deps for correct displaying modes | добавлены зависимости для корректного отображения режимов
+* added temp. limits by air sensor for I & II zones | добавлена функция ограничения по температуре воздуха
+* fixed sensor type selector, added some info | исправлена функция выбора типа датчика, добавлена информация
+#### Cloud func. | Функции облака
+* added mode selection on home screen for climate mode | добавлен выбор режимов для климат-контроля на главном экране
+* added mode selection on home screen for zones | добавлен выбор режимов для зон
+
+#### 2.0.0
+* global upgrade to React 16.8.3|RN 0.59.10 | глобальное обновление до React 16.8.3|RN 0.59.10
+* some optimizations & adoptations for new ver. support | нек. оптимизации и адаптирование под новую версию ---30%
+* clean-up some destructuring code | небольшая очистка деструктивного кода
+* !fixed selected temp. display value in startup | !исправлено отображение выбранной температуры при старте
 
 #### 1.2.8 Cloud RC2 Beta Show-room|Выставка
 * fix dimensions for normal tablet support | исправлены разрешения для нормальной поддержки планшетов
-* fix sizes and positions for normal rablet support | исправлены размеры и положения для нормальной поддержки планшетов
+* fix sizes and positions for normal tablet support | исправлены размеры и положения для нормальной поддержки планшетов
 
 #### 1.2.7 Cloud RC2 Beta Show-room|Выставка
 * rebuilt climate grid in reports | перестроена сетка в отображении
@@ -87,8 +105,6 @@ All notable changes to this project will be documented in this file. See [standa
 * added homescreen | добавлен главный экран
 * added maths avoiding from crossing end-values | добавление математического недопущения перекрывающих крайних пределов
 
-# ==UPD== #
-* for more logs see another version of package
 #### 1.1.1
 * have found a method to upgrade to React 16.8.3|RN 0.59.10 -- in process
 * !added simple charts for temp set | добавлены простые графики для температуры
@@ -104,10 +120,6 @@ All notable changes to this project will be documented in this file. See [standa
 * fix hot reloading homescreen | исправлена горячая перезагрузка домашнего экрана
 
 ## Settings | Настройки
-### Known issues | Известные ограничения
-* !visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
-* !force close app when slider has no any values to set due to limitations | принудительное завершение работы если слайдер не имеет значений из-за ограничений пределов
-
 #### 1.0.8
 * tryed to upgrade to React 16.8.3|RN 0.59.10 -- failed
 * added climate settings | добавлены настройки для климат-режима

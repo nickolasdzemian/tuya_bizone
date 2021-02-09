@@ -1,37 +1,28 @@
-# Tuya Panel BiZone thermostat panel
+# Tuya 'BiZone' thermostat panel（React Native 0.59）
 
 English | [简体中文](./README-zh_CN.md)
 
 for docs, please visit [tuya docs](https://docs.tuya.com)
 
-### This panel is based on Tyua SmartLock template
-### This package is using prefix '5.1' at the beginning of it's name
-
-## Dependencies for manual installation
-react-native-vector-icons
-@fortawesome/free-solid-svg-icons
-@fortawesome/react-native-fontawesome
-
-## Download manually
+## Download example manually
 
 ```bash
-$ curl https://codeload.github.com/TuyaInc/tuya-panel-kit-template/tar.gz/develop | tar -xz --strip=2 tuya-panel-kit-template-develop/examples/smartLock
-$ mv smartLock tuya-panel-smartLock-example
-$ cd tuya-panel-smartLock-example
+$ curl https://codeload.github.com/tuya/tuya-panel-demo/tar.gz/master | tar -xz --strip=2 tuya-panel-demo-master/examples/basic-ts-0.59
+$ mv basic tuya-panel-basic-ts-0.59-example
+$ cd tuya-panel-basic-ts-0.59-example
+$ npm install react-native-vector-icons && @fortawesome/free-solid-svg-icons && @fortawesome/react-native-fontawesome
 ```
 
 ## Introduction
 
-This template project is a WiFi door lock template, which can support the following functions:
+The template project is the basic typescript template of react native version 0.59, which can start all Tuya products and be used to debug the DP points of the current product, in addition, it supports the following functions:
 
-1. Open door record check
-2. Check the alarm message
-3. Child lock, backlock and battery display
-4. Days of protection
+1. Path Alias;
+2. React、Redux Hooks;
 
 You can scan the following QR code through the Tuya app to preview.
 
-![SmartLock](https://images.tuyacn.com/rms-static/a56b0770-bb89-11ea-96f0-cda03b175b6c-1593601044839.png?tyName=smartLock.png)
+![Basic-0.59](https://images.tuyacn.com/rms-static/91fab3d0-392d-11eb-8584-77b31b3e78b8-1607415345037.png?tyName=basic-0.59.png)
 
 ## Running
 
@@ -40,12 +31,6 @@ $ npm install && npm run start
 # or
 $ yarn && yarn start
 ```
-## API
-
-* [tuya.m.device.lock.active.period](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
-* [tuya.m.device.lock.alarm.unread](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
-* [tuya.m.scale.history.list](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
-* [tuya.m.device.lock.alarm.list](https://docs.tuya.com/zh/iot/panel-development/panel-sdk-development/lock-sdk/lock-api/lock-api?id=K9ppulorxzebv)
 
 ## License
 
