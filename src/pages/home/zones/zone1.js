@@ -12,6 +12,7 @@ import {
   faCog,
   faPowerOff,
   faStopwatch20,
+  faStopwatch,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -22,6 +23,7 @@ const {
   Zone: ZoneCode,
   SetTemperature: SetTemperatureCode,
   ModeChannel: ModeChannelCode,
+  TimerSettings: TimerSettingsCode,
 } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
@@ -38,8 +40,6 @@ class Zone1 extends PureComponent {
     const T = this.props.SetTemperature.substring(4, 6);
     const V = parseInt(T, 16);
     this.state = { valueZ1: V > 100 ? V - 256 : V };
-    this.stateTimerOn = { isHidden: false };
-    this.stateTimer = { countdown: 60, countdownSwitchValue: true };
   }
 
   // уйнкция выбора режима
@@ -103,6 +103,13 @@ class Zone1 extends PureComponent {
     return valueZ1;
   }
 
+  convertMinsToTime = mins => {
+    const hours = Math.floor(mins / 60);
+    let minutes = mins % 60;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${hours}${hrss}:${minutes}${minss}`;
+  };
+
   _changeDataTemp = valueZ1 => {
     this.setState({ valueZ1: Math.round(valueZ1) }, () => {
       const I = this.props.SetTemperature.substring(0, 4);
@@ -161,23 +168,48 @@ class Zone1 extends PureComponent {
         hourText: hrss,
         minuteText: minss,
         max: 1466,
-        value: this.stateTimer.countdown,
-        switchValue: this.stateTimer.countdownSwitchValue,
-        onSwitchValueChange: value => this.setStateTimer({ countdownSwitchValue: value }),
+        value: parseInt(this.props.TimerSettings.substring(0, 4), 16),
+        switchValue: this.props.TimerSettings.substring(12, 14) === '01',
+        onSwitchValueChange: () => {
+          const TimerSwitch = this.props.TimerSettings.substring(12, 14);
+          const I = this.props.TimerSettings.substring(0, 12);
+          const II = this.props.TimerSettings.substring(14, 18);
+          const ON = '01';
+          const OFF = '00';
+          const Tfin = TimerSwitch === '00' ? String(I + ON + II) : String(I + OFF + II);
+          TYDevice.putDeviceData({
+            [TimerSettingsCode]: Tfin,
+          });
+          this.forceUpdate();
+        },
         onMaskPress: ({ close }) => {
           close();
         },
         onConfirm: (data, { close }) => {
-          this.setStateTimer({ countdown: data.value });
-          if (data.value < 100) {
+          if (data.value < 1467) {
             console.log('return', data.value);
-            return;
+            const TimerI = this.props.TimerSettings.substring(4, 12);
+            const TimerII = this.props.TimerSettings.substring(14, 18);
+            const Tset = data.value;
+            const Tsend = Tset.toString(16);
+            console.log('Tsend', Tsend);
+            const Tfin =
+              Tset < 16
+                ? String(`000${Tsend}${TimerI}01${TimerII}`)
+                : 16 <= Tset < 255
+                  ? String(`00${Tsend}${TimerI}01${TimerII}`)
+                  : 255 <= Tset < 1467
+                    ? String(`0${Tsend}${TimerI}01${TimerII}`)
+                    : null;
+            TYDevice.putDeviceData({
+              [TimerSettingsCode]: Tfin,
+            });
           }
           close();
         },
       },
       {
-        onShow: () => console.log('show'),
+        onShow: () => this.forceUpdate(),
         onHide: () => console.log('hide'),
         onDismiss: () => console.log('dismiss'),
       }
@@ -204,6 +236,7 @@ class Zone1 extends PureComponent {
   render() {
     const C = this.props.Zone.substring(0, 2);
     const modeZ = this.props.ModeChannel.substring(0, 2);
+    const TimerOn = this.props.TimerSettings.substring(12, 14);
     return (
       <SafeAreaView style={styles.container}>
         {C === '01' ? (
@@ -261,17 +294,21 @@ class Zone1 extends PureComponent {
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
           {modeZ === '02' ? null : (
-            <TouchableOpacity onPress={this.timer1} style={styles.touch}>
+            <TouchableOpacity onPress={C === '01' ? this.timer1 : null} style={styles.touch}>
               <FontAwesomeIcon
-                icon={faStopwatch20}
+                icon={TimerOn === '01' ? faStopwatch20 : faStopwatch}
                 color={C === '01' ? '#ffb700' : '#d6d6d6'}
                 size={30}
                 margin={5}
               />
-              <Text style={styles.title}>{Strings.getLang('ttimer')}</Text>
+              <Text style={styles.title}>
+                {TimerOn === '00'
+                  ? Strings.getLang('ttimer')
+                  : this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(0, 4), 16))}
+              </Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={this.goToZoneChart} style={styles.touch}>
+          <TouchableOpacity onPress={C === '01' ? this.goToZoneChart : null} style={styles.touch}>
             <FontAwesomeIcon
               icon={faChartBar}
               color={C === '01' ? '#ffb700' : '#d6d6d6'}
@@ -280,7 +317,7 @@ class Zone1 extends PureComponent {
             />
             <Text style={styles.title}>{Strings.getLang('prog')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
+          <TouchableOpacity onPress={C === '01' ? this.onPressMode : null} style={styles.touch}>
             <FontAwesomeIcon
               icon={faTasks}
               color={C === '01' ? '#ffb700' : '#d6d6d6'}
@@ -303,12 +340,14 @@ Zone1.propTypes = {
   Zone: PropTypes.string,
   SetTemperature: PropTypes.string,
   ModeChannel: PropTypes.string,
+  TimerSettings: PropTypes.string,
 };
 
 Zone1.defaultProps = {
   Zone: '010101',
   SetTemperature: '1E1E141414',
   ModeChannel: '000000',
+  TimerSettings: '000000000000000000',
 };
 
 const styles = StyleSheet.create({
@@ -408,4 +447,5 @@ export default connect(({ dpState }) => ({
   Zone: dpState[ZoneCode],
   SetTemperature: dpState[SetTemperatureCode],
   ModeChannel: dpState[ModeChannelCode],
+  TimerSettings: dpState[TimerSettingsCode],
 }))(Zone1);

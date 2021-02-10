@@ -1,4 +1,5 @@
 /* eslint-disable global-require */
+/* eslint-disable react/destructuring-assignment */
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
@@ -12,7 +13,7 @@ import Zone2Mode from './zone2mode';
 import Zone2Air from './zone2AC';
 
 const TYDevice = TYSdk.device;
-const { Preheat2: Preheat2Code, SensorSet2: SensorSet2Code } = dpCodes;
+const { Preheat2: Preheat2Code, OpenWndW: OpenWndWCode, SensorSet2: SensorSet2Code } = dpCodes;
 
 const windowSw = Strings.getLang('windowSw');
 const selflearnSw = Strings.getLang('selflearnSw');
@@ -44,9 +45,16 @@ class ZoneIIScene extends React.PureComponent {
             // width={100}
             // height={20}
             onTintColor="#ff7300"
-            value={this.state.value1}
-            onValueChange={value1 => {
-              this.setState({ value1 });
+            value={this.props.OpenWndW.substring(2, 4) === '01'}
+            onValueChange={() => {
+              const I = this.props.OpenWndW.substring(0, 2);
+              const ON = '01';
+              const OFF = '00';
+              const Tfin =
+                this.props.OpenWndW.substring(2, 4) === '00' ? String(I + ON) : String(I + OFF);
+              TYDevice.putDeviceData({
+                [OpenWndWCode]: Tfin,
+              });
             }}
           />
         </View>
@@ -88,13 +96,13 @@ class ZoneIIScene extends React.PureComponent {
 
 ZoneIIScene.propTypes = {
   Preheat2: PropTypes.bool,
-  // OpenWndW: PropTypes.string,
+  OpenWndW: PropTypes.string,
   SensorSet2: PropTypes.string,
 };
 
 ZoneIIScene.defaultProps = {
   Preheat2: false,
-  // OpenWndW: '00',
+  OpenWndW: '0000',
   SensorSet2: 'air_flour',
 };
 
@@ -128,5 +136,6 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   Preheat2: dpState[Preheat2Code],
+  OpenWndW: dpState[OpenWndWCode],
   SensorSet2: dpState[SensorSet2Code],
 }))(ZoneIIScene);

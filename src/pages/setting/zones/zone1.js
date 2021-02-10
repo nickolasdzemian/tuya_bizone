@@ -1,4 +1,5 @@
 /* eslint-disable global-require */
+/* eslint-disable react/destructuring-assignment */
 // Зона 1 - переключатели самообучения и окна
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -29,16 +30,6 @@ class ZoneIScene extends React.PureComponent {
     return Preheat1;
   }
 
-  getDataW() {
-    const { OpenWndW } = this.props;
-    const W = this.props.OpenWndW;
-    console.log(W, 'W');
-    const W1 = W.substring(0, 2);
-    console.log(W1, 'W1');
-    // W1 === '0100' === '0101' ? Boolean.valueOf(this.state, true) : Boolean.valueOf(this.state, false);
-    return OpenWndW;
-  }
-
   render() {
     const { Preheat1, SensorSet1 } = this.props;
     return (
@@ -52,9 +43,16 @@ class ZoneIScene extends React.PureComponent {
           <SwitchButton
             style={styles.switch}
             onTintColor="#ffb700"
-            value={this.state.value1}
-            onValueChange={value1 => {
-              this.setState({ value1 });
+            value={this.props.OpenWndW.substring(0, 2) === '01'}
+            onValueChange={() => {
+              const I = this.props.OpenWndW.substring(2, 4);
+              const ON = '01';
+              const OFF = '00';
+              const Tfin =
+                this.props.OpenWndW.substring(0, 2) === '00' ? String(ON + I) : String(OFF + I);
+              TYDevice.putDeviceData({
+                [OpenWndWCode]: Tfin,
+              });
             }}
           />
         </View>
@@ -99,7 +97,7 @@ ZoneIScene.propTypes = {
 
 ZoneIScene.defaultProps = {
   Preheat1: false,
-  OpenWndW: '00',
+  OpenWndW: '0000',
   SensorSet1: 'air_flour',
 };
 
