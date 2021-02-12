@@ -167,26 +167,25 @@ class Zone1 extends PureComponent {
         confirmText,
         hourText: hrss,
         minuteText: minss,
-        max: 1466,
+        max: 1440,
         value: parseInt(this.props.TimerSettings.substring(0, 4), 16),
         switchValue: this.props.TimerSettings.substring(12, 14) === '01',
         onSwitchValueChange: () => {
           const TimerSwitch = this.props.TimerSettings.substring(12, 14);
           const I = this.props.TimerSettings.substring(0, 12);
           const II = this.props.TimerSettings.substring(14, 18);
-          const ON = '01';
+          // const ON = '01';
           const OFF = '00';
-          const Tfin = TimerSwitch === '00' ? String(I + ON + II) : String(I + OFF + II);
+          const Tfin = TimerSwitch === '00' ? null : String(I + OFF + II);
           TYDevice.putDeviceData({
             [TimerSettingsCode]: Tfin,
           });
-          this.forceUpdate();
         },
         onMaskPress: ({ close }) => {
           close();
         },
         onConfirm: (data, { close }) => {
-          if (data.value < 1467) {
+          if (data.value < 1441) {
             console.log('return', data.value);
             const TimerI = this.props.TimerSettings.substring(4, 12);
             const TimerII = this.props.TimerSettings.substring(14, 18);
@@ -196,21 +195,22 @@ class Zone1 extends PureComponent {
             const Tfin =
               Tset < 16
                 ? String(`000${Tsend}${TimerI}01${TimerII}`)
-                : 16 <= Tset < 255
+                : Tset < 255 && Tset > 15
                   ? String(`00${Tsend}${TimerI}01${TimerII}`)
-                  : 255 <= Tset < 1467
+                  : Tset < 1467 && Tset > 254
                     ? String(`0${Tsend}${TimerI}01${TimerII}`)
                     : null;
             TYDevice.putDeviceData({
               [TimerSettingsCode]: Tfin,
             });
+            this.forceUpdate();
           }
           close();
         },
       },
       {
         onShow: () => this.forceUpdate(),
-        onHide: () => console.log('hide'),
+        onHide: () => this.forceUpdate(this.render),
         onDismiss: () => console.log('dismiss'),
       }
     );
@@ -293,21 +293,22 @@ class Zone1 extends PureComponent {
             />
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
-          {modeZ === '02' ? null : (
-            <TouchableOpacity onPress={C === '01' ? this.timer1 : null} style={styles.touch}>
-              <FontAwesomeIcon
-                icon={TimerOn === '01' ? faStopwatch20 : faStopwatch}
-                color={C === '01' ? '#ffb700' : '#d6d6d6'}
-                size={30}
-                margin={5}
-              />
-              <Text style={styles.title}>
-                {TimerOn === '00'
-                  ? Strings.getLang('ttimer')
-                  : this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(0, 4), 16))}
-              </Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            onPress={C === '01' && modeZ !== '02' ? this.timer1 : null}
+            style={styles.touch}
+          >
+            <FontAwesomeIcon
+              icon={TimerOn === '01' ? faStopwatch20 : faStopwatch}
+              color={C === '01' && modeZ !== '02' ? '#ffb700' : '#d6d6d6'}
+              size={30}
+              margin={5}
+            />
+            <Text style={styles.title}>
+              {TimerOn === '00'
+                ? Strings.getLang('ttimer')
+                : this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(0, 4), 16))}
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={C === '01' ? this.goToZoneChart : null} style={styles.touch}>
             <FontAwesomeIcon
               icon={faChartBar}

@@ -16,14 +16,19 @@ All notable changes to this project will be documented in this file. See [standa
 * added additional icons for timer ON & OFF | добавлены дополнительные иконки для ВКЛ и ВЫКл таймера
 * added timer value under icon, when timer is ON and activated | добавлено текущее значение таймера, если он включен и активирован
 * added NULL taps when power is OFF | добавлены нажатия без действий, если питание выключено
+* added color definition for buttons mode selection | добавлено определение цветом для выбора режимов
+* added information about the 2nd button, when climate is on | добавлена информация о второй кнопке, когда климат включен
 * fixed force update for some values on the home screen | исправлено принудительное обновление некоторых значений на главном экране
-* fixed popup dialog window closing after confirmation | исправлено закрывание диалогового окна после подтверждения
+* ? fixed popup dialog window closing after confirmation | исправлено закрывание диалогового окна после подтверждения
 * fixed sensor type selector, added some info | исправлена функция выбора типа датчика, добавлена информация
 #### Cloud func. | Функции облака
+* fixed performance lag when turning ON simple timer | исправлена задержка и производительность при включении простого таймера
 * added mode selection on home screen for climate mode | добавлен выбор режимов для климат-контроля на главном экране
 * added mode selection on home screen for zones | добавлен выбор режимов для зон
 * added open window function control for both zones | добавлено управление функцией открытого окна для обеих зон
 * added simple timer and it's switcher to the 1st zone | добавлен простой таймер и его переключатель для первой зоны
+* added simple timer and it's switcher to the 2nd zone | добавлен простой таймер и его переключатель для второй зоны
+* added buttons mode control | добавлен выбор режима кнопок
 
 #### 2.0.0
 * global upgrade to React 16.8.3|RN 0.59.10 | глобальное обновление до React 16.8.3|RN 0.59.10

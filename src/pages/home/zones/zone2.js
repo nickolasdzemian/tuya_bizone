@@ -12,6 +12,7 @@ import {
   faCog,
   faPowerOff,
   faStopwatch20,
+  faStopwatch,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -22,6 +23,7 @@ const {
   Zone: ZoneCode,
   SetTemperature: SetTemperatureCode,
   ModeChannel: ModeChannelCode,
+  TimerSettings: TimerSettingsCode,
 } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
@@ -35,10 +37,6 @@ const minss = Strings.getLang('minss');
 class Zone2 extends PureComponent {
   constructor(props) {
     super(props);
-    this.stateTimerOn = { isHidden: false };
-
-    this.state = { countdown: 60, countdownSwitchValue: true };
-
     const { SetTemperature } = this.props;
     const T = SetTemperature.substring(6, 8);
     const V = parseInt(T, 16);
@@ -108,6 +106,13 @@ class Zone2 extends PureComponent {
     return valueZ2;
   }
 
+  convertMinsToTime = mins => {
+    const hours = Math.floor(mins / 60);
+    let minutes = mins % 60;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${hours}${hrss}:${minutes}${minss}`;
+  };
+
   _changeDataTemp = valueZ2 => {
     this.setState({ valueZ2: Math.round(valueZ2) });
     const { SetTemperature } = this.props;
@@ -165,25 +170,51 @@ class Zone2 extends PureComponent {
         confirmText,
         hourText: hrss,
         minuteText: minss,
-        max: 1466,
-        value: this.state.countdown,
-        switchValue: this.state.countdownSwitchValue,
-        onSwitchValueChange: value => this.setState({ countdownSwitchValue: value }),
+        max: 1440,
+        value: parseInt(this.props.TimerSettings.substring(4, 8), 16),
+        switchValue: this.props.TimerSettings.substring(14, 16) === '01',
+        onSwitchValueChange: () => {
+          const TimerSwitch = this.props.TimerSettings.substring(14, 16);
+          const I = this.props.TimerSettings.substring(0, 14);
+          const II = this.props.TimerSettings.substring(16, 18);
+          // const ON = '01';
+          const OFF = '00';
+          const Tfin = TimerSwitch === '00' ? null : String(I + OFF + II);
+          TYDevice.putDeviceData({
+            [TimerSettingsCode]: Tfin,
+          });
+        },
         onMaskPress: ({ close }) => {
           close();
         },
         onConfirm: (data, { close }) => {
-          this.setState({ countdown: data.value });
-          if (data.value < 100) {
+          if (data.value < 1441) {
             console.log('return', data.value);
-            return;
+            const TimerO = this.props.TimerSettings.substring(0, 4);
+            const TimerI = this.props.TimerSettings.substring(8, 14);
+            const TimerII = this.props.TimerSettings.substring(16, 18);
+            const Tset = data.value;
+            const Tsend = Tset.toString(16);
+            console.log('Tsend', Tsend);
+            const Tfin =
+              Tset < 16
+                ? String(`${TimerO}000${Tsend}${TimerI}01${TimerII}`)
+                : Tset < 255 && Tset > 15
+                  ? String(`${TimerO}00${Tsend}${TimerI}01${TimerII}`)
+                  : Tset < 1467 && Tset > 254
+                    ? String(`${TimerO}0${Tsend}${TimerI}01${TimerII}`)
+                    : null;
+            TYDevice.putDeviceData({
+              [TimerSettingsCode]: Tfin,
+            });
+            this.forceUpdate();
           }
           close();
         },
       },
       {
-        onShow: () => console.log('show'),
-        onHide: () => console.log('hide'),
+        onShow: () => this.forceUpdate(),
+        onHide: () => this.forceUpdate(this.render),
         onDismiss: () => console.log('dismiss'),
       }
     );
@@ -209,9 +240,9 @@ class Zone2 extends PureComponent {
   };
 
   render() {
-    const { Zone } = this.props;
-    const C = Zone.substring(2, 4);
+    const C = this.props.Zone.substring(2, 4);
     const modeZ = this.props.ModeChannel.substring(2, 4);
+    const TimerOn = this.props.TimerSettings.substring(14, 16);
     return (
       <SafeAreaView style={styles.container}>
         {C === '01' ? (
@@ -268,18 +299,23 @@ class Zone2 extends PureComponent {
             />
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
-          {modeZ === '02' ? null : (
-            <TouchableOpacity onPress={this.timer1} style={styles.touch}>
-              <FontAwesomeIcon
-                icon={faStopwatch20}
-                color={C === '01' ? '#ff7300' : '#d6d6d6'}
-                size={30}
-                margin={5}
-              />
-              <Text style={styles.title}>{Strings.getLang('ttimer')}</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity onPress={this.goToZoneChart} style={styles.touch}>
+          <TouchableOpacity
+            onPress={C === '01' && modeZ !== '02' ? this.timer1 : null}
+            style={styles.touch}
+          >
+            <FontAwesomeIcon
+              icon={TimerOn === '01' ? faStopwatch20 : faStopwatch}
+              color={C === '01' && modeZ !== '02' ? '#ff7300' : '#d6d6d6'}
+              size={30}
+              margin={5}
+            />
+            <Text style={styles.title}>
+              {TimerOn === '00'
+                ? Strings.getLang('ttimer')
+                : this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(4, 8), 16))}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={C === '01' ? this.goToZoneChart : null} style={styles.touch}>
             <FontAwesomeIcon
               icon={faChartBar}
               color={C === '01' ? '#ff7300' : '#d6d6d6'}
@@ -288,7 +324,7 @@ class Zone2 extends PureComponent {
             />
             <Text style={styles.title}>{Strings.getLang('prog')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
+          <TouchableOpacity onPress={C === '01' ? this.onPressMode : null} style={styles.touch}>
             <FontAwesomeIcon
               icon={faTasks}
               color={C === '01' ? '#ff7300' : '#d6d6d6'}
@@ -311,12 +347,14 @@ Zone2.propTypes = {
   Zone: PropTypes.string,
   SetTemperature: PropTypes.string,
   ModeChannel: PropTypes.string,
+  TimerSettings: PropTypes.string,
 };
 
 Zone2.defaultProps = {
   Zone: '010101',
   SetTemperature: '1E1E141414',
   ModeChannel: '000000',
+  TimerSettings: '000000000000000000',
 };
 
 const styles = StyleSheet.create({
@@ -416,4 +454,5 @@ export default connect(({ dpState }) => ({
   Zone: dpState[ZoneCode],
   SetTemperature: dpState[SetTemperatureCode],
   ModeChannel: dpState[ModeChannelCode],
+  TimerSettings: dpState[TimerSettingsCode],
 }))(Zone2);
