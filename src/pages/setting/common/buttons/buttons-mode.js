@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, ActivityIndicator } from 'react-native';
 import { TYFlatList, Popup, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTh, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
@@ -31,11 +31,16 @@ class ButtonMode extends Component {
                   {/* <FontAwesomeIcon icon={faTh} color="#FF7300" size={25} alignSelf="center" /> */}
                 </View>
                 <ButtonMode12 />
+                {this.props.isLoading === true ? <ActivityIndicator /> : null}
                 {CliSel === true ? (
                   <View>
                     <Divider />
                     <FontAwesomeIcon icon={faInfoCircle} size={16} margin={10} alignSelf="center" />
-                    <Text style={styles.annotation}>{Strings.getLang('btn2cli')}</Text>
+                    <Text style={styles.annotation}>
+                      {Strings.getLang('btn2cli')}
+                      {'\n'}
+                      {Strings.getLang('btn1cli')}
+                    </Text>
                   </View>
                 ) : null}
               </ScrollView>
@@ -61,10 +66,12 @@ class ButtonMode extends Component {
 }
 ButtonMode.propTypes = {
   ClimateSelector: PropTypes.bool,
+  isLoading: PropTypes.any,
 };
 
 ButtonMode.defaultProps = {
   ClimateSelector: false,
+  isLoading: '',
 };
 
 const styles = StyleSheet.create({

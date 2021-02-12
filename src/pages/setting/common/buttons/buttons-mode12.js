@@ -23,6 +23,21 @@ class ButtonMode12 extends Component {
     this.state = {};
   }
 
+  mapStateToProps(state) {
+    const { selectedReddit, postsByReddit } = state;
+    const { isFetching, lastUpdated, items: posts } = postsByReddit[selectedReddit] || {
+      isFetching: true,
+      items: [],
+    };
+
+    return {
+      selectedReddit,
+      posts,
+      isFetching,
+      lastUpdated,
+    };
+  }
+
   render = () => {
     const CliSel = this.props.ClimateSelector;
     return (
@@ -47,19 +62,18 @@ class ButtonMode12 extends Component {
           >
             {Strings.getLang('buttonsmodenametemp')}
           </Checkbox>
-          {CliSel === true ? null : (
-            <Checkbox
-              style={styles.check}
-              color={CliSel === true ? '#90EE90' : '#ffb700'}
-              checked={this.props.ButtonSettings.substring(0, 2) === '01'}
-              onChange={checked =>
-                TYDevice.putDeviceData({
-                  [ButtonSettingsCode]: String(`01${this.props.ButtonSettings.substring(2, 4)}`),
-                })}
-            >
-              {Strings.getLang('buttonsmodenametimer')}
-            </Checkbox>
-          )}
+          <Checkbox
+            disabled={CliSel === true}
+            style={styles.check}
+            color={CliSel === true ? '#90EE90' : '#ffb700'}
+            checked={this.props.ButtonSettings.substring(0, 2) === '01'}
+            onChange={checked =>
+              TYDevice.putDeviceData({
+                [ButtonSettingsCode]: String(`01${this.props.ButtonSettings.substring(2, 4)}`),
+              })}
+          >
+            {Strings.getLang('buttonsmodenametimer')}
+          </Checkbox>
           <Checkbox
             style={styles.check}
             color={CliSel === true ? '#90EE90' : '#ffb700'}
@@ -105,19 +119,17 @@ class ButtonMode12 extends Component {
             >
               {Strings.getLang('buttonsmodenametemp')}
             </Checkbox>
-            {CliSel === true ? null : (
-              <Checkbox
-                style={styles.check}
-                color="#ff7300"
-                checked={this.props.ButtonSettings.substring(2, 4) === '01'}
-                onChange={checked =>
-                  TYDevice.putDeviceData({
-                    [ButtonSettingsCode]: String(`${this.props.ButtonSettings.substring(0, 2)}01`),
-                  })}
-              >
-                {Strings.getLang('buttonsmodenametimer')}
-              </Checkbox>
-            )}
+            <Checkbox
+              style={styles.check}
+              color="#ff7300"
+              checked={this.props.ButtonSettings.substring(2, 4) === '01'}
+              onChange={checked =>
+                TYDevice.putDeviceData({
+                  [ButtonSettingsCode]: String(`${this.props.ButtonSettings.substring(0, 2)}01`),
+                })}
+            >
+              {Strings.getLang('buttonsmodenametimer')}
+            </Checkbox>
             <Checkbox
               style={styles.check}
               color="#ff7300"

@@ -1,11 +1,19 @@
 // настройка температур для 1 кнопки
+import PropTypes, { arrayOf } from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Text, StyleSheet, ScrollView, View } from 'react-native';
-import { Slider, Divider, Stepper } from 'tuya-panel-kit';
+import { Slider, Divider, Stepper, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
 // import { NumberUtils } from 'tuya-panel-kit/src/utils';
-import Strings from '../../../../i18n';
+import Strings from '../../../../i18n/index.ts';
+import dpCodes from '../../../../config/dpCodes.ts';
+import { isLength } from 'lodash';
+
+const TYDevice = TYSdk.device;
+
+const { PresetTemperature: PresetTemperatureCode } = dpCodes;
 
 const tonePress = Strings.getLang('tonePress');
 const ttwoPress = Strings.getLang('ttwoPress');
@@ -13,13 +21,25 @@ const tthreePress = Strings.getLang('tthreePress');
 
 // const { add, subtract } = NumberUtils;
 
-export default class ButtonsTemp1S extends Component {
-  state = {
-    // изначальное положение
-    value1: -15,
-    value2: 30,
-    value3: 80,
-  };
+class ButtonsTemp1S extends Component {
+  constructor(props) {
+    super(props);
+    console.log(this.props.PresetTemperature);
+    const TempArr = Array.from(this.props.PresetTemperature);
+    console.log(TempArr);
+    console.log(TempArr.filter((x, i) => (x % 0) + (i % 2)));
+    // const T = PresetTemperature.substring(6, 8);
+    const V = parseInt(T, 16);
+    this.state = { value1: V > 100 ? V - 256 : V };
+  }
+
+  // state = {
+  //   // изначальное положение
+  //   value1: -15,
+  //   value2: 30,
+  //   value3: 80,
+  // };
+
   // функция выбора 1 значения (с округлением до целого числа)
   _handleComplete1 = value1 => {
     this.setState({ value1: Math.round(value1) });
@@ -52,6 +72,7 @@ export default class ButtonsTemp1S extends Component {
   _handleComplete2 = value2 => {
     this.setState({ value2: Math.round(value2) });
   };
+
   // функция выбора 3 значения
   _handleComplete3 = value3 => {
     this.setState({ value3: Math.round(value3) });
@@ -171,6 +192,14 @@ export default class ButtonsTemp1S extends Component {
   }
 }
 
+ButtonsTemp1S.propTypes = {
+  PresetTemperature: PropTypes.string,
+};
+
+ButtonsTemp1S.defaultProps = {
+  PresetTemperature: '23180c1c180c1c180c',
+};
+
 const styles = StyleSheet.create({
   buttontext: {
     marginTop: 10,
@@ -212,3 +241,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
 });
+
+export default connect(({ dpState }) => ({
+  PresetTemperature: dpState[PresetTemperatureCode],
+}))(ButtonsTemp1S);

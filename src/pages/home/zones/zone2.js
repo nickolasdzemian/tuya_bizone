@@ -37,8 +37,7 @@ const minss = Strings.getLang('minss');
 class Zone2 extends PureComponent {
   constructor(props) {
     super(props);
-    const { SetTemperature } = this.props;
-    const T = SetTemperature.substring(6, 8);
+    const T = this.props.SetTemperature.substring(6, 8);
     const V = parseInt(T, 16);
     this.state = { valueZ2: V > 100 ? V - 256 : V };
   }
