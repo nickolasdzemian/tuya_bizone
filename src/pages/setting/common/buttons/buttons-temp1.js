@@ -1,5 +1,6 @@
+/* eslint-disable react/destructuring-assignment */
 // настройка температур для 1 кнопки
-import PropTypes, { arrayOf } from 'prop-types';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, StyleSheet, ScrollView, View } from 'react-native';
@@ -9,7 +10,6 @@ import { faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
 // import { NumberUtils } from 'tuya-panel-kit/src/utils';
 import Strings from '../../../../i18n/index.ts';
 import dpCodes from '../../../../config/dpCodes.ts';
-import { isLength } from 'lodash';
 
 const TYDevice = TYSdk.device;
 
@@ -24,25 +24,49 @@ const tthreePress = Strings.getLang('tthreePress');
 class ButtonsTemp1S extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.PresetTemperature);
-    const TempArr = Array.from(this.props.PresetTemperature);
-    console.log(TempArr);
-    console.log(TempArr.filter((x, i) => (x % 0) + (i % 2)));
-    // const T = PresetTemperature.substring(6, 8);
-    const V = parseInt(T, 16);
-    this.state = { value1: V > 100 ? V - 256 : V };
+    // const iT = this.props.PresetTemperature.match(/(..?)/g);
+    const T = this.props.PresetTemperature;
+    const t1 = parseInt(T.substring(4, 6), 16);
+    const t2 = parseInt(T.substring(2, 4), 16);
+    const t3 = parseInt(T.substring(0, 2), 16);
+    this.state = {
+      value1: t1 > 100 ? t1 - 256 : t1,
+      value2: t2 > 100 ? t2 - 256 : t2,
+      value3: t3 > 100 ? t3 - 256 : t3,
+    };
   }
-
-  // state = {
-  //   // изначальное положение
-  //   value1: -15,
-  //   value2: 30,
-  //   value3: 80,
-  // };
 
   // функция выбора 1 значения (с округлением до целого числа)
   _handleComplete1 = value1 => {
     this.setState({ value1: Math.round(value1) });
+    const I = this.props.PresetTemperature.substring(0, 4);
+    const II = this.props.PresetTemperature.substring(6, 18);
+    const Tset = Math.round(value1);
+    // плявит
+    const Tsend = Tset.toString(16);
+    const ZorroOne = '0';
+    const Tfin = Tset < 16 ? String(I + ZorroOne + Tsend + II) : String(I + Tsend + II);
+    // не плявит, ибо 0
+    const Zorro = '00';
+    const Tfin0 = String(I + Zorro + II);
+    // плявит обратно, ибо не 0 и не плявит
+    const Tminus = 256 + Tset;
+    const TsendMinus = Tminus.toString(16);
+    const TfinMin = String(I + TsendMinus + II);
+    // eslint-disable-next-line no-unused-expressions
+    Tset > 0
+      ? TYDevice.putDeviceData({
+        [PresetTemperatureCode]: Tfin,
+      })
+      : Tset === 0
+        ? TYDevice.putDeviceData({
+          [PresetTemperatureCode]: Tfin0,
+        })
+        : Tset < 0
+          ? TYDevice.putDeviceData({
+            [PresetTemperatureCode]: TfinMin,
+          })
+          : null;
   };
 
   // Математическое недопущение перекрывающих крайних пределов - работает только на кнопках
@@ -68,14 +92,70 @@ class ButtonsTemp1S extends Component {
   //     });
   //   }
   // };
+
   // функция выбора 2 значения
   _handleComplete2 = value2 => {
     this.setState({ value2: Math.round(value2) });
+    const I = this.props.PresetTemperature.substring(0, 2);
+    const II = this.props.PresetTemperature.substring(4, 18);
+    const Tset = Math.round(value2);
+    // плявит
+    const Tsend = Tset.toString(16);
+    const ZorroOne = '0';
+    const Tfin = Tset < 16 ? String(I + ZorroOne + Tsend + II) : String(I + Tsend + II);
+    // не плявит, ибо 0
+    const Zorro = '00';
+    const Tfin0 = String(I + Zorro + II);
+    // плявит обратно, ибо не 0 и не плявит
+    const Tminus = 256 + Tset;
+    const TsendMinus = Tminus.toString(16);
+    const TfinMin = String(I + TsendMinus + II);
+    // eslint-disable-next-line no-unused-expressions
+    Tset > 0
+      ? TYDevice.putDeviceData({
+        [PresetTemperatureCode]: Tfin,
+      })
+      : Tset === 0
+        ? TYDevice.putDeviceData({
+          [PresetTemperatureCode]: Tfin0,
+        })
+        : Tset < 0
+          ? TYDevice.putDeviceData({
+            [PresetTemperatureCode]: TfinMin,
+          })
+          : null;
   };
 
   // функция выбора 3 значения
   _handleComplete3 = value3 => {
     this.setState({ value3: Math.round(value3) });
+    const II = this.props.PresetTemperature.substring(2, 18);
+    const Tset = Math.round(value3);
+    // плявит
+    const Tsend = Tset.toString(16);
+    const ZorroOne = '0';
+    const Tfin = Tset < 16 ? String(ZorroOne + Tsend + II) : String(Tsend + II);
+    // не плявит, ибо 0
+    const Zorro = '00';
+    const Tfin0 = String(Zorro + II);
+    // плявит обратно, ибо не 0 и не плявит
+    const Tminus = 256 + Tset;
+    const TsendMinus = Tminus.toString(16);
+    const TfinMin = String(TsendMinus + II);
+    // eslint-disable-next-line no-unused-expressions
+    Tset > 0
+      ? TYDevice.putDeviceData({
+        [PresetTemperatureCode]: Tfin,
+      })
+      : Tset === 0
+        ? TYDevice.putDeviceData({
+          [PresetTemperatureCode]: Tfin0,
+        })
+        : Tset < 0
+          ? TYDevice.putDeviceData({
+            [PresetTemperatureCode]: TfinMin,
+          })
+          : null;
   };
 
   render() {
@@ -90,17 +170,20 @@ class ButtonsTemp1S extends Component {
           <FontAwesomeIcon icon={faTemperatureLow} color="#ffb700" size={25} />
         </View>
         <Text style={styles.buttontext}>
-          {this.state.value1}°C
+          {this.state.value1}
+          °C
           {tonePress}
         </Text>
         <View style={styles.title}>
           <Text style={styles.context}>-15</Text>
           <Slider.Horizontal
+            disabled={(this.state.value2 - -15) === 1}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value2 - 1}
             minimumValue={-15}
             value={this.state.value1}
+            stepValue={1}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
             minimumTrackTintColor="#ffb700"
             onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
@@ -115,7 +198,7 @@ class ButtonsTemp1S extends Component {
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
-          onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
+          onValueChange={this._handleComplete1}
           max={this.state.value2 - 1}
           stepValue={1}
           min={-15}
@@ -123,15 +206,18 @@ class ButtonsTemp1S extends Component {
         />
         <Divider />
         <Text style={styles.buttontext}>
-          {this.state.value2}°C
+          {this.state.value2}
+          °C
           {ttwoPress}
         </Text>
         <View style={styles.title}>
           <Text style={styles.context}>{this.state.value1}</Text>
           <Slider.Horizontal
+            disabled={(this.state.value3 - this.state.value1) === 2}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value3 - 1}
+            stepValue={1}
             minimumValue={this.state.value1 + 1}
             value={this.state.value2}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
@@ -148,7 +234,7 @@ class ButtonsTemp1S extends Component {
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
-          onValueChange={value2 => this.setState({ value2: Math.round(value2) })}
+          onValueChange={this._handleComplete2}
           max={this.state.value3 - 1}
           stepValue={1}
           min={this.state.value1 + 1}
@@ -156,15 +242,18 @@ class ButtonsTemp1S extends Component {
         />
         <Divider />
         <Text style={styles.buttontext}>
-          {this.state.value3}°C
+          {this.state.value3}
+          °C
           {tthreePress}
         </Text>
         <View style={styles.title}>
           <Text style={styles.context}>{this.state.value2}</Text>
           <Slider.Horizontal
+            disabled={(80 - this.state.value2) === 1}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={80}
+            stepValue={1}
             minimumValue={this.state.value2 + 1}
             value={this.state.value3}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
@@ -181,7 +270,7 @@ class ButtonsTemp1S extends Component {
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
-          onValueChange={value3 => this.setState({ value3: Math.round(value3) })}
+          onValueChange={this._handleComplete3}
           max={80}
           stepValue={1}
           min={this.state.value2 + 1}

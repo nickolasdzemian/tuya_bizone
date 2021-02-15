@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### Known issues | Известные ограничения
 * !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
 * !visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
-* !force close app when slider has no any values to set due to limitations | принудительное завершение работы если слайдер не имеет значений из-за ограничений пределов
 
 
 #### 2.0.1
@@ -21,6 +20,7 @@ All notable changes to this project will be documented in this file. See [standa
 * fixed force update for some values on the home screen | исправлено принудительное обновление некоторых значений на главном экране
 * ? fixed popup dialog window closing after confirmation | исправлено закрывание диалогового окна после подтверждения
 * fixed sensor type selector, added some info | исправлена функция выбора типа датчика, добавлена информация
+* fixed force close app when slider has no any values to set due to limitations | исправлено принудительное завершение работы если слайдер не имеет значений из-за ограничений пределов
 #### Cloud func. | Функции облака
 * fixed performance lag when turning ON simple timer | исправлена задержка и производительность при включении простого таймера
 * added mode selection on home screen for climate mode | добавлен выбор режимов для климат-контроля на главном экране
@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file. See [standa
 * added simple timer and it's switcher to the 1st zone | добавлен простой таймер и его переключатель для первой зоны
 * added simple timer and it's switcher to the 2nd zone | добавлен простой таймер и его переключатель для второй зоны
 * added buttons mode control | добавлен выбор режима кнопок
+* added temperature settings for I & II buttons | добавлены настройки температур для I и II кнопок
 
 #### 2.0.0
 * global upgrade to React 16.8.3|RN 0.59.10 | глобальное обновление до React 16.8.3|RN 0.59.10
