@@ -1,9 +1,17 @@
+/* eslint-disable react/destructuring-assignment */
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Text, StyleSheet, ScrollView, View } from 'react-native';
-import { Slider, Divider, Stepper } from 'tuya-panel-kit';
+import { Slider, Divider, Stepper, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
-import Strings from '../../../../i18n';
+import Strings from '../../../../i18n/index.ts';
+import dpCodes from '../../../../config/dpCodes.ts';
+
+const TYDevice = TYSdk.device;
+
+const { TimerPreset: TimerPresetCode } = dpCodes;
 
 const tonePress = Strings.getLang('tonePress');
 const ttwoPress = Strings.getLang('ttwoPress');
@@ -25,23 +33,77 @@ const convertMinsToTimeM = mins => {
   return `${hours}:${minutes}`;
 };
 
-export default class ButtonsTimer1S extends Component {
-  state = {
-    value1: 0,
-    value2: 700,
-    value3: 1440,
-  };
+class ButtonsTimer1S extends Component {
+  constructor(props) {
+    super(props);
+    const T = this.props.TimerPreset;
+    const t1 = parseInt(T.substring(8, 12), 16);
+    const t2 = parseInt(T.substring(4, 8), 16);
+    const t3 = parseInt(T.substring(0, 4), 16);
+    this.state = {
+      value1: t1,
+      value2: t2,
+      value3: t3,
+    };
+  }
 
   _handleComplete1 = value1 => {
     this.setState({ value1: Math.round(value1) });
+    const TimerI = this.props.TimerPreset.substring(0, 8);
+    const TimerII = this.props.TimerPreset.substring(12, 36);
+    const Tset = Math.round(value1);
+    const Tsend = Tset.toString(16);
+    const Tfin =
+      Tset < 16
+        ? String(`${TimerI}000${Tsend}${TimerII}`)
+        : Tset < 255 && Tset > 15
+          ? String(`${TimerI}00${Tsend}${TimerII}`)
+          : Tset < 1467 && Tset > 254
+            ? String(`${TimerI}0${Tsend}${TimerII}`)
+            : null;
+    TYDevice.putDeviceData({
+      [TimerPresetCode]: Tfin,
+    });
+    this.forceUpdate();
   };
 
   _handleComplete2 = value2 => {
     this.setState({ value2: Math.round(value2) });
+    const TimerI = this.props.TimerPreset.substring(0, 4);
+    const TimerII = this.props.TimerPreset.substring(8, 36);
+    const Tset = Math.round(value2);
+    const Tsend = Tset.toString(16);
+    const Tfin =
+      Tset < 16
+        ? String(`${TimerI}000${Tsend}${TimerII}`)
+        : Tset < 255 && Tset > 15
+          ? String(`${TimerI}00${Tsend}${TimerII}`)
+          : Tset < 1467 && Tset > 254
+            ? String(`${TimerI}0${Tsend}${TimerII}`)
+            : null;
+    TYDevice.putDeviceData({
+      [TimerPresetCode]: Tfin,
+    });
+    this.forceUpdate();
   };
 
   _handleComplete3 = value3 => {
     this.setState({ value3: Math.round(value3) });
+    const TimerII = this.props.TimerPreset.substring(4, 36);
+    const Tset = Math.round(value3);
+    const Tsend = Tset.toString(16);
+    const Tfin =
+      Tset < 16
+        ? String(`000${Tsend}${TimerII}`)
+        : Tset < 255 && Tset > 15
+          ? String(`00${Tsend}${TimerII}`)
+          : Tset < 1467 && Tset > 254
+            ? String(`0${Tsend}${TimerII}`)
+            : null;
+    TYDevice.putDeviceData({
+      [TimerPresetCode]: Tfin,
+    });
+    this.forceUpdate();
   };
 
   render() {
@@ -60,12 +122,13 @@ export default class ButtonsTimer1S extends Component {
           {tonePress}
         </Text>
         <View style={styles.title}>
-          <Text style={styles.context}>0</Text>
+          <Text style={styles.context}>0:01</Text>
           <Slider.Horizontal
+            disabled={this.state.value2 === 2}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value2 - 1}
-            minimumValue={0}
+            minimumValue={1}
             value={this.state.value1}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
             minimumTrackTintColor="#ffb700"
@@ -81,10 +144,10 @@ export default class ButtonsTimer1S extends Component {
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
-          onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
+          onValueChange={this._handleComplete1}
           max={this.state.value2 - 1}
           stepValue={1}
-          min={0}
+          min={1}
           value={this.state.value1}
         />
         <Divider />
@@ -95,6 +158,7 @@ export default class ButtonsTimer1S extends Component {
         <View style={styles.title}>
           <Text style={styles.context}>{convertMinsToTimeM(this.state.value1)}</Text>
           <Slider.Horizontal
+            disabled={(this.state.value3 - this.state.value1) === 2}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value3 - 1}
@@ -114,7 +178,7 @@ export default class ButtonsTimer1S extends Component {
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
-          onValueChange={value2 => this.setState({ value2: Math.round(value2) })}
+          onValueChange={this._handleComplete2}
           max={this.state.value3 - 1}
           stepValue={1}
           min={this.state.value1 + 1}
@@ -128,6 +192,7 @@ export default class ButtonsTimer1S extends Component {
         <View style={styles.title}>
           <Text style={styles.context}>{convertMinsToTimeM(this.state.value2)}</Text>
           <Slider.Horizontal
+            disabled={(1440 - this.state.value2) === 1}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={1440}
@@ -147,7 +212,7 @@ export default class ButtonsTimer1S extends Component {
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
-          onValueChange={value3 => this.setState({ value3: Math.round(value3) })}
+          onValueChange={this._handleComplete3}
           max={1440}
           stepValue={1}
           min={this.state.value2 + 1}
@@ -157,6 +222,14 @@ export default class ButtonsTimer1S extends Component {
     );
   }
 }
+
+ButtonsTimer1S.propTypes = {
+  TimerPreset: PropTypes.string,
+};
+
+ButtonsTimer1S.defaultProps = {
+  TimerPreset: '23180c1c180c1c180c',
+};
 
 const styles = StyleSheet.create({
   buttontext: {
@@ -199,3 +272,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
 });
+
+export default connect(({ dpState }) => ({
+  TimerPreset: dpState[TimerPresetCode],
+}))(ButtonsTimer1S);

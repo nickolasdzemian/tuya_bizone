@@ -188,7 +188,6 @@ class Zone2 extends PureComponent {
         },
         onConfirm: (data, { close }) => {
           if (data.value < 1441) {
-            console.log('return', data.value);
             const TimerO = this.props.TimerSettings.substring(0, 4);
             const TimerI = this.props.TimerSettings.substring(8, 14);
             const TimerII = this.props.TimerSettings.substring(16, 18);

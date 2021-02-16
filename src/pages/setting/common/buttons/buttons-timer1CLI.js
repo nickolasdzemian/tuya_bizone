@@ -33,13 +33,13 @@ const convertMinsToTimeM = mins => {
   return `${hours}:${minutes}`;
 };
 
-class ButtonsTimer2S extends Component {
+class ButtonsTimer1CLI extends Component {
   constructor(props) {
     super(props);
     const T = this.props.TimerPreset;
-    const t1 = parseInt(T.substring(20, 24), 16);
-    const t2 = parseInt(T.substring(16, 20), 16);
-    const t3 = parseInt(T.substring(12, 16), 16);
+    const t1 = parseInt(T.substring(32, 36), 16);
+    const t2 = parseInt(T.substring(28, 32), 16);
+    const t3 = parseInt(T.substring(24, 28), 16);
     this.state = {
       value1: t1,
       value2: t2,
@@ -49,17 +49,16 @@ class ButtonsTimer2S extends Component {
 
   _handleComplete1 = value1 => {
     this.setState({ value1: Math.round(value1) });
-    const TimerI = this.props.TimerPreset.substring(0, 20);
-    const TimerII = this.props.TimerPreset.substring(24, 36);
+    const TimerI = this.props.TimerPreset.substring(0, 32);
     const Tset = Math.round(value1);
     const Tsend = Tset.toString(16);
     const Tfin =
       Tset < 16
-        ? String(`${TimerI}000${Tsend}${TimerII}`)
+        ? String(`${TimerI}000${Tsend}`)
         : Tset < 255 && Tset > 15
-          ? String(`${TimerI}00${Tsend}${TimerII}`)
+          ? String(`${TimerI}00${Tsend}`)
           : Tset < 1467 && Tset > 254
-            ? String(`${TimerI}0${Tsend}${TimerII}`)
+            ? String(`${TimerI}0${Tsend}`)
             : null;
     TYDevice.putDeviceData({
       [TimerPresetCode]: Tfin,
@@ -69,8 +68,8 @@ class ButtonsTimer2S extends Component {
 
   _handleComplete2 = value2 => {
     this.setState({ value2: Math.round(value2) });
-    const TimerI = this.props.TimerPreset.substring(0, 16);
-    const TimerII = this.props.TimerPreset.substring(20, 36);
+    const TimerI = this.props.TimerPreset.substring(0, 28);
+    const TimerII = this.props.TimerPreset.substring(32, 36);
     const Tset = Math.round(value2);
     const Tsend = Tset.toString(16);
     const Tfin =
@@ -89,8 +88,8 @@ class ButtonsTimer2S extends Component {
 
   _handleComplete3 = value3 => {
     this.setState({ value3: Math.round(value3) });
-    const TimerI = this.props.TimerPreset.substring(0, 12);
-    const TimerII = this.props.TimerPreset.substring(16, 36);
+    const TimerI = this.props.TimerPreset.substring(0, 24);
+    const TimerII = this.props.TimerPreset.substring(28, 36);
     const Tset = Math.round(value3);
     const Tsend = Tset.toString(16);
     const Tfin =
@@ -116,7 +115,7 @@ class ButtonsTimer2S extends Component {
         }}
       >
         <View style={styles.title}>
-          <FontAwesomeIcon icon={faClock} color="#ff7300" size={25} />
+          <FontAwesomeIcon icon={faClock} color="#90EE90" size={25} />
         </View>
         <Text style={styles.buttontext}>
           {convertMinsToTime(this.state.value1)}
@@ -132,7 +131,7 @@ class ButtonsTimer2S extends Component {
             minimumValue={1}
             value={this.state.value1}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor="#90EE90"
             onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
             onSlidingComplete={this._handleComplete1}
           />
@@ -141,7 +140,7 @@ class ButtonsTimer2S extends Component {
         <Stepper
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor="#90EE90"
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -166,7 +165,7 @@ class ButtonsTimer2S extends Component {
             minimumValue={this.state.value1 + 1}
             value={this.state.value2}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor="#90EE90"
             onValueChange={value2 => this.setState({ value2: Math.round(value2) })}
             onSlidingComplete={this._handleComplete2}
           />
@@ -175,7 +174,7 @@ class ButtonsTimer2S extends Component {
         <Stepper
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor="#90EE90"
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -200,7 +199,7 @@ class ButtonsTimer2S extends Component {
             minimumValue={this.state.value2 + 1}
             value={this.state.value3}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor="#90EE90"
             onValueChange={value3 => this.setState({ value3: Math.round(value3) })}
             onSlidingComplete={this._handleComplete3}
           />
@@ -209,7 +208,7 @@ class ButtonsTimer2S extends Component {
         <Stepper
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor="#90EE90"
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -224,11 +223,11 @@ class ButtonsTimer2S extends Component {
   }
 }
 
-ButtonsTimer2S.propTypes = {
+ButtonsTimer1CLI.propTypes = {
   TimerPreset: PropTypes.string,
 };
 
-ButtonsTimer2S.defaultProps = {
+ButtonsTimer1CLI.defaultProps = {
   TimerPreset: '23180c1c180c1c180c',
 };
 
@@ -276,4 +275,4 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   TimerPreset: dpState[TimerPresetCode],
-}))(ButtonsTimer2S);
+}))(ButtonsTimer1CLI);

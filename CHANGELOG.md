@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Known issues | Известные ограничения
 * !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
-* !visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
+* visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
+* UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 и экранов с аналогичным разрешением
+* some performance lags when waitng props | некоторые задержки производительности при ожидании props
 
 
 #### 2.0.1
@@ -17,6 +19,7 @@ All notable changes to this project will be documented in this file. See [standa
 * added NULL taps when power is OFF | добавлены нажатия без действий, если питание выключено
 * added color definition for buttons mode selection | добавлено определение цветом для выбора режимов
 * added information about the 2nd button, when climate is on | добавлена информация о второй кнопке, когда климат включен
+* added some deps (colors, raws) in buttons configuration, when climate is on | добавлены некоторые зависимости (цвет, наполнение) для конфигуратора кнопок при вкл режиме климата
 * fixed force update for some values on the home screen | исправлено принудительное обновление некоторых значений на главном экране
 * ? fixed popup dialog window closing after confirmation | исправлено закрывание диалогового окна после подтверждения
 * fixed sensor type selector, added some info | исправлена функция выбора типа датчика, добавлена информация
@@ -30,6 +33,9 @@ All notable changes to this project will be documented in this file. See [standa
 * added simple timer and it's switcher to the 2nd zone | добавлен простой таймер и его переключатель для второй зоны
 * added buttons mode control | добавлен выбор режима кнопок
 * added temperature settings for I & II buttons | добавлены настройки температур для I и II кнопок
+* added timer settings for I & II buttons | добавлены настройки таймера для I и II кнопок
+* added temp. set. for climate-buttom | добавлена настройка темп. для кнопки климата
+* added timer set. for climate-button | добавлена настройка таймера для кнопки климата
 
 #### 2.0.0
 * global upgrade to React 16.8.3|RN 0.59.10 | глобальное обновление до React 16.8.3|RN 0.59.10
