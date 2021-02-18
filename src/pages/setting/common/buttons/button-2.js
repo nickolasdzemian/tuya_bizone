@@ -1,16 +1,20 @@
 // основное меню для второй кнопки
+import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Tabs, Divider } from 'tuya-panel-kit';
-import Strings from '../../../../i18n';
+import { connect } from 'react-redux';
+import Strings from '../../../../i18n/index.ts';
+import dpCodes from '../../../../config/dpCodes.ts';
 import ButtonsTemp2S from './buttons-temp2';
 import ButtonsTimer2S from './buttons-timer2';
 
-export default class Button2 extends React.PureComponent {
+const { ButtonSettings: ButtonSettingsCode } = dpCodes;
+class Button2 extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      activeKey2: '3',
+      activeKey2: this.props.ButtonSettings.substring(2, 4) === '01' ? '4' : '3',
       d2: [
         { value: '3', label: Strings.getLang('buttonsmodenametemp') },
         { value: '4', label: Strings.getLang('buttonsmodenametimer') },
@@ -45,6 +49,14 @@ export default class Button2 extends React.PureComponent {
   }
 }
 
+Button2.propTypes = {
+  ButtonSettings: PropTypes.string,
+};
+
+Button2.defaultProps = {
+  ButtonSettings: '0000',
+};
+
 const styles = StyleSheet.create({
   panelcontent: {
     justifyContent: 'center',
@@ -53,3 +65,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
 });
+
+export default connect(({ dpState }) => ({
+  ButtonSettings: dpState[ButtonSettingsCode],
+}))(Button2);

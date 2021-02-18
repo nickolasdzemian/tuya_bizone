@@ -9,7 +9,7 @@ import Strings from '../../../i18n';
 const TYNative = TYSdk.native;
 const TYDevice = TYSdk.device;
 
-class ScheduleScene1 extends Component {
+class ScheduleScene2 extends Component {
   static propTypes = {
     switches: PropTypes.object.isRequired,
     timers: PropTypes.object.isRequired,
@@ -92,4 +92,4 @@ const styles = StyleSheet.create({
 export default connect(({ State }) => ({
   switches: State.switches,
   timers: State.timers,
-}))(ScheduleScene1);
+}))(ScheduleScene2);

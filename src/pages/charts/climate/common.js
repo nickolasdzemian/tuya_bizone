@@ -3,14 +3,17 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Tabs } from 'tuya-panel-kit';
 import Strings from '../../../i18n';
-import ScheduleScene1 from './cl';
+import ClimateProgramm from './temp';
 
 export default class ChartPanel extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       activeKey1: '1',
-      d1: [{ value: '1', label: Strings.getLang('climate_set') }],
+      d1: [
+        { value: '1', label: Strings.getLang('programmmode') },
+        { value: '2', label: Strings.getLang('programmtimermode') },
+      ],
     };
   }
 
@@ -30,8 +33,11 @@ export default class ChartPanel extends React.PureComponent {
         >
           <Tabs.TabPanel>
             <ScrollView>
-              <ScheduleScene1 />
+              <ClimateProgramm />
             </ScrollView>
+          </Tabs.TabPanel>
+          <Tabs.TabPanel>
+            <ScrollView />
           </Tabs.TabPanel>
         </Tabs>
       </View>

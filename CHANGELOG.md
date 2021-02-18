@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. See [standa
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
 * UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 и экранов с аналогичным разрешением
 * some performance lags when waitng props | некоторые задержки производительности при ожидании props
+* some fonts in Settings menu need to be adopted to the system dynamic fonts | некоторые шрифты в Настройках требуют адаптации под системные динамические шрифты
 
 
 #### 2.0.1
