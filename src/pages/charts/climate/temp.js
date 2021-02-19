@@ -22,15 +22,20 @@ const Res = {
 };
 
 class ClimateProgramm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { temp: this._getFull() };
+  }
+
   get data() {
-    return new Array(this._getLenth()).fill(0).map((temps, idx) => ({
+    return this._getFull().map((_, idx) => ({
       key: idx,
       styles: idx === 2 && {
         container: styles.listItem,
         title: styles.title,
         subTitle: styles.subTitle,
       },
-      title: `title_${temps}`,
+      title: `title_${idx}`,
       subTitle: `subTitle_${idx}`,
       arrow: true,
       iconSize: 24,

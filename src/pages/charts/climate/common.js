@@ -3,7 +3,7 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { Tabs } from 'tuya-panel-kit';
 import Strings from '../../../i18n';
-import ClimateProgramm from './temp';
+import ClimateProgramm from './tempFOO';
 
 export default class ChartPanel extends React.PureComponent {
   constructor(props) {
