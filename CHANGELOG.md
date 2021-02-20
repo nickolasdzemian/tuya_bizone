@@ -11,6 +11,13 @@ All notable changes to this project will be documented in this file. See [standa
 * some fonts in Settings menu need to be adopted to the system dynamic fonts | некоторые шрифты в Настройках требуют адаптации под системные динамические шрифты
 
 
+#### 2.0.2
+* added new design for charts menu | добавлен новый дизайн для графиков
+* added tabs for every weekday | добавлены вкладки для каждого дня недели
+* added today's displaying | добавлено отображение "сегодня"
+#### Cloud func. | Функции облака
+* added Christmas-mode | добавлен Рождественский режим
+
 #### 2.0.1
 * added selected temperature report in climate programm mode | добавлено отображение выбранной температуры в программном режиме климата
 * added UI deps for correct displaying modes | добавлены зависимости для корректного отображения режимов
