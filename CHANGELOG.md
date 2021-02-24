@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. See [standa
 * added new design for charts menu | добавлен новый дизайн для графиков
 * added tabs for every weekday | добавлены вкладки для каждого дня недели
 * added today's displaying | добавлено отображение "сегодня"
+* added popup for setting points | добавлено высплывающее окно для натсройки точек
 #### Cloud func. | Функции облака
 * added Christmas-mode | добавлен Рождественский режим
 

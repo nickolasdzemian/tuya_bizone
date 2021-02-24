@@ -1,13 +1,23 @@
 /* eslint-disable react/destructuring-assignment */
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
-import { TYSdk, TYFlatList, Popup, Tabs } from 'tuya-panel-kit';
+import {
+  TYSdk,
+  TYFlatList,
+  Popup,
+  Tabs,
+  Divider,
+  Stepper,
+  TimerPicker,
+  Picker,
+} from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-  faHandPointUp,
-  faChartBar,
+  faThermometerHalf,
+  faBusinessTime,
   faTasks,
   faCog,
   faPowerOff,
@@ -51,6 +61,9 @@ class ClimateProgramm extends Component {
         { value: 6, label: Strings.getLang('sat') },
         { value: 7, label: Strings.getLang('sun') },
       ],
+      dutemps: _.range(-15, 81),
+      stepperValue: 0,
+      timeSelectionValue: 0,
     };
   }
 
@@ -87,21 +100,24 @@ class ClimateProgramm extends Component {
   }
 
   convertMinsToTime = mins => {
-    const hours = Math.floor(mins / 60);
-    if (mins < 1440)
-      minutes = mins % 60;
-    if (mins > 1439 && mins < 2880)
-      minutes = 2880 - (mins % 60);
-    if (mins > 2879 && mins < 4320)
-      minutes = 4320 - (mins % 60);
-    if (mins > 4319 && mins < 5760)
-      minutes = 5760 - (mins % 60);
-    if (mins > 5759 && mins < 7200)
-      minutes = 7200 - (mins % 60);
-    if (mins > 7199 && mins < 8640)
-      minutes = 8640 - (mins % 60);
-    if (mins > 8639 && mins < 10081)
-      minutes = 10081 - (mins % 60);
+    // const hours = (Math.floor(mins / 60) - ((this.state.activeKey - 1) * 24));
+    let hours =
+      mins < 1440
+        ? Math.floor(mins / 60)
+        : mins > 1439 && mins < 2880
+          ? Math.floor((mins - 1440) / 60)
+          : mins > 2879 && mins < 4320
+            ? Math.floor((mins - 2880) / 60)
+            : mins > 4319 && mins < 5760
+              ? Math.floor((mins - 4320) / 60)
+              : mins > 5759 && mins < 7200
+                ? Math.floor((mins - 5760) / 60)
+                : mins > 7199 && mins < 8640
+                  ? Math.floor((mins - 7200) / 60)
+                  : mins > 8639 && mins < 10081
+                    ? Math.floor((mins - 8640) / 60)
+                    : null;
+    hours = hours < 10 ? `0${hours}` : hours;
     let minutes = mins % 60;
     minutes = minutes < 10 ? `0${minutes}` : minutes;
     return `${hours}${hrss}:${minutes}${minss}`;
@@ -169,30 +185,95 @@ class ClimateProgramm extends Component {
 
   render() {
     // const DATA = this.getdata();
-    const monDATA = (this.getdata()).filter(item => item.day === 'mon');
-    const tuyDATA = (this.getdata()).filter(item => item.day === 'tuy');
-    const wedDATA = (this.getdata()).filter(item => item.day === 'wed');
-    const thuDATA = (this.getdata()).filter(item => item.day === 'thu');
-    const friDATA = (this.getdata()).filter(item => item.day === 'fri');
-    const satDATA = (this.getdata()).filter(item => item.day === 'sat');
-    const sunDATA = (this.getdata()).filter(item => item.day === 'sun');
+    const monDATA = this.getdata().filter(item => item.day === 'mon');
+    const tuyDATA = this.getdata().filter(item => item.day === 'tuy');
+    const wedDATA = this.getdata().filter(item => item.day === 'wed');
+    const thuDATA = this.getdata().filter(item => item.day === 'thu');
+    const friDATA = this.getdata().filter(item => item.day === 'fri');
+    const satDATA = this.getdata().filter(item => item.day === 'sat');
+    const sunDATA = this.getdata().filter(item => item.day === 'sun');
     const Item = ({ title, subTitle }) => (
       <TouchableOpacity
         activeOpacity={0.6}
         underlayColor="#90EE90"
         // eslint-disable-next-line no-alert
         // eslint-disable-next-line max-len
-        onLongPress={() =>
-          alert(String(title.toString(10) + this.convertMinsToTime(subTitle).toString(10)))
-        }
+        onLongPress={() => {
+          Popup.custom({
+            content: (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  height: 'auto',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#fff',
+                }}
+              >
+                <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={25} />
+                <Picker
+                  style={styles.timerPicker}
+                  itemStyle={styles.pickerItem}
+                  selectedValue={title}
+                  onValueChange={this._handleChange}
+                >
+                  {this.state.dutemps.map(stepperValue => (
+                    <Picker.Item
+                      key={stepperValue}
+                      value={stepperValue}
+                      label={String(`${stepperValue} °C`)}
+                    />
+                  ))}
+                </Picker>
+                <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
+                <TimerPicker
+                  style={styles.timerPicker}
+                  title="Time period selection"
+                  cancelText="Cancel"
+                  confirmText="Confirm"
+                  startTime={subTitle}
+                  is12Hours={false}
+                  singlePicker={true}
+                  onTimerChange={this._handleTimerChange}
+                />
+                {/* <Stepper
+                  buttonType="ellipse"
+                  buttonStyle={{ size: 'small' }}
+                  ellipseIconColor="#474747"
+                  style={styles.stepper}
+                  // inputStyle={{ color: 'transparent' }}
+                  editable={true}
+                  onValueChange={stepperValue => this.setState({ stepperValue })}
+                  max={80}
+                  stepValue={1}
+                  min={-15}
+                  value={title}
+                /> */}
+              </View>
+            ),
+            title: 'Custom',
+            cancelText: 'Cancel',
+            confirmText: 'Confirm',
+            onMaskPress: ({ close }) => {
+              close();
+            },
+            onConfirm: (date, { close }) => {
+              Popup.close();
+            },
+          });
+        }}
+        // onLongPress={this.pointSetup}
         style={styles.item}
       >
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{this.convertMinsToTime(subTitle)}</Text>
+        <View style={styles.inside}>
+          <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={20} />
+          <Text style={styles.title}>{title}°C</Text>
+          <Divider style={styles.divider} />
+          <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={20} />
+          <Text style={styles.title}>{this.convertMinsToTime(subTitle)}</Text>
+        </View>
       </TouchableOpacity>
     );
-    const day = ({ item }) => item.day;
-    const renderItemMon = ({ item }) => {day === 'mon' ? <Item title={item.temperature} subTitle={item.time} /> : null};
     const renderItem = ({ item }) => <Item title={item.temperature} subTitle={item.time} />;
 
     return (
@@ -262,10 +343,52 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     color: 'black',
+    alignContent: 'center',
+  },
+  inside: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  stepper: {
+    marginVertical: 8,
+    marginHorizontal: 16,
+    margin: 20,
+  },
+  timerPicker: {
+    marginVertical: 8,
+    marginHorizontal: 16,
+    width: 150,
+    height: 150,
+  },
+  divider: {
+    flexDirection: 'column',
+    color: 'black',
+    // width: 50,
+    height: 20,
   },
   title: {
     // fontSize: 32,
+    color: '#474747',
+  },
+  pickerContainer: {
+    // height: 188,
+    flex: 1,
+    marginVertical: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  tip: {
+    fontSize: 15,
     color: 'black',
+  },
+
+  picker: {
+    marginVertical: 0,
+    height: 188,
+    width: 100,
   },
 
   // subTitle: {
