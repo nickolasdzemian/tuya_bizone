@@ -113,6 +113,8 @@ export default {
     fri: 'FRI',
     sat: 'SAT',
     sun: 'SUN',
+    pointset: 'Edit selected point',
+    UERROR: 'There is a error. Please, try again later.',
 
     tabAlarm: 'Warn Records',
     set: 'Set',
@@ -255,6 +257,8 @@ export default {
     fri: 'ПТ',
     sat: 'СБ',
     sun: 'ВС',
+    pointset: 'Редактирование точки',
+    UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',
@@ -397,6 +401,8 @@ export default {
     fri: 'ПТ',
     sat: 'СБ',
     sun: 'ВС',
+    pointset: 'Редактирование точки',
+    UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',

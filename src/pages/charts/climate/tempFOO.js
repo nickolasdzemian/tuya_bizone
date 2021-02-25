@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable react/destructuring-assignment */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -18,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faThermometerHalf,
   faBusinessTime,
-  faTasks,
+  faTrashAlt,
   faCog,
   faPowerOff,
   faStopwatch20,
@@ -30,8 +31,11 @@ import dpCodes from '../../../config/dpCodes.ts';
 const TYNative = TYSdk.native;
 const TYDevice = TYSdk.device;
 
+const cancelText = Strings.getLang('cancelText');
+const confirmText = Strings.getLang('confirmText');
 const hrss = Strings.getLang('hrss');
 const minss = Strings.getLang('minss');
+const pointset = Strings.getLang('pointset');
 
 const {
   chart_1_part_1: chart_1_part_1Code,
@@ -61,7 +65,7 @@ class ClimateProgramm extends Component {
         { value: 6, label: Strings.getLang('sat') },
         { value: 7, label: Strings.getLang('sun') },
       ],
-      dutemps: _.range(-15, 81),
+      dutemps: _.range(0, 96),
       stepperValue: 0,
       timeSelectionValue: 0,
     };
@@ -121,6 +125,26 @@ class ClimateProgramm extends Component {
     let minutes = mins % 60;
     minutes = minutes < 10 ? `0${minutes}` : minutes;
     return `${hours}${hrss}:${minutes}${minss}`;
+  };
+
+  convertMinsToMins = mins => {
+    const MMM =
+      mins < 1440
+        ? Math.floor(mins)
+        : mins > 1439 && mins < 2880
+          ? Math.floor(mins - 1440)
+          : mins > 2879 && mins < 4320
+            ? Math.floor(mins - 2880)
+            : mins > 4319 && mins < 5760
+              ? Math.floor(mins - 4320)
+              : mins > 5759 && mins < 7200
+                ? Math.floor(mins - 5760)
+                : mins > 7199 && mins < 8640
+                  ? Math.floor(mins - 7200)
+                  : mins > 8639 && mins < 10081
+                    ? Math.floor(mins - 8640)
+                    : null;
+    return MMM;
   };
 
   _getLenth() {
@@ -192,13 +216,17 @@ class ClimateProgramm extends Component {
     const friDATA = this.getdata().filter(item => item.day === 'fri');
     const satDATA = this.getdata().filter(item => item.day === 'sat');
     const sunDATA = this.getdata().filter(item => item.day === 'sun');
-    const Item = ({ title, subTitle }) => (
+    const Item = ({ id, title, subTitle, day }) => (
       <TouchableOpacity
         activeOpacity={0.6}
         underlayColor="#90EE90"
-        // eslint-disable-next-line no-alert
-        // eslint-disable-next-line max-len
         onLongPress={() => {
+          this.setState({
+            stepperValue: title,
+            timeSelectionValue: this.convertMinsToMins(subTitle),
+          });
+          let temp = title;
+          let time = this.convertMinsToMins(subTitle);
           Popup.custom({
             content: (
               <View
@@ -208,57 +236,85 @@ class ClimateProgramm extends Component {
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: '#fff',
+                  padding: 8,
                 }}
               >
-                <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={25} />
+                <FontAwesomeIcon
+                  icon={faThermometerHalf}
+                  color="#474747"
+                  size={25}
+                  marginRight={20}
+                  marginLeft={10}
+                />
                 <Picker
-                  style={styles.timerPicker}
-                  itemStyle={styles.pickerItem}
+                  style={styles.tempPicker}
+                  loop={true}
+                  itemStyle={styles.tempPicker}
                   selectedValue={title}
-                  onValueChange={this._handleChange}
+                  onValueChange={stepperValue =>
+                    this.setState({
+                      stepperValue: parseInt(
+                        stepperValue < 80 ? stepperValue : 80 - stepperValue,
+                        10
+                      ),
+                    })
+                  }
                 >
                   {this.state.dutemps.map(stepperValue => (
                     <Picker.Item
+                      style={styles.tempPicker}
                       key={stepperValue}
                       value={stepperValue}
-                      label={String(`${stepperValue} °C`)}
+                      label={String(`${stepperValue < 80 ? stepperValue : 80 - stepperValue} °C`)}
                     />
                   ))}
                 </Picker>
+                <Divider
+                  style={{
+                    flexDirection: 'column',
+                    color: 'black',
+                    alignSelf: 'center',
+                    height: 100,
+                    marginLeft: 20,
+                    margin: 20,
+                  }}
+                />
                 <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
                 <TimerPicker
                   style={styles.timerPicker}
-                  title="Time period selection"
-                  cancelText="Cancel"
-                  confirmText="Confirm"
-                  startTime={subTitle}
+                  startTime={time}
                   is12Hours={false}
                   singlePicker={true}
-                  onTimerChange={this._handleTimerChange}
+                  onTimerChange={timeSelectionValue => this.setState({ timeSelectionValue })}
                 />
-                {/* <Stepper
-                  buttonType="ellipse"
-                  buttonStyle={{ size: 'small' }}
-                  ellipseIconColor="#474747"
-                  style={styles.stepper}
-                  // inputStyle={{ color: 'transparent' }}
-                  editable={true}
-                  onValueChange={stepperValue => this.setState({ stepperValue })}
-                  max={80}
-                  stepValue={1}
-                  min={-15}
-                  value={title}
-                /> */}
               </View>
             ),
-            title: 'Custom',
-            cancelText: 'Cancel',
-            confirmText: 'Confirm',
+            title: pointset,
+            cancelText,
+            confirmText,
             onMaskPress: ({ close }) => {
               close();
             },
-            onConfirm: (date, { close }) => {
-              Popup.close();
+            onConfirm: (idx, { close }) => {
+              temp = this.state.stepperValue;
+              time =
+                day === 'mon'
+                  ? this.state.timeSelectionValue
+                  : day === 'tuy'
+                    ? this.state.timeSelectionValue + 1440
+                    : day === 'wed'
+                      ? this.state.timeSelectionValue + 2880
+                      : day === 'thu'
+                        ? this.state.timeSelectionValue + 4320
+                        : day === 'fri'
+                          ? this.state.timeSelectionValue + 5760
+                          : day === 'sat'
+                            ? this.state.timeSelectionValue + 7200
+                            : day === 'sun'
+                              ? this.state.timeSelectionValue + 8640
+                              : alert(Strings.getLang('UERROR'));
+              console.log(id, temp, time, day, 'CONFIRMATION DATA');
+              close();
             },
           });
         }}
@@ -266,15 +322,29 @@ class ClimateProgramm extends Component {
         style={styles.item}
       >
         <View style={styles.inside}>
+          <Text style={styles.title}>
+            #
+            {id}
+          </Text>
+          <Divider style={styles.divider} />
           <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={20} />
-          <Text style={styles.title}>{title}°C</Text>
+          <Text style={styles.title}>
+            {title}
+            °C
+          </Text>
           <Divider style={styles.divider} />
           <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={20} />
           <Text style={styles.title}>{this.convertMinsToTime(subTitle)}</Text>
+          <Divider style={styles.divider} />
+          <TouchableOpacity style={{ marginLeft: 10 }}>
+            <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={18} />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
-    const renderItem = ({ item }) => <Item title={item.temperature} subTitle={item.time} />;
+    const renderItem = ({ item }) => (
+      <Item title={item.temperature} subTitle={item.time} id={item.id} day={item.day} />
+    );
 
     return (
       <View style={{ flex: 1 }}>
@@ -326,14 +396,9 @@ ClimateProgramm.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  // listItem: {
-  //   height: 72,
-  //   marginBottom: 8,
-  //   backgroundColor: '#242831',
+  // container: {
+  //   flex: 1,
   // },
-  container: {
-    flex: 1,
-  },
   item: {
     backgroundColor: '#fff',
     borderLeftColor: '#90EE90',
@@ -351,50 +416,23 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
   },
-  stepper: {
-    marginVertical: 8,
-    marginHorizontal: 16,
-    margin: 20,
+  tempPicker: {
+    width: 70,
+    height: 200,
   },
   timerPicker: {
-    marginVertical: 8,
-    marginHorizontal: 16,
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
   },
   divider: {
     flexDirection: 'column',
     color: 'black',
-    // width: 50,
     height: 20,
   },
   title: {
     // fontSize: 32,
     color: '#474747',
   },
-  pickerContainer: {
-    // height: 188,
-    flex: 1,
-    marginVertical: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  tip: {
-    fontSize: 15,
-    color: 'black',
-  },
-
-  picker: {
-    marginVertical: 0,
-    height: 188,
-    width: 100,
-  },
-
-  // subTitle: {
-  //   color: 'rgba(255, 255, 255, 0.4)',
-  //   marginTop: 4,
-  // },
 });
 
 export default connect(({ dpState }) => ({
