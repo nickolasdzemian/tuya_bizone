@@ -65,7 +65,7 @@ class ClimateProgramm extends Component {
         { value: 6, label: Strings.getLang('sat') },
         { value: 7, label: Strings.getLang('sun') },
       ],
-      dutemps: _.range(0, 96),
+      dutemps: _.range(-15, 80),
       stepperValue: 0,
       timeSelectionValue: 0,
     };
@@ -174,7 +174,11 @@ class ClimateProgramm extends Component {
       ? this.props.chart_1_part_4.substring(4)
       : '';
     const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
-    const temps = part0.map(item => parseInt(item.substring(4, 6), 16));
+    const temps = part0.map(item =>
+      parseInt(item.substring(4, 6), 16) > 100
+        ? parseInt(item.substring(4, 6), 16) - 256
+        : parseInt(item.substring(4, 6), 16)
+    );
     return temps;
   }
 
@@ -208,7 +212,7 @@ class ClimateProgramm extends Component {
   };
 
   render() {
-    // const DATA = this.getdata();
+    const DATA = this.getdata();
     const monDATA = this.getdata().filter(item => item.day === 'mon');
     const tuyDATA = this.getdata().filter(item => item.day === 'tuy');
     const wedDATA = this.getdata().filter(item => item.day === 'wed');
@@ -248,15 +252,12 @@ class ClimateProgramm extends Component {
                 />
                 <Picker
                   style={styles.tempPicker}
-                  loop={true}
+                  // loop={true}
                   itemStyle={styles.tempPicker}
                   selectedValue={title}
                   onValueChange={stepperValue =>
                     this.setState({
-                      stepperValue: parseInt(
-                        stepperValue < 80 ? stepperValue : 80 - stepperValue,
-                        10
-                      ),
+                      stepperValue: parseInt(stepperValue, 10),
                     })
                   }
                 >
@@ -265,7 +266,7 @@ class ClimateProgramm extends Component {
                       style={styles.tempPicker}
                       key={stepperValue}
                       value={stepperValue}
-                      label={String(`${stepperValue < 80 ? stepperValue : 80 - stepperValue} °C`)}
+                      label={String(`${stepperValue} °C`)}
                     />
                   ))}
                 </Picker>
@@ -313,19 +314,46 @@ class ClimateProgramm extends Component {
                             : day === 'sun'
                               ? this.state.timeSelectionValue + 8640
                               : alert(Strings.getLang('UERROR'));
-              console.log(id, temp, time, day, 'CONFIRMATION DATA');
+              DATA.splice(id, 1, {
+                id,
+                temperature: temp,
+                time,
+                day,
+              });
+              DATA.sort(function(a, b) {
+                if (a.time > b.time) {
+                  return 1;
+                }
+                if (a.time < b.time) {
+                  return -1;
+                }
+                return 0;
+              });
+              const DATA2 = [];
+              const temps = DATA.map(item => item.temperature);
+              if (DATA.length > 0) {
+                for (let i = 0; i < DATA.length; i++) {
+                  DATA2[i] = {
+                    temperature:
+                      temps[i] < 16 && temps[i] > -1
+                        ? String(`0${(temps[i]).toString(16)}`)
+                        : temps[i] < 0
+                          ? String((256 + temps[i]).toString(16))
+                          : String((temps[i]).toString(16)),
+                    time: time[i],
+                  };
+                }
+              }
+              console.log(id, temp, time, day, DATA2, 'Changed HEX data');
+              
               close();
             },
           });
         }}
-        // onLongPress={this.pointSetup}
         style={styles.item}
       >
         <View style={styles.inside}>
-          <Text style={styles.title}>
-            #
-            {id}
-          </Text>
+          <Text style={styles.title}>#{id}</Text>
           <Divider style={styles.divider} />
           <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={20} />
           <Text style={styles.title}>

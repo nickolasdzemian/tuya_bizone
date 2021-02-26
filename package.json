@@ -33,6 +33,7 @@
     "react": "16.8.3",
     "react-addons-shallow-compare": "^15.6.2",
     "react-native": "0.59.10",
+    "react-native-chart-kit": "^6.11.0",
     "react-native-svg": "5.5.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.0",
