@@ -331,21 +331,41 @@ class ClimateProgramm extends Component {
               });
               const DATA2 = [];
               const temps = DATA.map(item => item.temperature);
+              const times = DATA.map(item => item.time);
               if (DATA.length > 0) {
                 for (let i = 0; i < DATA.length; i++) {
                   DATA2[i] = {
+                    time:
+                      times[i] < 16 && times[i] > 0
+                        ? String(`000${(times[i]).toString(16)}`) 
+                        : times[i] > 15 && times[i] < 255
+                          ? String(`00${(times[i]).toString(16)}`) 
+                          : times[i] > 254 && times[i] < 4096
+                            ? String(`0${(times[i]).toString(16)}`) 
+                            : times[i] > 4095 && times[i] < 10080
+                              ? String(`${(times[i]).toString(16)}`)
+                              : alert(Strings.getLang('UERROR')),
                     temperature:
                       temps[i] < 16 && temps[i] > -1
                         ? String(`0${(temps[i]).toString(16)}`)
                         : temps[i] < 0
                           ? String((256 + temps[i]).toString(16))
-                          : String((temps[i]).toString(16)),
-                    time: time[i],
+                          : temps[i] > 15
+                            ? String((temps[i]).toString(16))
+                            : alert(Strings.getLang('UERROR')),
                   };
                 }
               }
+              const LENA2 = DATA2.length;
+              let part0 = DATA2.slice(0, 84);
+              const P0L =
+                part0.length < 16
+                  ? String(`000${(part0.length).toString(16)}`)
+                  : String(`00${(part0.length).toString(16)}`);
+              part0 = part0.map(a => (Object.values(a)).join('')).join('');
+              part0 = String(`${P0L + part0.substring(2)}`);
               console.log(id, temp, time, day, DATA2, 'Changed HEX data');
-              
+              console.log(part0, 'DATA for SEND');
               close();
             },
           });

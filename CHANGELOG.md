@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file. See [standa
 * added tabs for every weekday | добавлены вкладки для каждого дня недели
 * added today's displaying | добавлено отображение "сегодня"
 * added popup for setting points | добавлено высплывающее окно для настройки точек
+* added sorting for fixed points | добавлена сортировка для фиксированных значений
 * fixed -INT numbers on iOS selector | исправлен выбор -10 чисел в iOS
 #### Cloud func. | Функции облака
 * added Christmas-mode | добавлен Рождественский режим
