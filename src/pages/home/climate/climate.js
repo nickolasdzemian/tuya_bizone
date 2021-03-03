@@ -107,7 +107,8 @@ class ClimateM extends PureComponent {
   render() {
     const C = this.props.Zone.substring(4, 6);
     const modeCli = this.props.ModeChannel.substring(4, 6);
-    const ProgTempCli = parseInt(this.props.ReportProgTemp.substring(4, 6), 16);
+    const ProgTempCli0 = parseInt(this.props.ReportProgTemp.substring(4, 6), 16);
+    const ProgTempCli = ProgTempCli0 > 100 ? -(256 - ProgTempCli0) : ProgTempCli0;
     return C === '01' ? (
       <SafeAreaView style={styles.container}>
         {modeCli === '00' ? (

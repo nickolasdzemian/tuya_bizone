@@ -115,6 +115,7 @@ export default {
     sun: 'SUN',
     pointset: 'Edit selected point',
     UERROR: 'There is a error. Please, try again later.',
+    sametimeerr: 'Sorry, but you cant add more than one point for the same time. Please, choose another time.',
 
     tabAlarm: 'Warn Records',
     set: 'Set',
@@ -259,6 +260,7 @@ export default {
     sun: 'ВС',
     pointset: 'Редактирование точки',
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
+    sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',
@@ -403,6 +405,7 @@ export default {
     sun: 'ВС',
     pointset: 'Редактирование точки',
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
+    sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',

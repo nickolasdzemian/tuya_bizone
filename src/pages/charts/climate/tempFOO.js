@@ -1,17 +1,17 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-alert */
 /* eslint-disable react/destructuring-assignment */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import {
   TYSdk,
   TYFlatList,
   Popup,
   Tabs,
   Divider,
-  Stepper,
   TimerPicker,
   Picker,
 } from 'tuya-panel-kit';
@@ -20,10 +20,6 @@ import {
   faThermometerHalf,
   faBusinessTime,
   faTrashAlt,
-  faCog,
-  faPowerOff,
-  faStopwatch20,
-  faStopwatch,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -53,8 +49,7 @@ class ClimateProgramm extends Component {
     super(props);
     const date = new Date();
     this.state = {
-      temp: this._getTemp(),
-      time: this._getTime(),
+      data: this._getAll(),
       activeKey: [7, 1, 2, 3, 4, 5, 6][date.getDay()],
       d1: [
         { value: 1, label: Strings.getLang('mon') },
@@ -65,42 +60,10 @@ class ClimateProgramm extends Component {
         { value: 6, label: Strings.getLang('sat') },
         { value: 7, label: Strings.getLang('sun') },
       ],
-      dutemps: _.range(-15, 80),
+      dutemps: _.range(-15, 81),
       stepperValue: 0,
       timeSelectionValue: 0,
     };
-  }
-
-  getdata() {
-    const { time, temp } = this.state;
-    const Data = [];
-    if (this._getLenth() > 0) {
-      for (let i = 0; i < this._getLenth(); i++) {
-        Data[i] = {
-          id: i,
-          temperature: temp[i],
-          time: time[i],
-          day:
-            time[i] < 1440
-              ? 'mon'
-              : time[i] > 1439 && time[i] < 2880
-                ? 'tuy'
-                : time[i] > 2879 && time[i] < 4320
-                  ? 'wed'
-                  : time[i] > 4319 && time[i] < 5760
-                    ? 'thu'
-                    : time[i] > 5759 && time[i] < 7200
-                      ? 'fri'
-                      : time[i] > 7199 && time[i] < 8640
-                        ? 'sat'
-                        : time[i] > 8639 && time[i] < 10081
-                          ? 'sun'
-                          : false,
-        };
-      }
-    }
-    console.log('chart for list', Data);
-    return Data;
   }
 
   convertMinsToTime = mins => {
@@ -157,7 +120,7 @@ class ClimateProgramm extends Component {
     return LENA;
   }
 
-  _getTemp() {
+  _getAll() {
     const part1 =
       parseInt(this.props.chart_1_part_1.substring(0, 4), 16) > 0
         ? this.props.chart_1_part_1.substring(4)
@@ -174,33 +137,40 @@ class ClimateProgramm extends Component {
       ? this.props.chart_1_part_4.substring(4)
       : '';
     const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
-    const temps = part0.map(item =>
+    const temp = part0.map(item =>
       parseInt(item.substring(4, 6), 16) > 100
         ? parseInt(item.substring(4, 6), 16) - 256
         : parseInt(item.substring(4, 6), 16)
     );
-    return temps;
-  }
-
-  _getTime() {
-    const part1 =
-      parseInt(this.props.chart_1_part_1.substring(0, 4), 16) > 0
-        ? this.props.chart_1_part_1.substring(4)
-        : '';
-    const part2 =
-      parseInt(this.props.chart_1_part_2.substring(0, 4), 16) > 0
-        ? this.props.chart_1_part_2.substring(4)
-        : '';
-    const part3 =
-      parseInt(this.props.chart_1_part_3.substring(0, 4), 16) > 0
-        ? this.props.chart_1_part_3.substring(4)
-        : '';
-    const part4 = parseInt(this.props.chart_1_part_4.substring(0, 4), 16)
-      ? this.props.chart_1_part_4.substring(4)
-      : '';
-    const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
-    const times = part0.map(item => parseInt(item.substring(0, 4), 16));
-    return times;
+    const time = part0.map(item => parseInt(item.substring(0, 4), 16));
+    const Data = [];
+    if (this._getLenth() > 0) {
+      for (let i = 0; i < this._getLenth(); i++) {
+        Data[i] = {
+          id: i,
+          temperature: temp[i],
+          time: time[i],
+          day:
+            time[i] < 1440
+              ? 'mon'
+              : time[i] > 1439 && time[i] < 2880
+                ? 'tuy'
+                : time[i] > 2879 && time[i] < 4320
+                  ? 'wed'
+                  : time[i] > 4319 && time[i] < 5760
+                    ? 'thu'
+                    : time[i] > 5759 && time[i] < 7200
+                      ? 'fri'
+                      : time[i] > 7199 && time[i] < 8640
+                        ? 'sat'
+                        : time[i] > 8639 && time[i] < 10081
+                          ? 'sun'
+                          : false,
+        };
+      }
+    }
+    console.log('chart for list', Data);
+    return Data;
   }
 
   _handleItemPress = value => () => {
@@ -212,14 +182,14 @@ class ClimateProgramm extends Component {
   };
 
   render() {
-    const DATA = this.getdata();
-    const monDATA = this.getdata().filter(item => item.day === 'mon');
-    const tuyDATA = this.getdata().filter(item => item.day === 'tuy');
-    const wedDATA = this.getdata().filter(item => item.day === 'wed');
-    const thuDATA = this.getdata().filter(item => item.day === 'thu');
-    const friDATA = this.getdata().filter(item => item.day === 'fri');
-    const satDATA = this.getdata().filter(item => item.day === 'sat');
-    const sunDATA = this.getdata().filter(item => item.day === 'sun');
+    const DATA = this.state.data;
+    const monDATA = this.state.data.filter(item => item.day === 'mon');
+    const tuyDATA = this.state.data.filter(item => item.day === 'tuy');
+    const wedDATA = this.state.data.filter(item => item.day === 'wed');
+    const thuDATA = this.state.data.filter(item => item.day === 'thu');
+    const friDATA = this.state.data.filter(item => item.day === 'fri');
+    const satDATA = this.state.data.filter(item => item.day === 'sat');
+    const sunDATA = this.state.data.filter(item => item.day === 'sun');
     const Item = ({ id, title, subTitle, day }) => (
       <TouchableOpacity
         activeOpacity={0.6}
@@ -252,14 +222,13 @@ class ClimateProgramm extends Component {
                 />
                 <Picker
                   style={styles.tempPicker}
-                  // loop={true}
+                  // loop={true} - not working with iOS 14 and above
                   itemStyle={styles.tempPicker}
                   selectedValue={title}
                   onValueChange={stepperValue =>
                     this.setState({
                       stepperValue: parseInt(stepperValue, 10),
-                    })
-                  }
+                    })}
                 >
                   {this.state.dutemps.map(stepperValue => (
                     <Picker.Item
@@ -332,40 +301,61 @@ class ClimateProgramm extends Component {
               const DATA2 = [];
               const temps = DATA.map(item => item.temperature);
               const times = DATA.map(item => item.time);
+              // for (let i = 0; i < DATA.length; i++)
+              //   if ((DATA[i + 1].time - DATA[i].time) === 0) {
+              //     this.setState({error: true});
+              //     TYNative.simpleTipDialog(Strings.getLang('sametimeerr'), () => {});
+              //     break;
+              //   };
+              this.setState({data: DATA});
               if (DATA.length > 0) {
                 for (let i = 0; i < DATA.length; i++) {
                   DATA2[i] = {
                     time:
-                      times[i] < 16 && times[i] > 0
-                        ? String(`000${(times[i]).toString(16)}`) 
-                        : times[i] > 15 && times[i] < 255
-                          ? String(`00${(times[i]).toString(16)}`) 
-                          : times[i] > 254 && times[i] < 4096
-                            ? String(`0${(times[i]).toString(16)}`) 
-                            : times[i] > 4095 && times[i] < 10080
-                              ? String(`${(times[i]).toString(16)}`)
-                              : alert(Strings.getLang('UERROR')),
+                        times[i] < 16 && times[i] > 0
+                          ? String(`000${(times[i]).toString(16)}`) 
+                          : times[i] > 15 && times[i] < 255
+                            ? String(`00${(times[i]).toString(16)}`) 
+                            : times[i] > 254 && times[i] < 4096
+                              ? String(`0${(times[i]).toString(16)}`) 
+                              : times[i] > 4095 && times[i] < 10080
+                                ? String(`${(times[i]).toString(16)}`)
+                                : alert(Strings.getLang('UERROR')),
                     temperature:
-                      temps[i] < 16 && temps[i] > -1
-                        ? String(`0${(temps[i]).toString(16)}`)
-                        : temps[i] < 0
-                          ? String((256 + temps[i]).toString(16))
-                          : temps[i] > 15
-                            ? String((temps[i]).toString(16))
-                            : alert(Strings.getLang('UERROR')),
+                        temps[i] < 16 && temps[i] > -1
+                          ? String(`0${(temps[i]).toString(16)}`)
+                          : temps[i] < 0
+                            ? String((256 + temps[i]).toString(16))
+                            : temps[i] > 15
+                              ? String((temps[i]).toString(16))
+                              : alert(Strings.getLang('UERROR')),
                   };
                 }
               }
               const LENA2 = DATA2.length;
               let part0 = DATA2.slice(0, 84);
               const P0L =
-                part0.length < 16
-                  ? String(`000${(part0.length).toString(16)}`)
-                  : String(`00${(part0.length).toString(16)}`);
+                  part0.length < 16
+                    ? String(`000${(part0.length).toString(16)}`)
+                    : String(`00${(part0.length).toString(16)}`);
               part0 = part0.map(a => (Object.values(a)).join('')).join('');
-              part0 = String(`${P0L + part0.substring(2)}`);
+              part0 = JSON.parse(JSON.stringify(P0L + part0));
+              TYDevice.putDeviceData({
+                [chart_1_part_1Code]: part0,
+              });
+              let part1 = DATA2.slice(84, 168);
+              const P1L =
+                  part1.length < 16
+                    ? String(`000${(part1.length).toString(16)}`)
+                    : String(`00${(part1.length).toString(16)}`);
+              part1 = part1.map(a => (Object.values(a)).join('')).join('');
+              part1 = JSON.parse(JSON.stringify(P1L + part1));
+              TYDevice.putDeviceData({
+                [chart_1_part_2Code]: part1,
+              });
               console.log(id, temp, time, day, DATA2, 'Changed HEX data');
               console.log(part0, 'DATA for SEND');
+              console.log(part1, 'DATA for SEND 1');
               close();
             },
           });

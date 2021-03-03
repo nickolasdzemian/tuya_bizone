@@ -17,7 +17,9 @@ All notable changes to this project will be documented in this file. See [standa
 * added today's displaying | добавлено отображение "сегодня"
 * added popup for setting points | добавлено высплывающее окно для настройки точек
 * added sorting for fixed points | добавлена сортировка для фиксированных значений
+* fixed posibility to add more than 1 points on the same time | исправена возможность установить более одной точки на одно и то же время
 * fixed -INT numbers on iOS selector | исправлен выбор -10 чисел в iOS
+* fixed problem with displaying changed points in programm mode | исправлена проблема отображения измененных точек в программном режиме
 #### Cloud func. | Функции облака
 * added Christmas-mode | добавлен Рождественский режим
 
