@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-alert */
 /* eslint-disable react/destructuring-assignment */
@@ -40,16 +41,21 @@ const {
   chart_1_part_4: chart_1_part_4Code,
 } = dpCodes;
 
-const Res = {
-  hue: require('../../../res/hue.png'),
-};
+// const Res = {
+//   hue: require('../../../res/hue.png'),
+// };
 
-class ClimateProgramm extends Component {
+class ChartClimateScene extends Component {
   constructor(props) {
     super(props);
+    const Ipart = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
+    const IIpart = parseInt(this.props.chart_1_part_2.substring(0, 4), 16);
+    const IIIpart = parseInt(this.props.chart_1_part_3.substring(0, 4), 16);
+    const IVpart = parseInt(this.props.chart_1_part_4.substring(0, 4), 16);
     const date = new Date();
     this.state = {
-      data: this._getAll(),
+      god: Ipart + IIpart + IIIpart + IVpart,
+      data: this._getLenth() > 0 ? this._getAll() : null,
       activeKey: [7, 1, 2, 3, 4, 5, 6][date.getDay()],
       d1: [
         { value: 1, label: Strings.getLang('mon') },
@@ -61,8 +67,8 @@ class ClimateProgramm extends Component {
         { value: 7, label: Strings.getLang('sun') },
       ],
       dutemps: _.range(-15, 81),
-      stepperValue: 0,
-      timeSelectionValue: 0,
+      stepperValue: 6,
+      timeSelectionValue: 366,
     };
   }
 
@@ -117,6 +123,7 @@ class ClimateProgramm extends Component {
     const IVpart = parseInt(this.props.chart_1_part_4.substring(0, 4), 16);
     const LENA = Ipart + IIpart + IIIpart + IVpart;
     console.log(LENA);
+    // this.setState({god: LENA});
     return LENA;
   }
 
@@ -144,8 +151,8 @@ class ClimateProgramm extends Component {
     );
     const time = part0.map(item => parseInt(item.substring(0, 4), 16));
     const Data = [];
-    if (this._getLenth() > 0) {
-      for (let i = 0; i < this._getLenth(); i++) {
+    if (this.state.god > 0) {
+      for (let i = 0; i < this.state.god; i++) {
         Data[i] = {
           id: i,
           temperature: temp[i],
@@ -183,13 +190,13 @@ class ClimateProgramm extends Component {
 
   render() {
     const DATA = this.state.data;
-    const monDATA = this.state.data.filter(item => item.day === 'mon');
-    const tuyDATA = this.state.data.filter(item => item.day === 'tuy');
-    const wedDATA = this.state.data.filter(item => item.day === 'wed');
-    const thuDATA = this.state.data.filter(item => item.day === 'thu');
-    const friDATA = this.state.data.filter(item => item.day === 'fri');
-    const satDATA = this.state.data.filter(item => item.day === 'sat');
-    const sunDATA = this.state.data.filter(item => item.day === 'sun');
+    const monDATA = this.state.god > 0 ? this.state.data.filter(item => item.day === 'mon') : null;
+    const tuyDATA = this.state.god > 0 ? this.state.data.filter(item => item.day === 'tuy') : null;
+    const wedDATA = this.state.god > 0 ? this.state.data.filter(item => item.day === 'wed') : null;
+    const thuDATA = this.state.god > 0 ? this.state.data.filter(item => item.day === 'thu') : null;
+    const friDATA = this.state.god > 0 ? this.state.data.filter(item => item.day === 'fri') : null;
+    const satDATA = this.state.god > 0 ? this.state.data.filter(item => item.day === 'sat') : null;
+    const sunDATA = this.state.god > 0 ? this.state.data.filter(item => item.day === 'sun') : null;
     const Item = ({ id, title, subTitle, day }) => (
       <TouchableOpacity
         activeOpacity={0.6}
@@ -333,17 +340,7 @@ class ClimateProgramm extends Component {
                 }
               }
               const LENA2 = DATA2.length;
-              let part0 = DATA2.slice(0, 84);
-              const P0L =
-                  part0.length < 16
-                    ? String(`000${(part0.length).toString(16)}`)
-                    : String(`00${(part0.length).toString(16)}`);
-              part0 = part0.map(a => (Object.values(a)).join('')).join('');
-              part0 = JSON.parse(JSON.stringify(P0L + part0));
-              TYDevice.putDeviceData({
-                [chart_1_part_1Code]: part0,
-              });
-              let part1 = DATA2.slice(84, 168);
+              let part1 = DATA2.slice(0, 84);
               const P1L =
                   part1.length < 16
                     ? String(`000${(part1.length).toString(16)}`)
@@ -351,11 +348,43 @@ class ClimateProgramm extends Component {
               part1 = part1.map(a => (Object.values(a)).join('')).join('');
               part1 = JSON.parse(JSON.stringify(P1L + part1));
               TYDevice.putDeviceData({
-                [chart_1_part_2Code]: part1,
+                [chart_1_part_1Code]: part1,
+              });
+              let part2 = DATA2.slice(84, 168);
+              const P2L =
+                  part2.length < 16
+                    ? String(`000${(part1.length).toString(16)}`)
+                    : String(`00${(part1.length).toString(16)}`);
+              part2 = part2.map(a => (Object.values(a)).join('')).join('');
+              part2 = JSON.parse(JSON.stringify(P2L + part2));
+              TYDevice.putDeviceData({
+                [chart_1_part_2Code]: part2,
+              });
+              let part3 = DATA2.slice(168, 252);
+              const P3L =
+                  part3.length < 16
+                    ? String(`000${(part3.length).toString(16)}`)
+                    : String(`00${(part3.length).toString(16)}`);
+              part3 = part3.map(a => (Object.values(a)).join('')).join('');
+              part3 = JSON.parse(JSON.stringify(P3L + part3));
+              TYDevice.putDeviceData({
+                [chart_1_part_3Code]: part3,
+              });
+              let part4 = DATA2.slice(252, 336); 
+              const P4L =
+                  part1.length < 16
+                    ? String(`000${(part4.length).toString(16)}`)
+                    : String(`00${(part4.length).toString(16)}`);
+              part4 = part4.map(a => (Object.values(a)).join('')).join('');
+              part4 = JSON.parse(JSON.stringify(P4L + part4));
+              TYDevice.putDeviceData({
+                [chart_1_part_4Code]: part4,
               });
               console.log(id, temp, time, day, DATA2, 'Changed HEX data');
-              console.log(part0, 'DATA for SEND');
-              console.log(part1, 'DATA for SEND 1');
+              console.log(part1, 'DATA 1');
+              console.log(part2, 'DATA 2');
+              console.log(part3, 'DATA 3');
+              console.log(part4, 'DATA 4');
               close();
             },
           });
@@ -478,4 +507,4 @@ export default connect(({ dpState }) => ({
   chart_1_part_2: dpState[chart_1_part_2Code],
   chart_1_part_3: dpState[chart_1_part_3Code],
   chart_1_part_4: dpState[chart_1_part_4Code],
-}))(ClimateProgramm);
+}))(ChartClimateScene);

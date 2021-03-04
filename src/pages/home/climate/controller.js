@@ -20,7 +20,20 @@ class ClimateController extends PureComponent {
   constructor(props) {
     super(props);
     // eslint-disable-next-line react/no-unused-state
-    this.state = { listValue: this.modeI + this.modeCli };
+    this.state = { 
+      listValue: this.modeI + this.modeCli,
+      power: this.props.Zone.substring(4, 6),
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.Zone !== nextProps.Zone) {
+      this.setState({ power: nextProps.Zone.substring(4, 6) });
+    }
+
+    if (nextProps.Zone) {
+      this.setState({ power: nextProps.Zone.substring(4, 6) });
+    }
   }
 
   onPressMode = () => {
@@ -71,20 +84,14 @@ class ClimateController extends PureComponent {
   };
 
   changePowerZone = () => {
-    const { Zone } = this.props;
-    const I = Zone.substring(0, 4);
-    const C = Zone.substring(4, 6);
-    const C0 = C.replace(C, '00');
-    const C1 = C.replace(C, '01');
-    const C00 = String(I + C0);
-    const C01 = String(I + C1);
-    if (C === '01')
-      TYDevice.putDeviceData({
-        [ZoneCode]: C00,
-      });
+    const I = this.props.Zone.substring(0, 4);
+    const C = this.props.Zone.substring(4, 6);
+    const C00 = String(`${I}00`);
+    const C01 = String(`${I}01`);
     TYDevice.putDeviceData({
-      [ZoneCode]: C01,
+      [ZoneCode]: C === '01' ? C00 : C01,
     });
+    this.setState({ power: C === '01' ? '00' : '01' });
   };
 
   // функции навиготора
@@ -103,8 +110,7 @@ class ClimateController extends PureComponent {
   };
 
   render() {
-    const { Zone } = this.props;
-    const C = Zone.substring(4, 6);
+    const C = this.state.power;
     return (
       <View style={styles.container}>
         <View style={styles.areaContols}>

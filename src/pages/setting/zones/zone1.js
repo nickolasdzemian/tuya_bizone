@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
-import { Divider, SwitchButton, TYSdk } from 'tuya-panel-kit';
+import { Divider, SwitchButton, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faDoorOpen, faBrain, faListOl, faSortAmountUp } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
@@ -22,34 +22,32 @@ const selflearnSw = Strings.getLang('selflearnSw');
 class ZoneIScene extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  getData() {
-    const { Preheat1 } = this.props;
-    return Preheat1;
+    this.state = {
+      wind: this.props.OpenWndW.substring(0, 2) === '01',
+      overheat: this.props.Preheat1,
+    };
   }
 
   render() {
     const { Preheat1, SensorSet1 } = this.props;
+    const value = this.state.wind;
     return (
       <View style={styles.container}>
         <Divider />
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faDoorOpen} color="#ffb700" size={20} />
-            <Text style={styles.items}>{windowSw}</Text>
+            <TYText style={styles.items}>{windowSw}</TYText>
           </SafeAreaView>
           <SwitchButton
             style={styles.switch}
             onTintColor="#ffb700"
-            value={this.props.OpenWndW.substring(0, 2) === '01'}
+            value={value}
             onValueChange={() => {
+              this.setState({ wind: !value });
               const I = this.props.OpenWndW.substring(2, 4);
-              const ON = '01';
-              const OFF = '00';
               const Tfin =
-                this.props.OpenWndW.substring(0, 2) === '00' ? String(ON + I) : String(OFF + I);
+                this.props.OpenWndW.substring(0, 2) === '00' ? String(`01${I}`) : String(`00${I}`);
               TYDevice.putDeviceData({
                 [OpenWndWCode]: Tfin,
               });
@@ -60,13 +58,14 @@ class ZoneIScene extends React.PureComponent {
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faBrain} color="#ffb700" size={20} />
-            <Text style={styles.items}>{selflearnSw}</Text>
+            <TYText style={styles.items}>{selflearnSw}</TYText>
           </SafeAreaView>
           <SwitchButton
             style={styles.switch}
             onTintColor="#ffb700"
-            value={this.getData()}
+            value={this.state.overheat}
             onValueChange={() => {
+              this.setState({ overheat: !Preheat1 });
               TYDevice.putDeviceData({
                 [Preheat1Code]: !Preheat1,
               });
@@ -119,9 +118,7 @@ const styles = StyleSheet.create({
   },
   items: {
     alignItems: 'center',
-    color: 'black',
-    fontWeight: 'normal',
-    fontSize: 15,
+    fontSize: 16,
     padding: 14,
   },
   switch: {

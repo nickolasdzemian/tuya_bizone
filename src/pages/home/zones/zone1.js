@@ -39,7 +39,30 @@ class Zone1 extends PureComponent {
     super(props);
     const T = this.props.SetTemperature.substring(4, 6);
     const V = parseInt(T, 16);
-    this.state = { valueZ1: V > 100 ? V - 256 : V };
+    this.state = {
+      valueZ1: V > 100 ? V - 256 : V,
+      power: this.props.Zone.substring(0, 2),
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.SetTemperature !== nextProps.SetTemperature) {
+      const V = parseInt(nextProps.SetTemperature.substring(4, 6), 16);
+      this.setState({ valueZ1: V > 100 ? V - 256 : V });
+    }
+
+    if (this.props.Zone !== nextProps.Zone) {
+      this.setState({ power: nextProps.Zone.substring(0, 2) });
+    }
+
+    if (nextProps.SetTemperature) {
+      const V = parseInt(nextProps.SetTemperature.substring(4, 6), 16);
+      this.setState({ valueZ1: V > 100 ? V - 256 : V });
+    }
+
+    if (nextProps.Zone) {
+      this.setState({ power: nextProps.Zone.substring(0, 2) });
+    }
   }
 
   // уйнкция выбора режима
@@ -220,21 +243,16 @@ class Zone1 extends PureComponent {
   changePowerZone1 = () => {
     const I = this.props.Zone.substring(2, 6);
     const C = this.props.Zone.substring(0, 2);
-    const C0 = '00';
-    const C1 = '01';
-    const C00 = String(C0 + I);
-    const C01 = String(C1 + I);
-    if (C === '01')
-      TYDevice.putDeviceData({
-        [ZoneCode]: C00,
-      });
+    const C00 = String(`00${I}`);
+    const C01 = String(`01${I}`);
     TYDevice.putDeviceData({
-      [ZoneCode]: C01,
+      [ZoneCode]: C === '01' ? C00 : C01,
     });
+    this.setState({ power: C === '01' ? '00' : '01' });
   };
 
   render() {
-    const C = this.props.Zone.substring(0, 2);
+    const C = this.state.power;
     const modeZ = this.props.ModeChannel.substring(0, 2);
     const TimerOn = this.props.TimerSettings.substring(12, 14);
     return (

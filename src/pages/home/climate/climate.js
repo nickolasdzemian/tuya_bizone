@@ -54,7 +54,30 @@ class ClimateM extends PureComponent {
     // инициализация и текущий state для slidera
     const T = this.props.SetTemperature.substring(8, 10);
     const V = parseInt(T, 16);
-    this.state = { valueM0: V > 100 ? V - 256 : V };
+    this.state = { 
+      valueM0: V > 100 ? V - 256 : V,
+      fan: this.props.FanSpeed,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.SetTemperature !== nextProps.SetTemperature) {
+      const V = parseInt(nextProps.SetTemperature.substring(8, 10), 16);
+      this.setState({ valueM0: V > 100 ? V - 256 : V });
+    }
+
+    if (this.props.FanSpeed !== nextProps.FanSpeed) {
+      this.setState({ fan: nextProps.FanSpeed });
+    }
+
+    if (nextProps.SetTemperature) {
+      const V = parseInt(nextProps.SetTemperature.substring(8, 10), 16);
+      this.setState({ valueM0: V > 100 ? V - 256 : V });
+    }
+
+    if (nextProps.FanSpeed) {
+      this.setState({ fan: nextProps.FanSpeed });
+    }
   }
 
   getDataTemp() {
@@ -66,7 +89,7 @@ class ClimateM extends PureComponent {
 
   // отправка данных по изменению в переключателях
   changeDataFan = value => {
-    // this.setState({ tab: value });
+    this.setState({ fan: value });
     TYDevice.putDeviceData({
       [FanSpeedCode]: value,
     });
@@ -156,7 +179,7 @@ class ClimateM extends PureComponent {
             <View style={styles.title}>
               <FontAwesomeIcon icon={faWaveSquare} color="#90EE90" size={25} marginRight={10} />
               <Text style={styles.num}>
-                {ProgTempCli}
+                {this.props.ReportProgTemp.substring(4, 6) === '81' ? '--' : ProgTempCli}
                 °C
               </Text>
             </View>
@@ -166,7 +189,7 @@ class ClimateM extends PureComponent {
           <Text style={styles.titlekwh}>{Strings.getLang('fantitle')}</Text>
           <View style={styles.title}>
             <FontAwesomeIcon icon={faFan} color="#00e1ff" size={25} marginRight={10} />
-            <Text style={styles.num}>{Strings.getLang(this.props.FanSpeed)}</Text>
+            <Text style={styles.num}>{Strings.getLang(this.state.fan)}</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.context}>Lo</Text>
@@ -174,7 +197,7 @@ class ClimateM extends PureComponent {
               activeColor="#00e1ff"
               type="radio"
               tabs={fan}
-              activeKey={this.props.FanSpeed}
+              activeKey={this.state.fan}
               onChange={this.changeDataFan}
               style={styles.bar}
               gutter={1}
@@ -187,11 +210,12 @@ class ClimateM extends PureComponent {
   }
 }
 
-ClimateM.propTypespropTypes = {
+ClimateM.propTypes = {
   FanSpeed: PropTypes.string,
   Zone: PropTypes.string,
   SetTemperature: PropTypes.string,
   ReportProgTemp: PropTypes.string,
+  ModeChannel: PropTypes.string,
 };
 
 ClimateM.defaultProps = {
@@ -199,6 +223,7 @@ ClimateM.defaultProps = {
   Zone: '010101',
   SetTemperature: '1E1E141414',
   ReportProgTemp: '001515',
+  ModeChannel: '000000',
 };
 
 const styles = StyleSheet.create({

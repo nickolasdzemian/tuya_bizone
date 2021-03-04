@@ -114,7 +114,10 @@ export default {
     sat: 'SAT',
     sun: 'SUN',
     pointset: 'Edit selected point',
+    pointadd: 'Add new point for ',
+    pointleft: ' point(s) left',
     UERROR: 'There is a error. Please, try again later.',
+    nullcharts: 'There is no data, device is suspended. Please, configure you charts and enjoy!',
     sametimeerr: 'Sorry, but you cant add more than one point for the same time. Please, choose another time.',
 
     tabAlarm: 'Warn Records',
@@ -259,7 +262,10 @@ export default {
     sat: 'СБ',
     sun: 'ВС',
     pointset: 'Редактирование точки',
+    pointadd: 'Добавление новой точки для ',
+    pointleft: ' возможно добавить',
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
+    nullcharts: 'Нет данных, работа приостановлена. Настройте программу или измените режим.',
     sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
 
     tabAlarm: 'Warn Records',
@@ -404,7 +410,10 @@ export default {
     sat: 'СБ',
     sun: 'ВС',
     pointset: 'Редактирование точки',
+    pointadd: 'Добавление новой точки для ',
+    pointleft: ' возможно добавить',
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
+    nullcharts: 'Нет данных, работа приостановлена. Настройте программу или измените режим.',
     sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
 
     tabAlarm: 'Warn Records',

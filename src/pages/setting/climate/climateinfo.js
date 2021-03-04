@@ -1,6 +1,7 @@
 // информация о режиме по нажатию на кнопку инфо
 import React, { Component } from 'react';
 import { TYFlatList, Popup, Utils, TYText } from 'tuya-panel-kit';
+import { FlatList, StyleSheet } from 'react-native';
 import Strings from '../../../i18n/index.ts';
 
 const climateinfo = Strings.getLang('climateinfo');
@@ -9,14 +10,13 @@ const climateinfot = Strings.getLang('climateinfot');
 const { convertX: cx } = Utils.RatioUtils;
 
 export default class ClimateInfo extends Component {
-  // eslint-disable-next-line react/state-in-constructor
-  state = {};
 
   get data() {
     return [
       {
         key: 'tips',
         title: climateinfot,
+        // styles: { title: styles.textSubtitle },
         onPress: () => {
           Popup.tips({
             show: true,
@@ -35,3 +35,9 @@ export default class ClimateInfo extends Component {
     return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
   }
 }
+
+// const styles = StyleSheet.create({
+//   textSubtitle: {
+//     fontSize: 15,
+//   },
+// });

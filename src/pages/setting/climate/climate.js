@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
-import { Divider, SwitchButton, TYSdk } from 'tuya-panel-kit';
+import { Divider, SwitchButton, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faSeedling,
@@ -18,7 +18,6 @@ import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 import ClimateMode from './climatemode';
 import ClimateInfo from './climateinfo';
-// import ClimateChScene from './climatech';
 
 const TYDevice = TYSdk.device;
 
@@ -28,18 +27,13 @@ const { ClimateSelector: ClimateSelectorCode, chSelector: chSelectorCode } = dpC
 class ClimateScene extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  getDataClimate() {
-    const { ClimateSelector } = this.props;
-    console.log('Climate', ClimateSelector);
-    return ClimateSelector;
+    this.state = {
+      climate: this.props.ClimateSelector,
+    };
   }
 
   getDataSelector() {
     const { chSelector } = this.props;
-    console.log('ClimateCH', chSelector);
     return chSelector;
   }
 
@@ -51,17 +45,18 @@ class ClimateScene extends React.PureComponent {
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} />
-            <Text style={styles.items}>{Strings.getLang('climateSw')}</Text>
+            <TYText style={styles.items}>{Strings.getLang('climateSw')}</TYText>
           </SafeAreaView>
           <SwitchButton
             style={styles.switch}
             tintColor="#ffb700"
             onTintColor="#90EE90"
-            value={this.getDataClimate()}
+            value={this.state.climate}
             onValueChange={() => {
               TYDevice.putDeviceData({
                 [ClimateSelectorCode]: !ClimateSelector,
               });
+              this.setState({ climate: !ClimateSelector });
             }}
           />
         </View>
@@ -69,24 +64,24 @@ class ClimateScene extends React.PureComponent {
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faExchangeAlt} color="#90EE90" size={20} />
-            <Text style={styles.items}>{Strings.getLang('chSelector')}</Text>
+            <TYText style={styles.items}>{Strings.getLang('chSelector')}</TYText>
             {chSelector === false ? (
               <SafeAreaView style={styles.полюшко}>
                 <Divider style={styles.divider} />
-                <Text style={styles.itemsCH}>I</Text>
+                <TYText style={styles.itemsCH}>I</TYText>
                 <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} marginRight={10} />
                 <Divider style={styles.divider} />
-                <Text style={styles.itemsCH}>II</Text>
+                <TYText style={styles.itemsCH}>II</TYText>
                 <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} marginRight={10} />
                 <Divider style={styles.divider} />
               </SafeAreaView>
             ) : (
               <SafeAreaView style={styles.полюшко}>
                 <Divider style={styles.divider} />
-                <Text style={styles.itemsCH}>I</Text>
+                <TYText style={styles.itemsCH}>I</TYText>
                 <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} marginRight={10} />
                 <Divider style={styles.divider} />
-                <Text style={styles.itemsCH}>II</Text>
+                <TYText style={styles.itemsCH}>II</TYText>
                 <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} marginRight={10} />
                 <Divider style={styles.divider} />
               </SafeAreaView>
@@ -160,9 +155,7 @@ const styles = StyleSheet.create({
   },
   items: {
     alignItems: 'center',
-    color: 'black',
-    fontWeight: 'normal',
-    fontSize: 15,
+    fontSize: 16,
     padding: 14,
   },
   switch: {
