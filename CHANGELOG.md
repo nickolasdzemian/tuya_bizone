@@ -7,7 +7,6 @@ All notable changes to this project will be documented in this file. See [standa
 * !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
 * UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 и экранов с аналогичным разрешением
-* !in programm mode user can add and sometimes see the point that has the same timestamp as another (this value resrtics by device later, when data is got) | в программном режиме пользователь может добавить точку на тоже самое время, что и другая (данное значение отклоняется устройством, когда данные получены)
 
 
 #### 2.0.2
@@ -21,15 +20,19 @@ All notable changes to this project will be documented in this file. See [standa
 * added performance optimizations for contol bar in Climate | добавена оптимизация производительности для контроллера Климата
 * added performance optimizations for every contol bar in Zones | добавена оптимизация производительности для каждого контроллера Зон
 * added UI performance optimizations for every switcher, expt channel selector | добавена оптимизация производительности UI для каждого переключателя за искл. переключателя каналов
+* added points countdown | добавлен обратный отсчет для оставшихся точек
+* added new UI for empty tabs in programm mode | добавлен новый интерфейс для пустых вкладок в программном режиме
 * fixed difference between non-dynamic fonts in settings via TY | исправлена разница между нединамическими шрифтами в настройсках при помощи TY
 * fixed set temperature states when changes are made on the device | исправлено состояние установленной температуры при изменениях на устройстве
-<!-- * fixed posibility to add more than 1 points on the same time | исправена возможность установить более одной точки на одно и то же время -->
+* fixed posibility to add more than 1 points on the same time | исправена возможность установить более одной точки на одно и то же время
 * fixed -INT numbers on iOS selector | исправлен выбор -10 чисел в iOS
 * fixed problem with displaying changed points in programm mode | исправлена проблема отображения измененных точек в программном режиме
 #### Cloud func. | Функции облака
 * increased cloud performance | увеличена производительность при обмене данными с облаком 
 * added Christmas-mode | добавлен Рождественский режим
 * added pos. real-time data (when it was changed) get | добавлена возможность получения данных (по изменениям) в режиме реального времени
+* added func creation new point from 0 | добавлено создание точек при пустом графике
+* added func creation new point with data | добавлено создание точек внутри полученных данных
 * !added adoptation for switching power (hardware's firmware changes) | добавлена адаптация под переключение питания (изменения в прошивки устройства)
 
 #### 2.0.1
