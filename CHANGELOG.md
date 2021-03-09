@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 #### 2.0.2
 * added new design for charts menu | добавлен новый дизайн для графиков
+* added swipeable buttons for chart's points | добавлены сдвигаемые кнопки для точек графика
 * added tabs for every weekday | добавлены вкладки для каждого дня недели
 * added today's displaying | добавлено отображение "сегодня"
 * added popup for setting points | добавлено высплывающее окно для настройки точек
