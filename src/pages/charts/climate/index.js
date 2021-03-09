@@ -52,12 +52,18 @@ const {
 class ChartClimateScene extends Component {
   constructor(props) {
     super(props);
-    const Ipart = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
-    const IIpart = parseInt(this.props.chart_1_part_2.substring(0, 4), 16);
-    const IIIpart = parseInt(this.props.chart_1_part_3.substring(0, 4), 16);
-    const IVpart = parseInt(this.props.chart_1_part_4.substring(0, 4), 16);
+
+    const I = this.props.chart_1_part_1;
+    const II = this.props.chart_1_part_2;
+    const III = this.props.chart_1_part_3;
+    const IV = this.props.chart_1_part_4;
+    const Ipart = I.length < 6 ? 0 : I.length / 6;
+    const IIpart = II.length < 6 ? 0 : II.length / 6;
+    const IIIpart = III.length < 6 ? 0 : III.length / 6;
+    const IVpart = IV.length < 6 ? 0 : IV.length / 6;
+
     const date = new Date();
-    console.log(date);
+    
     this.state = {
       god: Ipart + IIpart + IIIpart + IVpart,
       data: this._getLenth() > 0 ? this._getAll() : null,
@@ -72,8 +78,8 @@ class ChartClimateScene extends Component {
         { value: 7, label: Strings.getLang('sun') },
       ],
       dutemps: _.range(-15, 81),
-      stepperValue: 0,
-      timeSelectionValue: 0,
+      stepperValue: 6,
+      timeSelectionValue: 366,
     };
   }
 
@@ -121,8 +127,9 @@ class ChartClimateScene extends Component {
     return MMM;
   };
 
-  dayToMin = time => {
+  dayToMin() {
     const day = this.state.activeKey;
+    const time = this.state.timeSelectionValue;
     const DTM = day === 1
       ? time
       : day === 2
@@ -137,36 +144,33 @@ class ChartClimateScene extends Component {
                 ? time + 7200
                 : day === 7
                   ? time + 8640
-                  : false;
+                  : null;
     return DTM;              
   }
 
   _getLenth() {
-    const Ipart = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
-    const IIpart = parseInt(this.props.chart_1_part_2.substring(0, 4), 16);
-    const IIIpart = parseInt(this.props.chart_1_part_3.substring(0, 4), 16);
-    const IVpart = parseInt(this.props.chart_1_part_4.substring(0, 4), 16);
+    const I = this.props.chart_1_part_1;
+    const II = this.props.chart_1_part_2;
+    const III = this.props.chart_1_part_3;
+    const IV = this.props.chart_1_part_4;
+    const Ipart = I.length < 6 ? 0 : I.length / 6;
+    const IIpart = II.length < 6 ? 0 : II.length / 6;
+    const IIIpart = III.length < 6 ? 0 : III.length / 6;
+    const IVpart = IV.length < 6 ? 0 : IV.length / 6;
     const LENA = Ipart + IIpart + IIIpart + IVpart;
     // this.setState({god: LENA});
     return LENA;
   }
 
   _getAll() {
-    const part1 =
-      parseInt(this.props.chart_1_part_1.substring(0, 4), 16) > 0
-        ? this.props.chart_1_part_1.substring(4)
-        : '';
-    const part2 =
-      parseInt(this.props.chart_1_part_2.substring(0, 4), 16) > 0
-        ? this.props.chart_1_part_2.substring(4)
-        : '';
-    const part3 =
-      parseInt(this.props.chart_1_part_3.substring(0, 4), 16) > 0
-        ? this.props.chart_1_part_3.substring(4)
-        : '';
-    const part4 = parseInt(this.props.chart_1_part_4.substring(0, 4), 16)
-      ? this.props.chart_1_part_4.substring(4)
-      : '';
+    const I = this.props.chart_1_part_1;
+    const II = this.props.chart_1_part_2;
+    const III = this.props.chart_1_part_3;
+    const IV = this.props.chart_1_part_4;
+    const part1 = I.length > 6 ? I : '';
+    const part2 = II.length > 6 ? II : '';
+    const part3 = III.length > 6 ? III : '';
+    const part4 = IV.length > 6 ? IV : '';
     const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
     const temp = part0.map(item =>
       parseInt(item.substring(4, 6), 16) > 100
@@ -196,7 +200,7 @@ class ChartClimateScene extends Component {
                         ? 6
                         : time[i] > 8639 && time[i] < 10081
                           ? 7
-                          : false,
+                          : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} GetAll-time`, () => {}),
         };
       }
     }
@@ -205,16 +209,14 @@ class ChartClimateScene extends Component {
     return Data;
   }
 
-  _add0point() {
-    let temp = this.state.stepperValue;
-    let time = this.state.timeSelectionValue;
+  async _add0point() {
     const day = this.state.activeKey;
-    temp = this.state.stepperValue;
-    time = this.dayToMin(time);
+    const temp = this.state.stepperValue;
+    const time = this.dayToMin();
     const DATA = [];
     for (let i = 0; i < 1; i++) {
       DATA[i] = {
-        id: '#',
+        id: '+',
         temperature: temp,
         time,
         day,
@@ -228,7 +230,7 @@ class ChartClimateScene extends Component {
       for (let i = 0; i < DATA.length; i++) {
         DATA2[i] = {
           time:
-          times[i] < 16 && times[i] > 0
+          times[i] < 16 && times[i] >= 0
             ? String(`000${(times[i]).toString(16)}`) 
             : times[i] > 15 && times[i] < 255
               ? String(`00${(times[i]).toString(16)}`) 
@@ -236,7 +238,7 @@ class ChartClimateScene extends Component {
                 ? String(`0${(times[i]).toString(16)}`) 
                 : times[i] > 4095 && times[i] < 10080
                   ? String(`${(times[i]).toString(16)}`)
-                  : alert(Strings.getLang('UERROR')),
+                  : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time0`, () => {}),
           temperature:
           temps[i] < 16 && temps[i] > -1
             ? String(`0${(temps[i]).toString(16)}`)
@@ -244,31 +246,25 @@ class ChartClimateScene extends Component {
               ? String((256 + temps[i]).toString(16))
               : temps[i] > 15
                 ? String((temps[i]).toString(16))
-                : alert(Strings.getLang('UERROR')),
+                : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp0`, () => {}),
         };
       }
     }
     let part1 = DATA2.slice(0, 84);
-    const P1L =
-      part1.length < 16
-        ? String(`000${(part1.length).toString(16)}`)
-        : String(`00${(part1.length).toString(16)}`);
     part1 = part1.map(a => (Object.values(a)).join('')).join('');
-    part1 = JSON.parse(JSON.stringify(P1L + part1));
+    part1 = JSON.parse(JSON.stringify(part1));
     TYDevice.putDeviceData({
       [chart_1_part_1Code]: part1,
     });
   }
 
   _addpoint() {
-    let temp = this.state.stepperValue;
-    let time = this.state.timeSelectionValue;
     const day = this.state.activeKey;
-    temp = this.state.stepperValue;
-    time = this.dayToMin(time);
+    const temp = this.state.stepperValue;
+    const time = this.dayToMin();
     const DATA = this._getAll();
     DATA.push({
-      id: '+',
+      id: '*',
       temperature: temp,
       time,
       day,
@@ -289,7 +285,7 @@ class ChartClimateScene extends Component {
       for (let i = 0; i < DATA.length; i++) {
         DATA2[i] = {
           time:
-          times[i] < 16 && times[i] > 0
+          times[i] < 16 && times[i] >= 0
             ? String(`000${(times[i]).toString(16)}`) 
             : times[i] > 15 && times[i] < 255
               ? String(`00${(times[i]).toString(16)}`) 
@@ -297,7 +293,7 @@ class ChartClimateScene extends Component {
                 ? String(`0${(times[i]).toString(16)}`) 
                 : times[i] > 4095 && times[i] < 10080
                   ? String(`${(times[i]).toString(16)}`)
-                  : alert(Strings.getLang('UERROR')),
+                  : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
           temperature:
           temps[i] < 16 && temps[i] > -1
             ? String(`0${(temps[i]).toString(16)}`)
@@ -305,65 +301,53 @@ class ChartClimateScene extends Component {
               ? String((256 + temps[i]).toString(16))
               : temps[i] > 15
                 ? String((temps[i]).toString(16))
-                : alert(Strings.getLang('UERROR')),
+                : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
         };
       }
     }
-    for (let i = 1; i < DATA.length; i++)
-      if (DATA[i - 1].time >= DATA[i].time) {
-        () => this.setState({data: this._getAll(), god: this._getLenth()});
-        TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});
-        break;
-      } else {
-        () => this.setState({data: DATA, god: DATA.length});
-        let part1 = DATA2.slice(0, 84);
-        const P1L =
-          part1.length < 16
-            ? String(`000${(part1.length).toString(16)}`)
-            : String(`00${(part1.length).toString(16)}`);
-        part1 = part1.map(a => (Object.values(a)).join('')).join('');
-        part1 = JSON.parse(JSON.stringify(P1L + part1));
-        TYDevice.putDeviceData({
-          [chart_1_part_1Code]: part1,
-        });
-        let part2 = DATA2.slice(84, 168);
-        const P2L =
-          part2.length < 16
-            ? String(`000${(part2.length).toString(16)}`)
-            : String(`00${(part2.length).toString(16)}`);
-        part2 = part2.map(a => (Object.values(a)).join('')).join('');
-        part2 = JSON.parse(JSON.stringify(P2L + part2));
-        // TYDevice.putDeviceData({
-        //   [chart_1_part_2Code]: part2.length === 0 ? null : part2,
-        // });
-        let part3 = DATA2.slice(168, 252);
-        const P3L =
-          part3.length < 16
-            ? String(`000${(part3.length).toString(16)}`)
-            : String(`00${(part3.length).toString(16)}`);
-        part3 = part3.map(a => (Object.values(a)).join('')).join('');
-        part3 = JSON.parse(JSON.stringify(P3L + part3));
-        // TYDevice.putDeviceData({
-        //   [chart_1_part_3Code]: part3.length === 0 ? null : part3,
-        // });
-        let part4 = DATA2.slice(252, 336); 
-        const P4L =
-          part4.length < 16
-            ? String(`000${(part4.length).toString(16)}`)
-            : String(`00${(part4.length).toString(16)}`);
-        part4 = part4.map(a => (Object.values(a)).join('')).join('');
-        part4 = JSON.parse(JSON.stringify(P4L + part4));
-        // if (part4.length > 0) {
-        //   TYDevice.putDeviceData({
-        //     [chart_1_part_4Code]: part4,
-        //   });
-        // }
-        console.log(temp, time, day, DATA2, 'Changed HEX data');
-        console.log(part1, 'DATA 1');
-        console.log(part2, 'DATA 2');
-        console.log(part3, 'DATA 3');
-        console.log(part4, 'DATA 4');
-      }
+    this.setState({data: DATA, god: DATA.length}, () => {
+      for (let i = 1; i < DATA.length; i++)
+        if (DATA[i - 1].time >= DATA[i].time) {
+          this.setState({data: this._getAll(), god: this._getLenth()});
+          TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});
+          break;
+        } else {
+        
+          let part1 = DATA2.slice(0, 84);
+          part1 = part1.map(a => (Object.values(a)).join('')).join('');
+          part1 = JSON.parse(JSON.stringify(part1));
+          TYDevice.putDeviceData({
+            [chart_1_part_1Code]: part1,
+          });
+          let part2 = DATA2.slice(84, 168);
+          part2 = part2.map(a => (Object.values(a)).join('')).join('');
+          part2 = JSON.parse(JSON.stringify(part2));
+          part2.length === 0 ? null : 
+            TYDevice.putDeviceData({
+              [chart_1_part_2Code]: part2,
+            });
+          let part3 = DATA2.slice(168, 252);
+          part3 = part3.map(a => (Object.values(a)).join('')).join('');
+          part3 = JSON.parse(JSON.stringify(part3));
+          part3.length === 0 ? null : 
+            TYDevice.putDeviceData({
+              [chart_1_part_3Code]: part3,
+            });
+          let part4 = DATA2.slice(252, 336); 
+          part4 = part4.map(a => (Object.values(a)).join('')).join('');
+          part4 = JSON.parse(JSON.stringify(part4));
+          part4.length === 0 ? null :
+            TYDevice.putDeviceData({
+              [chart_1_part_4Code]: part4,
+            });
+          console.log(temp, time, day, DATA2, 'Changed HEX data');
+          console.log(part1, 'DATA 1');
+          console.log(part2, 'DATA 2');
+          console.log(part3, 'DATA 3');
+          console.log(part4, 'DATA 4');
+          break;
+        }
+    }); 
   };
 
   _handleItemPress = value => () => {
