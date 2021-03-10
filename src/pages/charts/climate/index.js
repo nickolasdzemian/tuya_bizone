@@ -24,7 +24,7 @@ import {
   faBusinessTime,
   faTrashAlt,
   faChartPie,
-  faPlusCircle,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -34,10 +34,12 @@ const TYDevice = TYSdk.device;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
+const btndelete = Strings.getLang('btndelete');
 const hrss = Strings.getLang('hrss');
 const minss = Strings.getLang('minss');
 const pointset = Strings.getLang('pointset');
 const pointadd = Strings.getLang('pointadd');
+const pointdelete = Strings.getLang('pointdelete');
 
 const {
   chart_1_part_1: chart_1_part_1Code,
@@ -364,96 +366,98 @@ class ChartClimateScene extends Component {
     const magic = this._getAll() && this._getLenth();
     console.log(magic, 'AVADA KEDAVRA!');
     const G = this.state.god;
-    const ICO = <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} style={styles.info} marginVertical="40%" />;
+    const ICO = G > 0 ? null : <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} style={styles.info} marginVertical="40%" />;
     const DATA = this.state.data;
     const ADDPOINT = (
-      <TouchableOpacity
-        activeOpacity={0.6}
-        underlayColor="#90EE90"
-        onLongPress={G < 336 ? () => {
-          this.setState({
-            stepperValue: 6,
-            timeSelectionValue: 366,
-          });
-          const ADay = this.state.activeKey;
-          const day = ADay === 1 ? 'mon' :
-            ADay === 2 ? 'tuу' :
-              ADay === 3 ? 'wed' :
-                ADay === 4 ? 'thu' :
-                  ADay === 5 ? 'fri' :
-                    ADay === 6 ? 'sat' :
-                      ADay === 7 ? 'sun' : alert(Strings.getLang('UERROR'));
-          Popup.custom({
-            content: (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  height: 'auto',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: '#fff',
-                  padding: 8,
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faThermometerHalf}
-                  color="#474747"
-                  size={25}
-                  marginRight={20}
-                  marginLeft={10}
-                />
-                <Picker
-                  style={styles.tempPicker}
-                  // loop={true} - not working with iOS 14 and above
-                  itemStyle={styles.tempPicker}
-                  selectedValue={this.state.stepperValue}
-                  onValueChange={stepperValue =>
-                    this.setState({
-                      stepperValue: parseInt(stepperValue, 10),
-                    })}
-                >
-                  {this.state.dutemps.map(stepperValue => (
-                    <Picker.Item
-                      style={styles.tempPicker}
-                      key={stepperValue}
-                      value={stepperValue}
-                      label={String(`${stepperValue} °C`)}
-                    />
-                  ))}
-                </Picker>
-                <Divider
+      <View style={styles.edit}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={G < 336 ? () => {
+            this.setState({
+              stepperValue: 6,
+              timeSelectionValue: 366,
+            });
+            const ADay = this.state.activeKey;
+            const day = ADay === 1 ? 'mon' :
+              ADay === 2 ? 'tuу' :
+                ADay === 3 ? 'wed' :
+                  ADay === 4 ? 'thu' :
+                    ADay === 5 ? 'fri' :
+                      ADay === 6 ? 'sat' :
+                        ADay === 7 ? 'sun' : alert(Strings.getLang('UERROR'));
+            Popup.custom({
+              content: (
+                <View
                   style={{
-                    flexDirection: 'column',
-                    alignSelf: 'center',
-                    height: 100,
-                    marginLeft: 20,
-                    margin: 20,
+                    flexDirection: 'row',
+                    height: 'auto',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#fff',
+                    padding: 8,
                   }}
-                />
-                <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
-                <TimerPicker
-                  style={styles.timerPicker}
-                  startTime={this.state.timeSelectionValue}
-                  is12Hours={false}
-                  singlePicker={true}
-                  onTimerChange={timeSelectionValue => this.setState({ timeSelectionValue })}
-                />
-              </View>
-            ),
-            title: pointadd + Strings.getLang(day),
-            cancelText,
-            confirmText,
-            onMaskPress: ({ close }) => {
-              close();
-            },
-            onConfirm: (idx, { close }) => {G > 0 ? this._addpoint() : this._add0point(); close();},
-          });
-        } : null}
-        style={styles.edit}
-      >
-        {G < 336 ? <FontAwesomeIcon icon={faPlusCircle} color="#90EE90" size={30} />
-          : <FontAwesomeIcon icon={faPlusCircle} color="#d6d6d6" size={30} />}
-      </TouchableOpacity>);
+                >
+                  <FontAwesomeIcon
+                    icon={faThermometerHalf}
+                    color="#474747"
+                    size={25}
+                    marginRight={20}
+                    marginLeft={10}
+                  />
+                  <Picker
+                    style={styles.tempPicker}
+                    // loop={true} - not working with iOS 14 and above
+                    itemStyle={styles.tempPicker}
+                    selectedValue={this.state.stepperValue}
+                    onValueChange={stepperValue =>
+                      this.setState({
+                        stepperValue: parseInt(stepperValue, 10),
+                      })}
+                  >
+                    {this.state.dutemps.map(stepperValue => (
+                      <Picker.Item
+                        style={styles.tempPicker}
+                        key={stepperValue}
+                        value={stepperValue}
+                        label={String(`${stepperValue} °C`)}
+                      />
+                    ))}
+                  </Picker>
+                  <Divider
+                    style={{
+                      flexDirection: 'column',
+                      alignSelf: 'center',
+                      height: 100,
+                      marginLeft: 20,
+                      margin: 20,
+                    }}
+                  />
+                  <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
+                  <TimerPicker
+                    style={styles.timerPicker}
+                    startTime={this.state.timeSelectionValue}
+                    is12Hours={false}
+                    singlePicker={true}
+                    onTimerChange={timeSelectionValue => this.setState({ timeSelectionValue })}
+                  />
+                </View>
+              ),
+              title: pointadd + Strings.getLang(day),
+              cancelText,
+              confirmText,
+              onMaskPress: ({ close }) => {
+                close();
+              },
+              onConfirm: (idx, { close }) => {G > 0 ? this._addpoint() : this._add0point(); close();},
+            });
+          } : null}
+          style={styles.insideADD}
+        >
+          {G < 336 ? <FontAwesomeIcon icon={faPlus} color="#90EE90" size={20} />
+            : <FontAwesomeIcon icon={faPlus} color="#d6d6d6" size={20} />}
+          <Text style={styles.title}>{Strings.getLang('addNew')}</Text>  
+        </TouchableOpacity>
+      </View>);
     const monDATA = G > 0 ? this.state.data.filter(item => item.day === 1) : null;
     const tuyDATA = G > 0 ? this.state.data.filter(item => item.day === 2) : null;
     const wedDATA = G > 0 ? this.state.data.filter(item => item.day === 3) : null;
@@ -470,13 +474,129 @@ class ChartClimateScene extends Component {
             backgroundColor: '#FF4040',
             text: Strings.getLang('btndelete'),
             textStyle: { color: '#fff' },
-            onPress: () => this.delete(),
+            onPress: () => {
+              Popup.custom({
+                content: (
+                  <View
+                    style={{
+                      // flexDirection: 'row',
+                      height: 200,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#fff',
+                      padding: 8,
+                    }}
+                  >
+                    <Text style={styles.deletet}>{Strings.getLang('pointdeltext')}</Text>
+                    <Text style={styles.title}>
+                      {'#'}
+                      {id + 1}
+                      {':   '}
+                      {title}
+                      {'°C  '}
+                      {this.convertMinsToTime(subTitle)}
+                    </Text>
+                  </View>
+                ),
+                title: pointdelete,
+                cancelText,
+                confirmText: btndelete,
+                onMaskPress: ({ close }) => {
+                  close();
+                },
+                onConfirm: (idx, { close }) => {
+                  DATA.splice(id, 1);
+                  DATA.sort(function(a, b) {
+                    if (a.time > b.time) {
+                      return 1;
+                    }
+                    if (a.time < b.time) {
+                      return -1;
+                    }
+                    return 0;
+                  });
+                  const DATA2 = [];
+                  const temps = DATA.map(item => item.temperature);
+                  const times = DATA.map(item => item.time);
+                  if (DATA.length > 0) {
+                    for (let i = 0; i < DATA.length; i++) {
+                      DATA2[i] = {
+                        time:
+                            times[i] < 16 && times[i] >= 0
+                              ? String(`000${(times[i]).toString(16)}`) 
+                              : times[i] > 15 && times[i] < 255
+                                ? String(`00${(times[i]).toString(16)}`) 
+                                : times[i] > 254 && times[i] < 4096
+                                  ? String(`0${(times[i]).toString(16)}`) 
+                                  : times[i] > 4095 && times[i] < 10080
+                                    ? String(`${(times[i]).toString(16)}`)
+                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time`, () => {}),
+                        temperature:
+                            temps[i] < 16 && temps[i] > -1
+                              ? String(`0${(temps[i]).toString(16)}`)
+                              : temps[i] < 0
+                                ? String((256 + temps[i]).toString(16))
+                                : temps[i] > 15
+                                  ? String((temps[i]).toString(16))
+                                  : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp`, () => {}),
+                      };
+                    }
+                  }
+                  const timeerror = () => {
+                    for (let i = 1; i < DATA.length; i++)
+                      if (DATA[i - 1].time >= DATA[i].time) {
+                        this.setState({data: this._getAll(), god: this._getLenth()});
+                        return 1;
+                      }
+                    return 0;
+                  };
+                  if (timeerror() === 1) {TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});} else {
+                    let part1 = DATA2.slice(0, 84);
+                    part1 = part1.map(a => (Object.values(a)).join('')).join('');
+                    part1 = JSON.parse(JSON.stringify(part1));
+                    console.log(part1.length, 'PART1 LENGTH');
+                    TYDevice.putDeviceData({
+                      [chart_1_part_1Code]: part1,
+                    });
+                    let part2 = DATA2.slice(84, 168);
+                    part2 = part2.map(a => (Object.values(a)).join('')).join('');
+                    part2 = JSON.parse(JSON.stringify(part2));
+                    part2.length === 0 ? null : 
+                      TYDevice.putDeviceData({
+                        [chart_1_part_2Code]: part2,
+                      });
+                    let part3 = DATA2.slice(168, 252);
+                    part3 = part3.map(a => (Object.values(a)).join('')).join('');
+                    part3 = JSON.parse(JSON.stringify(part3));
+                    part3.length === 0 ? null : 
+                      TYDevice.putDeviceData({
+                        [chart_1_part_3Code]: part3,
+                      });
+                    let part4 = DATA2.slice(252, 336); 
+                    part4 = part4.map(a => (Object.values(a)).join('')).join('');
+                    part4 = JSON.parse(JSON.stringify(part4));
+                    part4.length === 0 ? null :
+                      TYDevice.putDeviceData({
+                        [chart_1_part_4Code]: part4,
+                      });
+                    this.setState({data: DATA, god: DATA.length});
+                    console.log(DATA2, 'Changed HEX data');
+                    console.log(part1, 'DATA 1');
+                    console.log(part2, 'DATA 2');
+                    console.log(part3, 'DATA 3');
+                    console.log(part4, 'DATA 4');
+                  }
+                  close();  
+                },
+              });
+            },
           },
         ]}
         left={[
           {
             backgroundColor: '#90EE90',
             text: Strings.getLang('btnedit'),
+            textStyle: { color: '#fff', alignSelf: 'center' },
             onPress: () => {
               this.setState({
                 stepperValue: title,
@@ -640,7 +760,6 @@ class ChartClimateScene extends Component {
                 },
               });
             },
-            textStyle: { color: '#fff', alignSelf: 'center' },
           },
         ]}
         style={styles.item}
@@ -666,7 +785,6 @@ class ChartClimateScene extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: '#f0f0f0' }}>
         <Text style={styles.info}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : Strings.getLang('nullcharts')}</Text>
-        <Divider />
         <Tabs
           style={{borderRadius: 10, padding: 8, marginVertical: 5}}
           maxItem={7}
@@ -687,30 +805,37 @@ class ChartClimateScene extends Component {
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={monDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {ICO}
           </Tabs.TabPanel>
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={tuyDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {ICO}
           </Tabs.TabPanel>
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={wedDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {ICO}
           </Tabs.TabPanel>
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={thuDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {ICO}
           </Tabs.TabPanel>
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={friDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {ICO}
           </Tabs.TabPanel>
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={satDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {ICO}
           </Tabs.TabPanel>
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={sunDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {ICO}
           </Tabs.TabPanel>
         </Tabs>
       </View>
@@ -760,13 +885,20 @@ const styles = StyleSheet.create({
   edit: {
     backgroundColor: '#fff',
     width: '100%',
+    height: 40,
     borderRadius: 10,
-    padding: 20,
-    marginBottom: 5,
+    // padding: 20,
+    // marginBottom: 5,
     // marginTop: -10,
     // marginHorizontal: 16,
     color: 'black',
     alignContent: 'center',
+    justifyContent: 'center',
+  },
+  insideADD: {
+    // justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
   },
   tempPicker: {
     width: 70,
@@ -782,6 +914,11 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#474747',
+  },
+  deletet: {
+    fontWeight: 'bold',
+    color: 'red',
+    margin: 20,
   },
   info: {
     color: '#474747',
