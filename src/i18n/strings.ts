@@ -121,7 +121,7 @@ export default {
     pointadd: 'Add new point for ',
     pointleft: ' point(s) left',
     UERROR: 'There is a error. Please, try again later.',
-    nullcharts: 'There is no data, device is suspended. Please, configure you charts and enjoy!',
+    nullcharts: 'There is no data, device is suspended. Please, configure your charts and enjoy!',
     sametimeerr: 'Sorry, but you cant add more than one point for the same time. Please, choose another time.',
     addNew: 'Add',
     deleteAll: 'Delete all',
@@ -277,6 +277,8 @@ export default {
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
     nullcharts: 'Нет данных, работа приостановлена. Настройте программу или измените режим.',
     sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
+    addNew: 'Добавить',
+    deleteAll: 'Удалить все',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',
@@ -429,6 +431,8 @@ export default {
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
     nullcharts: 'Нет данных, работа приостановлена. Настройте программу или измените режим.',
     sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
+    addNew: 'Добавить',
+    deleteAll: 'Удалить все',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',

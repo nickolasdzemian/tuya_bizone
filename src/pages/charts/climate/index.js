@@ -25,6 +25,7 @@ import {
   faTrashAlt,
   faChartPie,
   faPlus,
+  faCoins,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -366,7 +367,15 @@ class ChartClimateScene extends Component {
     const magic = this._getAll() && this._getLenth();
     console.log(magic, 'AVADA KEDAVRA!');
     const G = this.state.god;
-    const ICO = G > 0 ? null : <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} style={styles.info} marginVertical="40%" />;
+    const ICO = G > 0 ? null : 
+      (
+        <View style={styles.info}>
+          <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
+          <Text style={styles.info}>
+            {Strings.getLang('nullcharts')}
+          </Text>
+        </View>
+      );
     const DATA = this.state.data;
     const ADDPOINT = (
       <View style={styles.edit}>
@@ -456,6 +465,38 @@ class ChartClimateScene extends Component {
           {G < 336 ? <FontAwesomeIcon icon={faPlus} color="#90EE90" size={20} />
             : <FontAwesomeIcon icon={faPlus} color="#d6d6d6" size={20} />}
           <Text style={styles.title}>{Strings.getLang('addNew')}</Text>  
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.insideADD} 
+          onPress={() => {
+            this.setState({data: this._getAll(), god: this._getLenth()});
+          }}
+        >
+          {G < 336 ? <FontAwesomeIcon icon={faCoins} color="#90EE90" size={20} />
+            : <FontAwesomeIcon icon={faCoins} color="#d6d6d6" size={20} />}
+          <Text style={styles.title}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.insideADD}
+          onPress={() => {
+            TYDevice.putDeviceData({
+              [chart_1_part_1Code]: '00',
+            });
+            TYDevice.putDeviceData({
+              [chart_1_part_2Code]: '00',
+            });
+            TYDevice.putDeviceData({
+              [chart_1_part_3Code]: '00',
+            });
+            TYDevice.putDeviceData({
+              [chart_1_part_4Code]: '00',
+            });
+            this.setState({data: 0, god: 0});
+          }}
+        >
+          {G === 0 ? <FontAwesomeIcon icon={faTrashAlt} color="#d6d6d6" size={20} />
+            : <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={20} />}
+          <Text style={styles.title}>{Strings.getLang('deleteAll')}</Text>
         </TouchableOpacity>
       </View>);
     const monDATA = G > 0 ? this.state.data.filter(item => item.day === 1) : null;
@@ -784,7 +825,6 @@ class ChartClimateScene extends Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: '#f0f0f0' }}>
-        <Text style={styles.info}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : Strings.getLang('nullcharts')}</Text>
         <Tabs
           style={{borderRadius: 10, padding: 8, marginVertical: 5}}
           maxItem={7}
@@ -793,17 +833,17 @@ class ChartClimateScene extends Component {
           swipeable={false}
           onChange={this._handleD1Change}
           preload={true}
-          preloadTimeout={1000}
-          velocityThreshold={1}
+          preloadTimeout={500}
           animationConfig={{duration: 200, easing: Easing.cubic}}
           activeColor="#90EE90"
           tabActiveTextStyle={{fontWeight: 'bold', fontSize: 20}}
-          tabStyle={{width: 50, marginHorizontal: -5}}
-          tabActiveStyle={{borderRadius: 8, backgroundColor: '#fff'}}
+          tabStyle={{width: 50}}
+          tabActiveStyle={{backgroundColor: '#fff'}}
           underlineStyle={{backgroundColor: '#fff'}}
         >
           <Tabs.TabPanel>
             {ADDPOINT}
+            {/* <Divider color="#FFF" /> */}
             <FlatList data={monDATA} renderItem={renderItem} keyExtractor={item => item.id} />
             {ICO}
           </Tabs.TabPanel>
@@ -835,6 +875,7 @@ class ChartClimateScene extends Component {
           <Tabs.TabPanel>
             {ADDPOINT}
             <FlatList data={sunDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {/* {sunDATA.length !== 0 ? null : ICO} */}
             {ICO}
           </Tabs.TabPanel>
         </Tabs>
@@ -883,20 +924,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   edit: {
-    backgroundColor: '#fff',
+    flexDirection: 'row',
+    // backgroundColor: '#fff',
     width: '100%',
     height: 40,
-    borderRadius: 10,
-    // padding: 20,
-    // marginBottom: 5,
-    // marginTop: -10,
-    // marginHorizontal: 16,
+    paddingRight: 20,
+    paddingLeft: 20,
+    marginBottom: 5,
+    marginTop: 5,
     color: 'black',
     alignContent: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   insideADD: {
-    // justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
   },
@@ -921,13 +961,14 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   info: {
+    flexWrap: 'wrap',
     color: '#474747',
     textAlign: 'center',
-    margin: 15,
+    margin: 30,
     alignSelf: 'center',
-    justifyContent: 'space-around',
-    alignContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'space-around',
+    // alignContent: 'center',
+    // alignItems: 'center',
   },
 });
 
