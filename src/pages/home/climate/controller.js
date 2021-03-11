@@ -111,6 +111,7 @@ class ClimateController extends PureComponent {
 
   render() {
     const C = this.state.power;
+    const modeCli = this.props.ModeChannel.substring(4, 6);
     return (
       <View style={styles.container}>
         <View style={styles.areaContols}>
@@ -123,10 +124,13 @@ class ClimateController extends PureComponent {
             />
             <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.goToClimateChart} style={styles.touch}>
+          <TouchableOpacity
+            onPress={modeCli === '01' ? this.goToClimateChart : null}
+            style={styles.touch}
+          >
             <FontAwesomeIcon
               icon={faChartBar}
-              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              color={C === '01' && modeCli === '01' ? '#ff7300' : '#d6d6d6'}
               size={30}
               margin={10}
             />

@@ -20,7 +20,7 @@ import {
 } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-  faPowerOff,
+  faThermometerHalf,
   faBusinessTime,
   faTrashAlt,
   faChartPie,
@@ -43,24 +43,24 @@ const pointadd = Strings.getLang('pointadd');
 const pointdelete = Strings.getLang('pointdelete');
 
 const {
-  chart_2_part_1: chart_2_part_1Code,
-  chart_2_part_2: chart_2_part_2Code,
-  chart_2_part_3: chart_2_part_3Code,
-  chart_2_part_4: chart_2_part_4Code,
+  chart_1_part_1: chart_1_part_1Code,
+  chart_1_part_2: chart_1_part_2Code,
+  chart_1_part_3: chart_1_part_3Code,
+  chart_1_part_4: chart_1_part_4Code,
 } = dpCodes;
 
 // const Res = {
 //   hue: require('../../../res/hue.png'),
 // };
 
-class ChartTime2 extends Component {
+class ChartClimateT extends Component {
   constructor(props) {
     super(props);
 
-    const I = this.props.chart_2_part_1;
-    const II = this.props.chart_2_part_2;
-    const III = this.props.chart_2_part_3;
-    const IV = this.props.chart_2_part_4;
+    const I = this.props.chart_1_part_1;
+    const II = this.props.chart_1_part_2;
+    const III = this.props.chart_1_part_3;
+    const IV = this.props.chart_1_part_4;
     const Ipart = I.length < 6 ? 0 : I.length / 6;
     const IIpart = II.length < 6 ? 0 : II.length / 6;
     const IIIpart = III.length < 6 ? 0 : III.length / 6;
@@ -81,8 +81,8 @@ class ChartTime2 extends Component {
         { value: 6, label: Strings.getLang('sat') },
         { value: 7, label: Strings.getLang('sun') },
       ],
-      dutemps: ['00', '01'],
-      stepperValue: '00',
+      dutemps: _.range(-15, 81),
+      stepperValue: 6,
       timeSelectionValue: 366,
     };
   }
@@ -153,10 +153,10 @@ class ChartTime2 extends Component {
   }
 
   _getLenth() {
-    const I = this.props.chart_2_part_1;
-    const II = this.props.chart_2_part_2;
-    const III = this.props.chart_2_part_3;
-    const IV = this.props.chart_2_part_4;
+    const I = this.props.chart_1_part_1;
+    const II = this.props.chart_1_part_2;
+    const III = this.props.chart_1_part_3;
+    const IV = this.props.chart_1_part_4;
     const Ipart = I.length < 6 ? 0 : I.length / 6;
     const IIpart = II.length < 6 ? 0 : II.length / 6;
     const IIIpart = III.length < 6 ? 0 : III.length / 6;
@@ -167,16 +167,20 @@ class ChartTime2 extends Component {
   }
 
   _getAll() {
-    const I = this.props.chart_2_part_1;
-    const II = this.props.chart_2_part_2;
-    const III = this.props.chart_2_part_3;
-    const IV = this.props.chart_2_part_4;
+    const I = this.props.chart_1_part_1;
+    const II = this.props.chart_1_part_2;
+    const III = this.props.chart_1_part_3;
+    const IV = this.props.chart_1_part_4;
     const part1 = I.length >= 6 ? I : '';
     const part2 = II.length >= 6 ? II : '';
     const part3 = III.length >= 6 ? III : '';
     const part4 = IV.length >= 6 ? IV : '';
     const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
-    const temp = part0.map(item => item.substring(4, 6));
+    const temp = part0.map(item =>
+      parseInt(item.substring(4, 6), 16) > 100
+        ? parseInt(item.substring(4, 6), 16) - 256
+        : parseInt(item.substring(4, 6), 16)
+    );
     const time = part0.map(item => parseInt(item.substring(0, 4), 16));
     const Data = [];
     if (this._getLenth() > 0) {
@@ -239,25 +243,31 @@ class ChartTime2 extends Component {
                 : times[i] > 4095 && times[i] < 10080
                   ? String(`${(times[i]).toString(16)}`)
                   : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time0`, () => {}),
-          temperature: String(temps[i]),
+          temperature:
+          temps[i] < 16 && temps[i] > -1
+            ? String(`0${(temps[i]).toString(16)}`)
+            : temps[i] < 0
+              ? String((256 + temps[i]).toString(16))
+              : temps[i] > 15
+                ? String((temps[i]).toString(16))
+                : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp0`, () => {}),
         };
       }
     }
-    console.log(DATA2, 'iuwgeciuwegciidecgasceiugkijoi');
     let part1 = DATA2.slice(0, 84);
     part1 = part1.map(a => (Object.values(a)).join('')).join('');
     part1 = JSON.parse(JSON.stringify(part1));
     TYDevice.putDeviceData({
-      [chart_2_part_1Code]: part1,
+      [chart_1_part_1Code]: part1,
     });
     TYDevice.putDeviceData({
-      [chart_2_part_2Code]: '00',
+      [chart_1_part_2Code]: '00',
     });
     TYDevice.putDeviceData({
-      [chart_2_part_3Code]: '00',
+      [chart_1_part_3Code]: '00',
     });
     TYDevice.putDeviceData({
-      [chart_2_part_4Code]: '00',
+      [chart_1_part_4Code]: '00',
     });
   }
 
@@ -297,7 +307,14 @@ class ChartTime2 extends Component {
                 : times[i] > 4095 && times[i] < 10080
                   ? String(`${(times[i]).toString(16)}`)
                   : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
-          temperature: temps[i],
+          temperature:
+          temps[i] < 16 && temps[i] > -1
+            ? String(`0${(temps[i]).toString(16)}`)
+            : temps[i] < 0
+              ? String((256 + temps[i]).toString(16))
+              : temps[i] > 15
+                ? String((temps[i]).toString(16))
+                : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
         };
       }
     }
@@ -314,25 +331,25 @@ class ChartTime2 extends Component {
       part1 = part1.map(a => (Object.values(a)).join('')).join('');
       part1 = JSON.parse(JSON.stringify(part1));
       TYDevice.putDeviceData({
-        [chart_2_part_1Code]: part1,
+        [chart_1_part_1Code]: part1,
       });
       let part2 = DATA2.slice(84, 168);
       part2 = part2.map(a => (Object.values(a)).join('')).join('');
       part2 = JSON.parse(JSON.stringify(part2));
       TYDevice.putDeviceData({
-        [chart_2_part_2Code]: part2.length === 0 ? '00' : part2,
+        [chart_1_part_2Code]: part2.length === 0 ? '00' : part2,
       });
       let part3 = DATA2.slice(168, 252);
       part3 = part3.map(a => (Object.values(a)).join('')).join('');
       part3 = JSON.parse(JSON.stringify(part3));
       TYDevice.putDeviceData({
-        [chart_2_part_3Code]: part3.length === 0 ? '00' : part3,
+        [chart_1_part_3Code]: part3.length === 0 ? '00' : part3,
       });
       let part4 = DATA2.slice(252, 336); 
       part4 = part4.map(a => (Object.values(a)).join('')).join('');
       part4 = JSON.parse(JSON.stringify(part4));
       TYDevice.putDeviceData({
-        [chart_2_part_4Code]: part4.length === 0 ? '00' : part4,
+        [chart_1_part_4Code]: part4.length === 0 ? '00' : part4,
       });
       this.setState({data: DATA, god: DATA.length});
       console.log(temp, time, day, DATA2, 'Changed HEX data');
@@ -371,6 +388,7 @@ class ChartTime2 extends Component {
           activeOpacity={0.6}
           onPress={G < 336 ? () => {
             this.setState({
+              stepperValue: 6,
               timeSelectionValue: 366,
             });
             const ADay = this.state.activeKey;
@@ -394,7 +412,7 @@ class ChartTime2 extends Component {
                   }}
                 >
                   <FontAwesomeIcon
-                    icon={faPowerOff}
+                    icon={faThermometerHalf}
                     color="#474747"
                     size={25}
                     marginRight={20}
@@ -407,7 +425,7 @@ class ChartTime2 extends Component {
                     selectedValue={this.state.stepperValue}
                     onValueChange={stepperValue =>
                       this.setState({
-                        stepperValue,
+                        stepperValue: parseInt(stepperValue, 10),
                       })}
                   >
                     {this.state.dutemps.map(stepperValue => (
@@ -415,7 +433,7 @@ class ChartTime2 extends Component {
                         style={styles.tempPicker}
                         key={stepperValue}
                         value={stepperValue}
-                        label={String(`${Strings.getLang(stepperValue)}`)}
+                        label={String(`${stepperValue} °C`)}
                       />
                     ))}
                   </Picker>
@@ -449,7 +467,7 @@ class ChartTime2 extends Component {
           } : null}
           style={styles.insideADD}
         >
-          {G < 336 ? <FontAwesomeIcon icon={faPlus} color="#ff7300" size={20} />
+          {G < 336 ? <FontAwesomeIcon icon={faPlus} color="#90EE90" size={20} />
             : <FontAwesomeIcon icon={faPlus} color="#d6d6d6" size={20} />}
           <Text style={styles.titleADD}>{Strings.getLang('addNew')}</Text>  
         </TouchableOpacity>
@@ -459,7 +477,7 @@ class ChartTime2 extends Component {
             this.setState({data: this._getAll(), god: this._getLenth()});
           }}
         >
-          {G < 336 ? <FontAwesomeIcon icon={faCoins} color="#ff7300" size={20} />
+          {G < 336 ? <FontAwesomeIcon icon={faCoins} color="#90EE90" size={20} />
             : <FontAwesomeIcon icon={faCoins} color="#d6d6d6" size={20} />}
           <Text style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</Text>
         </TouchableOpacity>
@@ -467,16 +485,16 @@ class ChartTime2 extends Component {
           style={styles.insideADD}
           onPress={() => {
             TYDevice.putDeviceData({
-              [chart_2_part_1Code]: '00',
+              [chart_1_part_1Code]: '00',
             });
             TYDevice.putDeviceData({
-              [chart_2_part_2Code]: '00',
+              [chart_1_part_2Code]: '00',
             });
             TYDevice.putDeviceData({
-              [chart_2_part_3Code]: '00',
+              [chart_1_part_3Code]: '00',
             });
             TYDevice.putDeviceData({
-              [chart_2_part_4Code]: '00',
+              [chart_1_part_4Code]: '00',
             });
             this.setState({data: 0, god: 0});
           }}
@@ -574,25 +592,25 @@ class ChartTime2 extends Component {
                   part1 = part1.map(a => (Object.values(a)).join('')).join('');
                   part1 = JSON.parse(JSON.stringify(part1));
                   TYDevice.putDeviceData({
-                    [chart_2_part_1Code]: part1.length === 0 ? '00' : part1,
+                    [chart_1_part_1Code]: part1.length === 0 ? '00' : part1,
                   });
                   let part2 = DATA2.slice(84, 168);
                   part2 = part2.map(a => (Object.values(a)).join('')).join('');
                   part2 = JSON.parse(JSON.stringify(part2));
                   TYDevice.putDeviceData({
-                    [chart_2_part_2Code]: part2.length === 0 ? '00' : part2,
+                    [chart_1_part_2Code]: part2.length === 0 ? '00' : part2,
                   });
                   let part3 = DATA2.slice(168, 252);
                   part3 = part3.map(a => (Object.values(a)).join('')).join('');
                   part3 = JSON.parse(JSON.stringify(part3));
                   TYDevice.putDeviceData({
-                    [chart_2_part_3Code]: part3.length === 0 ? '00' : part3,
+                    [chart_1_part_3Code]: part3.length === 0 ? '00' : part3,
                   });
                   let part4 = DATA2.slice(252, 336); 
                   part4 = part4.map(a => (Object.values(a)).join('')).join('');
                   part4 = JSON.parse(JSON.stringify(part4));
                   TYDevice.putDeviceData({
-                    [chart_2_part_4Code]: part4.length === 0 ? '00' : part4,
+                    [chart_1_part_4Code]: part4.length === 0 ? '00' : part4,
                   });
                   this.setState({data: DATA, god: DATA.length});
                   console.log(DATA2, 'Changed HEX data');
@@ -608,7 +626,7 @@ class ChartTime2 extends Component {
         ]}
         left={[
           {
-            backgroundColor: '#ff7300',
+            backgroundColor: '#90EE90',
             text: Strings.getLang('btnedit'),
             textStyle: { color: '#fff', alignSelf: 'center' },
             onPress: () => {
@@ -631,7 +649,7 @@ class ChartTime2 extends Component {
                     }}
                   >
                     <FontAwesomeIcon
-                      icon={faPowerOff}
+                      icon={faThermometerHalf}
                       color="#474747"
                       size={25}
                       marginRight={20}
@@ -644,7 +662,7 @@ class ChartTime2 extends Component {
                       selectedValue={title}
                       onValueChange={stepperValue =>
                         this.setState({
-                          stepperValue,
+                          stepperValue: parseInt(stepperValue, 10),
                         })}
                     >
                       {this.state.dutemps.map(stepperValue => (
@@ -652,7 +670,7 @@ class ChartTime2 extends Component {
                           style={styles.tempPicker}
                           key={stepperValue}
                           value={stepperValue}
-                          label={String(`${Strings.getLang(stepperValue)}`)}
+                          label={String(`${stepperValue} °C`)}
                         />
                       ))}
                     </Picker>
@@ -715,7 +733,14 @@ class ChartTime2 extends Component {
                                   : times[i] > 4095 && times[i] < 10080
                                     ? String(`${(times[i]).toString(16)}`)
                                     : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time`, () => {}),
-                        temperature: temps[i],
+                        temperature:
+                            temps[i] < 16 && temps[i] > -1
+                              ? String(`0${(temps[i]).toString(16)}`)
+                              : temps[i] < 0
+                                ? String((256 + temps[i]).toString(16))
+                                : temps[i] > 15
+                                  ? String((temps[i]).toString(16))
+                                  : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp`, () => {}),
                       };
                     }
                   }
@@ -732,25 +757,25 @@ class ChartTime2 extends Component {
                     part1 = part1.map(a => (Object.values(a)).join('')).join('');
                     part1 = JSON.parse(JSON.stringify(part1));
                     TYDevice.putDeviceData({
-                      [chart_2_part_1Code]: part1.length === 0 ? '00' : part1,
+                      [chart_1_part_1Code]: part1.length === 0 ? '00' : part1,
                     });
                     let part2 = DATA2.slice(84, 168);
                     part2 = part2.map(a => (Object.values(a)).join('')).join('');
                     part2 = JSON.parse(JSON.stringify(part2));
                     TYDevice.putDeviceData({
-                      [chart_2_part_2Code]: part2.length === 0 ? '00' : part2,
+                      [chart_1_part_2Code]: part2.length === 0 ? '00' : part2,
                     });
                     let part3 = DATA2.slice(168, 252);
                     part3 = part3.map(a => (Object.values(a)).join('')).join('');
                     part3 = JSON.parse(JSON.stringify(part3));
                     TYDevice.putDeviceData({
-                      [chart_2_part_3Code]: part3.length === 0 ? '00' : part3,
+                      [chart_1_part_3Code]: part3.length === 0 ? '00' : part3,
                     });
                     let part4 = DATA2.slice(252, 336); 
                     part4 = part4.map(a => (Object.values(a)).join('')).join('');
                     part4 = JSON.parse(JSON.stringify(part4));
                     TYDevice.putDeviceData({
-                      [chart_2_part_4Code]: part4.length === 0 ? '00' : part4,
+                      [chart_1_part_4Code]: part4.length === 0 ? '00' : part4,
                     });
                     this.setState({data: DATA, god: DATA.length});
                     console.log(temp, time, day, DATA2, 'Changed HEX data');
@@ -770,9 +795,10 @@ class ChartTime2 extends Component {
         <View style={styles.inside}>
           <Text style={styles.title}>{id + 1}</Text>
           <Divider style={styles.divider} />
-          <FontAwesomeIcon icon={faPowerOff} color="#474747" size={20} />
+          <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={20} />
           <Text style={styles.title}>
-            {Strings.getLang(title)}
+            {title}
+            °C
           </Text>
           <Divider style={styles.divider} />
           <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={20} />
@@ -796,7 +822,7 @@ class ChartTime2 extends Component {
           preload={true}
           preloadTimeout={500}
           animationConfig={{duration: 200, easing: Easing.cubic}}
-          activeColor="#ff7300"
+          activeColor="#90EE90"
           tabActiveTextStyle={{fontWeight: 'bold', fontSize: 20}}
           tabStyle={{width: 50}}
           tabActiveStyle={{backgroundColor: '#fff'}}
@@ -845,18 +871,18 @@ class ChartTime2 extends Component {
   }
 }
 
-ChartTime2.propTypes = {
-  chart_2_part_1: PropTypes.string,
-  chart_2_part_2: PropTypes.string,
-  chart_2_part_3: PropTypes.string,
-  chart_2_part_4: PropTypes.string,
+ChartClimateT.propTypes = {
+  chart_1_part_1: PropTypes.string,
+  chart_1_part_2: PropTypes.string,
+  chart_1_part_3: PropTypes.string,
+  chart_1_part_4: PropTypes.string,
 };
 
-ChartTime2.defaultProps = {
-  chart_2_part_1: '0000000000',
-  chart_2_part_2: '0000000000',
-  chart_2_part_3: '0000000000',
-  chart_2_part_4: '0000000000',
+ChartClimateT.defaultProps = {
+  chart_1_part_1: '0000000000',
+  chart_1_part_2: '0000000000',
+  chart_1_part_3: '0000000000',
+  chart_1_part_4: '0000000000',
 };
 
 const styles = StyleSheet.create({
@@ -865,7 +891,7 @@ const styles = StyleSheet.create({
   // },
   item: {
     backgroundColor: '#fff',
-    borderLeftColor: '#ff7300',
+    borderLeftColor: '#90EE90',
     borderRightColor: '#FF4040',
     borderLeftWidth: 10,
     borderRightWidth: 3,
@@ -939,8 +965,8 @@ const styles = StyleSheet.create({
 });
 
 export default connect(({ dpState }) => ({
-  chart_2_part_1: dpState[chart_2_part_1Code],
-  chart_2_part_2: dpState[chart_2_part_2Code],
-  chart_2_part_3: dpState[chart_2_part_3Code],
-  chart_2_part_4: dpState[chart_2_part_4Code],
-}))(ChartTime2);
+  chart_1_part_1: dpState[chart_1_part_1Code],
+  chart_1_part_2: dpState[chart_1_part_2Code],
+  chart_1_part_3: dpState[chart_1_part_3Code],
+  chart_1_part_4: dpState[chart_1_part_4Code],
+}))(ChartClimateT);

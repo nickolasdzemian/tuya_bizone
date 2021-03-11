@@ -4,9 +4,10 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ### Known issues | Известные ограничения
-* !charts need to be tested with real device and data | графики необходимо тестировать с реальным устройством и данными
+* changing of new point (recently added) in charts may not have effect, need to force update state | изменение новой точки (недавно добавленной) в графиках может не возыметь эффекта, требуется принудительное обновление состояния
+* state of new point (when chart is totally empty) may not be visible before force update | состояние новой точки (при добавлении с нуля, когда графики полностью пустые) может быть невидимым до принудительного обновления
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
-* UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 и экранов с аналогичным разрешением
+* UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
 
 
 #### 2.0.2
@@ -34,7 +35,14 @@ All notable changes to this project will be documented in this file. See [standa
 * added pos. real-time data (when it was changed) get | добавлена возможность получения данных (по изменениям) в режиме реального времени
 * added func creation new point from 0 | добавлено создание точек при пустом графике
 * added func creation new point with data | добавлено создание точек внутри полученных данных
-* !added adoptation for switching power (hardware's firmware changes) | добавлена адаптация под переключение питания (изменения в прошивки устройства)
+* added func for reset to zero all charts | добавлена функция сброса в ноль всех графиков
+* added programm mode (charts) for climate | добавлен программный режим (график) для климата
+* added programm mode (charts) for I zone | добавлен программный режим (график) для I зоны
+* added programm timer mode (charts) for I zone | добавлен режим программного таймера (график) для I зоны
+* added programm mode (charts) for II zone | добавлен программный режим (график) для II зоны
+* added programm timer mode (charts) for II zone | добавлен режим программного таймера (график) для II зоны
+* !added adoptation for switching power (hardware's firmware changes) | добавлена адаптация под переключение питания (изменения в прошивке устройства)
+* !added adoptation for new data type in charts (hardware's firmware changes) | добавлена адаптация под новый тип данных графиков (изменения в прошивке устройства)
 
 #### 2.0.1
 * added selected temperature report in climate programm mode | добавлено отображение выбранной температуры в программном режиме климата

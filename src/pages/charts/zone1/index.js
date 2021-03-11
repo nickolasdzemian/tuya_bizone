@@ -1,11 +1,11 @@
 // страница входа в графики температур
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import ChartPanel from './common';
+import EnteringToHell from './main';
 
 const ChartZone1Scene = () => (
   <View style={styles.container}>
-    <ChartPanel />
+    <EnteringToHell />
   </View>
 );
 

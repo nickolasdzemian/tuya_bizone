@@ -13,6 +13,7 @@ import {
   faPowerOff,
   faStopwatch20,
   faStopwatch,
+  faWaveSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -24,6 +25,7 @@ const {
   SetTemperature: SetTemperatureCode,
   ModeChannel: ModeChannelCode,
   TimerSettings: TimerSettingsCode,
+  ReportProgTemp: ReportProgTempCode,
 } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
@@ -255,50 +257,67 @@ class Zone1 extends PureComponent {
     const C = this.state.power;
     const modeZ = this.props.ModeChannel.substring(0, 2);
     const TimerOn = this.props.TimerSettings.substring(12, 14);
+    const ProgTempI = parseInt(this.props.ReportProgTemp.substring(0, 2), 16);
+    const ProgTemp = ProgTempI > 100 ? -(256 - ProgTempI) : ProgTempI;
     return (
       <SafeAreaView style={styles.container}>
         {C === '01' ? (
-          <View style={styles.area}>
-            <View style={styles.sel}>
-              <FontAwesomeIcon icon={faHandPointUp} color="#ffb700" size={16} marginRight={5} />
-              <Text style={styles.titlekwh}>
-                {Strings.getLang('manualtemp')}
-                {': '}
-              </Text>
-              <Text style={styles.num}>
-                {this.state.valueZ1}
-                °C
-              </Text>
-            </View>
-            <View style={styles.title}>
-              <Text style={styles.context}>-15</Text>
-              <Slider.Horizontal
-                style={styles.slider}
-                canTouchTrack={true}
-                maximumValue={80}
-                stepValue={1}
-                minimumValue={-15}
-                value={this.getDataTemp()}
-                maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-                minimumTrackTintColor="#ffb700"
-                onValueChange={valueZ1 => this.setState({ valueZ1: Math.round(valueZ1) })}
-                onSlidingComplete={this._changeDataTemp}
-              />
-              <Text style={styles.context}>+80</Text>
-            </View>
-            <Stepper
-              buttonType="ellipse"
-              buttonStyle={{ size: 'small' }}
-              ellipseIconColor="#ffb700"
-              style={styles.stepper}
-              inputStyle={{ color: 'transparent' }}
-              editable={false}
-              onValueChange={this._changeDataTemp}
-              max={80}
-              stepValue={1}
-              min={-15}
-              value={this.getDataTemp()}
-            />
+          <View style={modeZ === '00' ? styles.area : styles.areaAir}>
+            {modeZ === '00' ? (
+              <View style={styles.area}>
+                <View style={styles.sel}>
+                  <FontAwesomeIcon icon={faHandPointUp} color="#ffb700" size={16} marginRight={5} />
+                  <Text style={styles.titlekwh}>
+                    {Strings.getLang('manualtemp')}
+                    {': '}
+                  </Text>
+                  <Text style={styles.num}>
+                    {this.state.valueZ1}
+                    °C
+                  </Text>
+                </View>
+                <View style={styles.title}>
+                  <Text style={styles.context}>-15</Text>
+                  <Slider.Horizontal
+                    style={styles.slider}
+                    canTouchTrack={true}
+                    maximumValue={80}
+                    stepValue={1}
+                    minimumValue={-15}
+                    value={this.getDataTemp()}
+                    maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
+                    minimumTrackTintColor="#ffb700"
+                    onValueChange={valueZ1 => this.setState({ valueZ1: Math.round(valueZ1) })}
+                    onSlidingComplete={this._changeDataTemp}
+                  />
+                  <Text style={styles.context}>+80</Text>
+                </View>
+                <Stepper
+                  buttonType="ellipse"
+                  buttonStyle={{ size: 'small' }}
+                  ellipseIconColor="#ffb700"
+                  style={styles.stepper}
+                  inputStyle={{ color: 'transparent' }}
+                  editable={false}
+                  onValueChange={this._changeDataTemp}
+                  max={80}
+                  stepValue={1}
+                  min={-15}
+                  value={this.getDataTemp()}
+                />
+              </View>
+            ) : (
+              <View style={styles.areaAir}>
+                <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
+                <View style={styles.title}>
+                  <FontAwesomeIcon icon={faWaveSquare} color="#ffb700" size={25} marginRight={10} />
+                  <Text style={styles.num}>
+                    {this.props.ReportProgTemp.substring(0, 2) === '81' ? '--' : ProgTemp}
+                    °C
+                  </Text>
+                </View>
+              </View>
+            )}
           </View>
         ) : null}
         <View style={styles.areaContols}>
@@ -327,10 +346,25 @@ class Zone1 extends PureComponent {
                 : this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(0, 4), 16))}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={C === '01' ? this.goToZoneChart : null} style={styles.touch}>
+          <TouchableOpacity
+            onPress={
+              C === '01' && modeZ === '01'
+                ? this.goToZoneChart
+                : C === '01' && modeZ === '02'
+                  ? this.goToZoneChart
+                  : null
+            }
+            style={styles.touch}
+          >
             <FontAwesomeIcon
               icon={faChartBar}
-              color={C === '01' ? '#ffb700' : '#d6d6d6'}
+              color={
+                C === '01' && modeZ === '01'
+                  ? '#ffb700'
+                  : C === '01' && modeZ === '02'
+                    ? '#ffb700'
+                    : '#d6d6d6'
+              }
               size={30}
               margin={5}
             />
@@ -359,6 +393,7 @@ Zone1.propTypes = {
   Zone: PropTypes.string,
   SetTemperature: PropTypes.string,
   ModeChannel: PropTypes.string,
+  ReportProgTemp: PropTypes.string,
   TimerSettings: PropTypes.string,
 };
 
@@ -366,6 +401,7 @@ Zone1.defaultProps = {
   Zone: '010101',
   SetTemperature: '1E1E141414',
   ModeChannel: '000000',
+  ReportProgTemp: '001515',
   TimerSettings: '000000000000000000',
 };
 
@@ -394,6 +430,16 @@ const styles = StyleSheet.create({
     margin: 5,
     width: '90%',
     height: 70,
+  },
+  areaAir: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    margin: 5,
+    width: '90%',
+    height: 60,
   },
   num: {
     textAlign: 'center',
@@ -467,4 +513,5 @@ export default connect(({ dpState }) => ({
   SetTemperature: dpState[SetTemperatureCode],
   ModeChannel: dpState[ModeChannelCode],
   TimerSettings: dpState[TimerSettingsCode],
+  ReportProgTemp: dpState[ReportProgTempCode],
 }))(Zone1);
