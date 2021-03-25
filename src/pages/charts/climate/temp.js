@@ -57,19 +57,12 @@ class ChartClimateT extends Component {
   constructor(props) {
     super(props);
 
-    const I = this.props.chart_1_part_1;
-    const II = this.props.chart_1_part_2;
-    const III = this.props.chart_1_part_3;
-    const IV = this.props.chart_1_part_4;
-    const Ipart = I.length < 6 ? 0 : I.length / 6;
-    const IIpart = II.length < 6 ? 0 : II.length / 6;
-    const IIIpart = III.length < 6 ? 0 : III.length / 6;
-    const IVpart = IV.length < 6 ? 0 : IV.length / 6;
+    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 10);
 
     const date = new Date();
     
     this.state = {
-      god: Ipart + IIpart + IIIpart + IVpart,
+      god: EVA > 0 ? EVA : 0,
       data: this._getLenth() > 0 ? this._getAll() : null,
       activeKey: [7, 1, 2, 3, 4, 5, 6][date.getDay()],
       d1: [
@@ -153,28 +146,22 @@ class ChartClimateT extends Component {
   }
 
   _getLenth() {
-    const I = this.props.chart_1_part_1;
-    const II = this.props.chart_1_part_2;
-    const III = this.props.chart_1_part_3;
-    const IV = this.props.chart_1_part_4;
-    const Ipart = I.length < 6 ? 0 : I.length / 6;
-    const IIpart = II.length < 6 ? 0 : II.length / 6;
-    const IIIpart = III.length < 6 ? 0 : III.length / 6;
-    const IVpart = IV.length < 6 ? 0 : IV.length / 6;
-    const LENA = Ipart + IIpart + IIIpart + IVpart;
+    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 10);
+    const LENA = EVA > 0 ? EVA : 0;
     // this.setState({god: LENA});
     return LENA;
   }
 
   _getAll() {
-    const I = this.props.chart_1_part_1;
-    const II = this.props.chart_1_part_2;
-    const III = this.props.chart_1_part_3;
-    const IV = this.props.chart_1_part_4;
-    const part1 = I.length >= 6 ? I : '';
-    const part2 = II.length >= 6 ? II : '';
-    const part3 = III.length >= 6 ? III : '';
-    const part4 = IV.length >= 6 ? IV : '';
+    const I = this.props.chart_1_part_1.substring(4);
+    const II = this.props.chart_1_part_2.substring(4);
+    const III = this.props.chart_1_part_3.substring(4);
+    const IV = this.props.chart_1_part_4.substring(4);
+    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 10);
+    const part1 = EVA > 0 ? I : '000000';
+    const part2 = EVA > 0 ? II : '';
+    const part3 = EVA > 0 ? III : '';
+    const part4 = EVA > 0 ? IV : '';
     const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
     const temp = part0.map(item =>
       parseInt(item.substring(4, 6), 16) > 100
@@ -255,19 +242,20 @@ class ChartClimateT extends Component {
       }
     }
     let part1 = DATA2.slice(0, 84);
+    const L = String(`000${(DATA2.length).toString(16)}`);
     part1 = part1.map(a => (Object.values(a)).join('')).join('');
     part1 = JSON.parse(JSON.stringify(part1));
     TYDevice.putDeviceData({
-      [chart_1_part_1Code]: part1,
+      [chart_1_part_1Code]: String(L + part1),
     });
     TYDevice.putDeviceData({
-      [chart_1_part_2Code]: '00',
+      [chart_1_part_2Code]: '000100',
     });
     TYDevice.putDeviceData({
-      [chart_1_part_3Code]: '00',
+      [chart_1_part_3Code]: '000100',
     });
     TYDevice.putDeviceData({
-      [chart_1_part_4Code]: '00',
+      [chart_1_part_4Code]: '000100',
     });
   }
 
@@ -327,29 +315,34 @@ class ChartClimateT extends Component {
       return 0;
     };
     if (timeerror() === 1) {TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});} else {
+      const L10 = DATA2.length;
+      const L0 = (DATA2.length).toString(16);
+      const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+
       let part1 = DATA2.slice(0, 84);
+      console.log(DATA2.length, L0, L, 'jason');
       part1 = part1.map(a => (Object.values(a)).join('')).join('');
       part1 = JSON.parse(JSON.stringify(part1));
       TYDevice.putDeviceData({
-        [chart_1_part_1Code]: part1,
+        [chart_1_part_1Code]: String(L + part1),
       });
       let part2 = DATA2.slice(84, 168);
       part2 = part2.map(a => (Object.values(a)).join('')).join('');
       part2 = JSON.parse(JSON.stringify(part2));
       TYDevice.putDeviceData({
-        [chart_1_part_2Code]: part2.length === 0 ? '00' : part2,
+        [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : part2,
       });
       let part3 = DATA2.slice(168, 252);
       part3 = part3.map(a => (Object.values(a)).join('')).join('');
       part3 = JSON.parse(JSON.stringify(part3));
       TYDevice.putDeviceData({
-        [chart_1_part_3Code]: part3.length === 0 ? '00' : part3,
+        [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : part3,
       });
       let part4 = DATA2.slice(252, 336); 
       part4 = part4.map(a => (Object.values(a)).join('')).join('');
       part4 = JSON.parse(JSON.stringify(part4));
       TYDevice.putDeviceData({
-        [chart_1_part_4Code]: part4.length === 0 ? '00' : part4,
+        [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : part4,
       });
       this.setState({data: DATA, god: DATA.length});
       console.log(temp, time, day, DATA2, 'Changed HEX data');

@@ -5,7 +5,7 @@
   "name": "2sex2",
   "pid": [],
   "uiid": "",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "prettier --write '**/*.{js,jsx,ts,tsx}'",

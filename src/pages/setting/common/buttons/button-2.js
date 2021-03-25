@@ -16,6 +16,8 @@ class Button2 extends React.PureComponent {
     this.state = {
       activeKey2: this.props.ButtonSettings.substring(2, 4) === '01' ? '4' : '3',
       d2: [
+        { value: '0', label: null },
+        { value: '0', label: null },
         { value: '3', label: Strings.getLang('buttonsmodenametemp') },
         { value: '4', label: Strings.getLang('buttonsmodenametimer') },
       ],
@@ -23,17 +25,21 @@ class Button2 extends React.PureComponent {
   }
 
   _handleD2Change = tab => {
-    this.setState({ activeKey2: tab.value });
+    this.setState({ activeKey2: tab.value === '0' ? '3' : tab.value });
   };
 
   render() {
     return (
       <Tabs
+        // style={{ justifyContent: 'flex-end' }}
         activeKey={this.state.activeKey2}
         dataSource={this.state.d2}
         swipeable={false}
         onChange={this._handleD2Change}
+        maxItem={4}
       >
+        <Tabs.TabPanel style={styles.panelcontent} />
+        <Tabs.TabPanel style={styles.panelcontent} />
         <Tabs.TabPanel style={styles.panelcontent}>
           <Divider />
           <ButtonsTemp2S />

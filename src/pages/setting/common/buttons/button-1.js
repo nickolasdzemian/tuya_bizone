@@ -36,6 +36,7 @@ class Button1 extends React.PureComponent {
         dataSource={this.state.d1}
         swipeable={false}
         onChange={this._handleD1Change}
+        maxItem={4}
       >
         <Tabs.TabPanel style={styles.panelcontent}>
           <Divider />
