@@ -57,7 +57,7 @@ class ChartClimateT extends Component {
   constructor(props) {
     super(props);
 
-    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 10);
+    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
 
     const date = new Date();
     
@@ -146,9 +146,10 @@ class ChartClimateT extends Component {
   }
 
   _getLenth() {
-    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 10);
+    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
     const LENA = EVA > 0 ? EVA : 0;
     // this.setState({god: LENA});
+    console.log(EVA, LENA, 'EVA, LENA');
     return LENA;
   }
 
@@ -157,7 +158,7 @@ class ChartClimateT extends Component {
     const II = this.props.chart_1_part_2.substring(4);
     const III = this.props.chart_1_part_3.substring(4);
     const IV = this.props.chart_1_part_4.substring(4);
-    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 10);
+    const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
     const part1 = EVA > 0 ? I : '000000';
     const part2 = EVA > 0 ? II : '';
     const part3 = EVA > 0 ? III : '';
@@ -176,22 +177,23 @@ class ChartClimateT extends Component {
           id: i,
           temperature: temp[i],
           time: time[i],
-          day:
-            time[i] < 1440
-              ? 1
-              : time[i] > 1439 && time[i] < 2880
-                ? 2
-                : time[i] > 2879 && time[i] < 4320
-                  ? 3
-                  : time[i] > 4319 && time[i] < 5760
-                    ? 4
-                    : time[i] > 5759 && time[i] < 7200
-                      ? 5
-                      : time[i] > 7199 && time[i] < 8640
-                        ? 6
-                        : time[i] > 8639 && time[i] < 10081
-                          ? 7
-                          : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} GetAll-time`, () => {}),
+          day: Math.floor(time[i] / 1440),
+          // time[i] < 1440
+          //   ? 1
+          //   : time[i] > 1439 && time[i] < 2880
+          //     ? 2
+          //     : time[i] > 2879 && time[i] < 4320
+          //       ? 3
+          //       : time[i] > 4319 && time[i] < 5760
+          //         ? 4
+          //         : time[i] > 5759 && time[i] < 7200
+          //           ? 5
+          //           : time[i] > 7199 && time[i] < 8640
+          //             ? 6
+          //             : time[i] > 8639 && time[i] < 10081
+          //               ? 7
+          //               : 0,
+          // : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} GetAll-day`, () => {}),
         };
       }
     }
@@ -330,19 +332,19 @@ class ChartClimateT extends Component {
       part2 = part2.map(a => (Object.values(a)).join('')).join('');
       part2 = JSON.parse(JSON.stringify(part2));
       TYDevice.putDeviceData({
-        [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : part2,
+        [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
       });
       let part3 = DATA2.slice(168, 252);
       part3 = part3.map(a => (Object.values(a)).join('')).join('');
       part3 = JSON.parse(JSON.stringify(part3));
       TYDevice.putDeviceData({
-        [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : part3,
+        [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
       });
       let part4 = DATA2.slice(252, 336); 
       part4 = part4.map(a => (Object.values(a)).join('')).join('');
       part4 = JSON.parse(JSON.stringify(part4));
       TYDevice.putDeviceData({
-        [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : part4,
+        [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
       });
       this.setState({data: DATA, god: DATA.length});
       console.log(temp, time, day, DATA2, 'Changed HEX data');

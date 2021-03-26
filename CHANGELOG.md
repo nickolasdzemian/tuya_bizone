@@ -25,9 +25,9 @@ All notable changes to this project will be documented in this file. See [standa
 * added sorting for fixed points | добавлена сортировка для фиксированных значений
 * added handling for zero programm mode in report temp state | добавлена обработка программного режима без данных для состояния программной температуры
 * added FC exeption for null data in programm mode | добавлено исключение FC для программного режима без данных
-* added performance optimizations for contol bar in Climate | добавена оптимизация производительности для контроллера Климата
-* added performance optimizations for every contol bar in Zones | добавена оптимизация производительности для каждого контроллера Зон
-* added UI performance optimizations for every switcher, expt channel selector | добавена оптимизация производительности UI для каждого переключателя за искл. переключателя каналов
+* added performance optimizations for contol bar in Climate | добавлена оптимизация производительности для контроллера Климата
+* added performance optimizations for every contol bar in Zones | добавлена оптимизация производительности для каждого контроллера Зон
+* added UI performance optimizations for every switcher, expt channel selector | добавлена оптимизация производительности UI для каждого переключателя за искл. переключателя каналов
 * added points countdown | добавлен обратный отсчет для оставшихся точек
 * added new UI for empty tabs in programm mode | добавлен новый интерфейс для пустых вкладок в программном режиме
 * fixed difference between non-dynamic fonts in settings via TY | исправлена разница между нединамическими шрифтами в настройсках при помощи TY

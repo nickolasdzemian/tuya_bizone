@@ -85,7 +85,7 @@ class ButtonMode12 extends Component {
           >
             {Strings.getLang('buttonsmodenamemode')}
           </Checkbox>
-          <Checkbox
+          {/* <Checkbox
             style={styles.check}
             color="#000"
             checked={this.props.ButtonSettings.substring(0, 2) === '03'}
@@ -95,7 +95,7 @@ class ButtonMode12 extends Component {
               })}
           >
             {Strings.getLang('nothing')}
-          </Checkbox>
+          </Checkbox> */}
         </View>
         {/* <Divider style={{ flexDirection: 'column', width: 5, color: '#000' }} /> */}
         {CliSel === true ? null : (
@@ -141,7 +141,7 @@ class ButtonMode12 extends Component {
             >
               {Strings.getLang('buttonsmodenamemode')}
             </Checkbox>
-            <Checkbox
+            {/* <Checkbox
               style={styles.check}
               color="#000"
               checked={this.props.ButtonSettings.substring(2, 4) === '03'}
@@ -151,7 +151,7 @@ class ButtonMode12 extends Component {
                 })}
             >
               {Strings.getLang('nothing')}
-            </Checkbox>
+            </Checkbox> */}
           </View>
         )}
       </View>
