@@ -154,6 +154,7 @@ class ChartClimateT extends Component {
   }
 
   _getAll() {
+    const L = this._getLenth();
     const I = this.props.chart_1_part_1.substring(4);
     const II = this.props.chart_1_part_2.substring(4);
     const III = this.props.chart_1_part_3.substring(4);
@@ -171,13 +172,13 @@ class ChartClimateT extends Component {
     );
     const time = part0.map(item => parseInt(item.substring(0, 4), 16));
     const Data = [];
-    if (this._getLenth() > 0) {
-      for (let i = 0; i < this._getLenth(); i++) {
+    if (L > 0) {
+      for (let i = 0; i < L; i++) {
         Data[i] = {
           id: i,
           temperature: temp[i],
           time: time[i],
-          day: Math.floor(time[i] / 1440),
+          day: Math.floor(time[i] / 1440) + 1,
           // time[i] < 1440
           //   ? 1
           //   : time[i] > 1439 && time[i] < 2880
@@ -202,7 +203,7 @@ class ChartClimateT extends Component {
     return Data;
   }
 
-  async _add0point() {
+  _add0point() {
     const day = this.state.activeKey;
     const temp = this.state.stepperValue;
     const time = this.dayToMin();
@@ -214,8 +215,8 @@ class ChartClimateT extends Component {
         time,
         day,
       };
-    } () =>
-      this.setState({data: DATA, god: DATA.length});
+    };
+    this.setState({data: DATA, god: DATA.length}, () => {});
     const DATA2 = [];
     const temps = DATA.map(item => item.temperature);
     const times = DATA.map(item => item.time);
@@ -259,7 +260,7 @@ class ChartClimateT extends Component {
     TYDevice.putDeviceData({
       [chart_1_part_4Code]: '000100',
     });
-  }
+  } 
 
   _addpoint() {
     const day = this.state.activeKey;
@@ -480,16 +481,16 @@ class ChartClimateT extends Component {
           style={styles.insideADD}
           onPress={() => {
             TYDevice.putDeviceData({
-              [chart_1_part_1Code]: '00',
+              [chart_1_part_1Code]: '000000',
             });
             TYDevice.putDeviceData({
-              [chart_1_part_2Code]: '00',
+              [chart_1_part_2Code]: '000000',
             });
             TYDevice.putDeviceData({
-              [chart_1_part_3Code]: '00',
+              [chart_1_part_3Code]: '000000',
             });
             TYDevice.putDeviceData({
-              [chart_1_part_4Code]: '00',
+              [chart_1_part_4Code]: '000000',
             });
             this.setState({data: 0, god: 0});
           }}
@@ -546,6 +547,11 @@ class ChartClimateT extends Component {
                   close();
                 },
                 onConfirm: (idx, { close }) => {
+                  const N = DATA.indexOf({
+                    time: subTitle,
+                    temperature: title,
+                  });
+                  console.log(id, N, 'НАЙДЕННЫЙ ИНДЕКС ЭЛЕМЕНТА');
                   DATA.splice(id, 1);
                   DATA.sort(function(a, b) {
                     if (a.time > b.time) {
@@ -583,36 +589,36 @@ class ChartClimateT extends Component {
                       };
                     }
                   }
+                  const L10 = DATA2.length;
+                  const L0 = (DATA2.length).toString(16);
+                  const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+
                   let part1 = DATA2.slice(0, 84);
+                  console.log(DATA2.length, L0, L, 'jason');
                   part1 = part1.map(a => (Object.values(a)).join('')).join('');
                   part1 = JSON.parse(JSON.stringify(part1));
                   TYDevice.putDeviceData({
-                    [chart_1_part_1Code]: part1.length === 0 ? '00' : part1,
+                    [chart_1_part_1Code]: String(L + part1),
                   });
                   let part2 = DATA2.slice(84, 168);
                   part2 = part2.map(a => (Object.values(a)).join('')).join('');
                   part2 = JSON.parse(JSON.stringify(part2));
                   TYDevice.putDeviceData({
-                    [chart_1_part_2Code]: part2.length === 0 ? '00' : part2,
+                    [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
                   });
                   let part3 = DATA2.slice(168, 252);
                   part3 = part3.map(a => (Object.values(a)).join('')).join('');
                   part3 = JSON.parse(JSON.stringify(part3));
                   TYDevice.putDeviceData({
-                    [chart_1_part_3Code]: part3.length === 0 ? '00' : part3,
+                    [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
                   });
                   let part4 = DATA2.slice(252, 336); 
                   part4 = part4.map(a => (Object.values(a)).join('')).join('');
                   part4 = JSON.parse(JSON.stringify(part4));
                   TYDevice.putDeviceData({
-                    [chart_1_part_4Code]: part4.length === 0 ? '00' : part4,
+                    [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
                   });
                   this.setState({data: DATA, god: DATA.length});
-                  console.log(DATA2, 'Changed HEX data');
-                  console.log(part1, 'DATA 1');
-                  console.log(part2, 'DATA 2');
-                  console.log(part3, 'DATA 3');
-                  console.log(part4, 'DATA 4');
                   close();  
                 },
               });
@@ -748,29 +754,34 @@ class ChartClimateT extends Component {
                     return 0;
                   };
                   if (timeerror() === 1) {TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});} else {
+                    const L10 = DATA2.length;
+                    const L0 = (DATA2.length).toString(16);
+                    const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+
                     let part1 = DATA2.slice(0, 84);
+                    console.log(DATA2.length, L0, L, 'jason');
                     part1 = part1.map(a => (Object.values(a)).join('')).join('');
                     part1 = JSON.parse(JSON.stringify(part1));
                     TYDevice.putDeviceData({
-                      [chart_1_part_1Code]: part1.length === 0 ? '00' : part1,
+                      [chart_1_part_1Code]: String(L + part1),
                     });
                     let part2 = DATA2.slice(84, 168);
                     part2 = part2.map(a => (Object.values(a)).join('')).join('');
                     part2 = JSON.parse(JSON.stringify(part2));
                     TYDevice.putDeviceData({
-                      [chart_1_part_2Code]: part2.length === 0 ? '00' : part2,
+                      [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
                     });
                     let part3 = DATA2.slice(168, 252);
                     part3 = part3.map(a => (Object.values(a)).join('')).join('');
                     part3 = JSON.parse(JSON.stringify(part3));
                     TYDevice.putDeviceData({
-                      [chart_1_part_3Code]: part3.length === 0 ? '00' : part3,
+                      [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
                     });
                     let part4 = DATA2.slice(252, 336); 
                     part4 = part4.map(a => (Object.values(a)).join('')).join('');
                     part4 = JSON.parse(JSON.stringify(part4));
                     TYDevice.putDeviceData({
-                      [chart_1_part_4Code]: part4.length === 0 ? '00' : part4,
+                      [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
                     });
                     this.setState({data: DATA, god: DATA.length});
                     console.log(temp, time, day, DATA2, 'Changed HEX data');

@@ -4,7 +4,6 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ### Known issues | Известные ограничения
-* state of new point (when chart is totally empty) may not be visible before force update | состояние новой точки (при добавлении с нуля, когда графики полностью пустые) может быть невидимым до принудительного обновления
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
 * UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
 
@@ -13,6 +12,7 @@ All notable changes to this project will be documented in this file. See [standa
 * updated main settings menu design | обновлен дизайн домашней страницы настроек
 * updated buttons configuration menu | обновлено меню настройки кнопок
 * fixed Samsung's edge random swipe
+* fixed problem when state of new point (when chart is totally empty) may not be visible before force update | исправлена ошибка, когда состояние новой точки (при добавлении с нуля, когда графики полностью пустые) может быть невидимым до принудительного обновления
 #### Cloud func. | Функции облака
 ---* !added adoptation for new data type in charts (hardware's firmware changes) | добавлена адаптация под новый тип данных графиков (изменения в прошивке устройства)
 
