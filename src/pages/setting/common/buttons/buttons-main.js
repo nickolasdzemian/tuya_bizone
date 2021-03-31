@@ -29,8 +29,8 @@ export default class ButtonSet extends Component {
             onMaskPress: ({ close }) => {
               close();
             },
-            onConfirm: () => {
-              Popup.close();
+            onConfirm: (value, { close }) => {
+              close();
             },
           });
         },

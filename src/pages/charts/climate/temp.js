@@ -7,7 +7,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Easing } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Easing, ActivityIndicator } from 'react-native';
 import {
   TYSdk,
   TYFlatList,
@@ -26,6 +26,9 @@ import {
   faChartPie,
   faPlus,
   faCoins,
+  faCogs,
+  faCopy,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -48,10 +51,6 @@ const {
   chart_1_part_3: chart_1_part_3Code,
   chart_1_part_4: chart_1_part_4Code,
 } = dpCodes;
-
-// const Res = {
-//   hue: require('../../../res/hue.png'),
-// };
 
 class ChartClimateT extends Component {
   constructor(props) {
@@ -77,7 +76,19 @@ class ChartClimateT extends Component {
       dutemps: _.range(-15, 81),
       stepperValue: 6,
       timeSelectionValue: 366,
+      apl: false,
     };
+  }
+
+  componentWillReceiveProps() {
+    if (this._getLenth() !== this.state.data.length) {
+      this.setState({ apl: true });
+      this._getLenth() === 0 ? setTimeout(() => { this.setState({ apl: false }); }, 2000) : null;
+    }
+
+    if (this._getLenth() === this.state.data.length) {
+      setTimeout(() => { this.setState({ apl: false, data: this._getAll(), god: this._getLenth() }); }, 3000);
+    }
   }
 
   convertMinsToTime = mins => {
@@ -148,7 +159,6 @@ class ChartClimateT extends Component {
   _getLenth() {
     const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
     const LENA = EVA > 0 ? EVA : 0;
-    // this.setState({god: LENA});
     console.log(EVA, LENA, 'EVA, LENA');
     return LENA;
   }
@@ -179,31 +189,15 @@ class ChartClimateT extends Component {
           temperature: temp[i],
           time: time[i],
           day: Math.floor(time[i] / 1440) + 1,
-          // time[i] < 1440
-          //   ? 1
-          //   : time[i] > 1439 && time[i] < 2880
-          //     ? 2
-          //     : time[i] > 2879 && time[i] < 4320
-          //       ? 3
-          //       : time[i] > 4319 && time[i] < 5760
-          //         ? 4
-          //         : time[i] > 5759 && time[i] < 7200
-          //           ? 5
-          //           : time[i] > 7199 && time[i] < 8640
-          //             ? 6
-          //             : time[i] > 8639 && time[i] < 10081
-          //               ? 7
-          //               : 0,
-          // : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} GetAll-day`, () => {}),
         };
       }
     }
-    // this.setState({god: Data.length});
     console.log('chart for list', Data);
     return Data;
   }
 
   _add0point() {
+    this.setState({stepperValue: 6, timeSelectionValue: 366});
     const day = this.state.activeKey;
     const temp = this.state.stepperValue;
     const time = this.dayToMin();
@@ -263,6 +257,7 @@ class ChartClimateT extends Component {
   } 
 
   _addpoint() {
+    this.setState({stepperValue: 6, timeSelectionValue: 366});
     const day = this.state.activeKey;
     const temp = this.state.stepperValue;
     const time = this.dayToMin();
@@ -348,11 +343,7 @@ class ChartClimateT extends Component {
         [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
       });
       this.setState({data: DATA, god: DATA.length});
-      console.log(temp, time, day, DATA2, 'Changed HEX data');
-      console.log(part1, 'DATA 1');
-      console.log(part2, 'DATA 2');
-      console.log(part3, 'DATA 3');
-      console.log(part4, 'DATA 4');
+      console.log(temp, time, day, DATA, 'Changed data');
     }
   };
 
@@ -367,8 +358,10 @@ class ChartClimateT extends Component {
   render() {
     const magic = this._getLenth() > 0 ? this._getAll() && this._getLenth() : null;
     console.log(magic, 'AVADA KEDAVRA!');
+    const D = this.state.activeKey;
     const G = this.state.god;
-    const ICO = G > 0 ? null : 
+    const dayDATA = G > 0 ? this.state.data.filter(item => item.day === D) : null;
+    const ICO = 
       (
         <View style={styles.info}>
           <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
@@ -377,6 +370,15 @@ class ChartClimateT extends Component {
           </Text>
         </View>
       );
+    const ICODAY = 
+    (
+      <View style={styles.info}>
+        <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
+        <Text style={styles.info}>
+          {Strings.getLang('nullchartsday')}
+        </Text>
+      </View>
+    );
     const DATA = this.state.data;
     const ADDPOINT = (
       <View style={styles.edit}>
@@ -477,22 +479,377 @@ class ChartClimateT extends Component {
             : <FontAwesomeIcon icon={faCoins} color="#d6d6d6" size={20} />}
           <Text style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</Text>
         </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.insideADD} 
+          onPress={G === 0 || dayDATA.length === 0 ? null : () => {
+            Popup.custom({
+              content: (
+                <View
+                  style={{
+                    // height: 380,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#fff',
+                    padding: 8,
+                  }}
+                >
+                  {D === 1 ? null : (
+                    <TouchableOpacity 
+                      style={styles.insideADD}
+                      onPress={() => {
+                        const newdayDATA = [];
+                        const newtemp = dayDATA.map(item => item.temperature);
+                        const newtime = dayDATA.map(item => item.time);
+                        const newday = dayDATA.map(item => item.day);
+                        if (dayDATA.length > 0) {
+                          for (let i = 0; i < dayDATA.length; i++) {
+                            newdayDATA[i] = {
+                              id: i,
+                              temperature: newtemp[i],
+                              time: newtime[i] - 1440,
+                              day: newday[i] - 1,
+                            };
+                          }
+                        }
+                        const day = DATA.map(item => item.day);
+                        for (let i = DATA.length - 1; i >= 0; i--) {
+                          if (day[i] === D - 1) {
+                            DATA.splice(i, 1);
+                          }
+                        }
+                        const newDATA = DATA.concat(newdayDATA);
+                        newDATA.sort(function(a, b) {
+                          if (a.time > b.time) {
+                            return 1;
+                          }
+                          if (a.time < b.time) {
+                            return -1;
+                          }
+                          return 0;
+                        });
+                        const DATA2 = [];
+                        const temps = newDATA.map(item => item.temperature);
+                        const times = newDATA.map(item => item.time);
+                        if (newDATA.length > 0) {
+                          for (let i = 0; i < newDATA.length; i++) {
+                            DATA2[i] = {
+                              time:
+                              times[i] < 16 && times[i] >= 0
+                                ? String(`000${(times[i]).toString(16)}`) 
+                                : times[i] > 15 && times[i] < 255
+                                  ? String(`00${(times[i]).toString(16)}`) 
+                                  : times[i] > 254 && times[i] < 4096
+                                    ? String(`0${(times[i]).toString(16)}`) 
+                                    : times[i] > 4095 && times[i] < 10080
+                                      ? String(`${(times[i]).toString(16)}`)
+                                      : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
+                              temperature:
+                              temps[i] < 16 && temps[i] > -1
+                                ? String(`0${(temps[i]).toString(16)}`)
+                                : temps[i] < 0
+                                  ? String((256 + temps[i]).toString(16))
+                                  : temps[i] > 15
+                                    ? String((temps[i]).toString(16))
+                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
+                            };
+                          }
+                        }
+                        if (newDATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
+                          const L10 = DATA2.length;
+                          const L0 = (DATA2.length).toString(16);
+                          const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+
+                          let part1 = DATA2.slice(0, 84);
+                          console.log(DATA2.length, L0, L, 'jason');
+                          part1 = part1.map(a => (Object.values(a)).join('')).join('');
+                          part1 = JSON.parse(JSON.stringify(part1));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_1Code]: String(L + part1),
+                          });
+                          let part2 = DATA2.slice(84, 168);
+                          part2 = part2.map(a => (Object.values(a)).join('')).join('');
+                          part2 = JSON.parse(JSON.stringify(part2));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
+                          });
+                          let part3 = DATA2.slice(168, 252);
+                          part3 = part3.map(a => (Object.values(a)).join('')).join('');
+                          part3 = JSON.parse(JSON.stringify(part3));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
+                          });
+                          let part4 = DATA2.slice(252, 336); 
+                          part4 = part4.map(a => (Object.values(a)).join('')).join('');
+                          part4 = JSON.parse(JSON.stringify(part4));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
+                          });
+                          this.setState({data: newDATA, god: newDATA.length, activeKey: D - 1});
+                          Popup.close();
+                        }
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
+                      <Text style={styles.title}>{Strings.getLang('copyB')}</Text>
+                    </TouchableOpacity>)}
+                  <Divider style={{marginBottom: 10, marginTop: 10}} />
+                  {D === 7 ? null : (
+                    <TouchableOpacity 
+                      style={styles.insideADD}
+                      onPress={() => {
+                        const newdayDATA = [];
+                        const newtemp = dayDATA.map(item => item.temperature);
+                        const newtime = dayDATA.map(item => item.time);
+                        const newday = dayDATA.map(item => item.day);
+                        if (dayDATA.length > 0) {
+                          for (let i = 0; i < dayDATA.length; i++) {
+                            newdayDATA[i] = {
+                              id: i,
+                              temperature: newtemp[i],
+                              time: newtime[i] + 1440,
+                              day: newday[i] + 1,
+                            };
+                          }
+                        }
+                        const day = DATA.map(item => item.day);
+                        for (let i = DATA.length - 1; i >= 0; i--) {
+                          if (day[i] === D + 1) {
+                            DATA.splice(i, 1);
+                          }
+                        }
+                        const newDATA = DATA.concat(newdayDATA);
+                        newDATA.sort(function(a, b) {
+                          if (a.time > b.time) {
+                            return 1;
+                          }
+                          if (a.time < b.time) {
+                            return -1;
+                          }
+                          return 0;
+                        });
+                        const DATA2 = [];
+                        const temps = newDATA.map(item => item.temperature);
+                        const times = newDATA.map(item => item.time);
+                        if (newDATA.length > 0) {
+                          for (let i = 0; i < newDATA.length; i++) {
+                            DATA2[i] = {
+                              time:
+                              times[i] < 16 && times[i] >= 0
+                                ? String(`000${(times[i]).toString(16)}`) 
+                                : times[i] > 15 && times[i] < 255
+                                  ? String(`00${(times[i]).toString(16)}`) 
+                                  : times[i] > 254 && times[i] < 4096
+                                    ? String(`0${(times[i]).toString(16)}`) 
+                                    : times[i] > 4095 && times[i] < 10080
+                                      ? String(`${(times[i]).toString(16)}`)
+                                      : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
+                              temperature:
+                              temps[i] < 16 && temps[i] > -1
+                                ? String(`0${(temps[i]).toString(16)}`)
+                                : temps[i] < 0
+                                  ? String((256 + temps[i]).toString(16))
+                                  : temps[i] > 15
+                                    ? String((temps[i]).toString(16))
+                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
+                            };
+                          }
+                        }
+                        if (newDATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
+                          const L10 = DATA2.length;
+                          const L0 = (DATA2.length).toString(16);
+                          const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+
+                          let part1 = DATA2.slice(0, 84);
+                          console.log(DATA2.length, L0, L, 'jason');
+                          part1 = part1.map(a => (Object.values(a)).join('')).join('');
+                          part1 = JSON.parse(JSON.stringify(part1));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_1Code]: String(L + part1),
+                          });
+                          let part2 = DATA2.slice(84, 168);
+                          part2 = part2.map(a => (Object.values(a)).join('')).join('');
+                          part2 = JSON.parse(JSON.stringify(part2));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
+                          });
+                          let part3 = DATA2.slice(168, 252);
+                          part3 = part3.map(a => (Object.values(a)).join('')).join('');
+                          part3 = JSON.parse(JSON.stringify(part3));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
+                          });
+                          let part4 = DATA2.slice(252, 336); 
+                          part4 = part4.map(a => (Object.values(a)).join('')).join('');
+                          part4 = JSON.parse(JSON.stringify(part4));
+                          TYDevice.putDeviceData({
+                            [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
+                          });
+                          this.setState({data: newDATA, god: newDATA.length, activeKey: D + 1});
+                          Popup.close();
+                        }
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
+                      <Text style={styles.title}>{Strings.getLang('copyF')}</Text>
+                    </TouchableOpacity>)}
+                  <Divider style={{marginBottom: 10, marginTop: 10}} />
+                  <TouchableOpacity 
+                    style={styles.insideADD} 
+                    onPress={() => {
+                      const day = DATA.map(item => item.day);
+                      for (let i = DATA.length - 1; i >= 0; i--) {
+                        if (day[i] === this.state.activeKey) {
+                          DATA.splice(i, 1);
+                        }
+                      }
+                      DATA.sort(function(a, b) {
+                        if (a.time > b.time) {
+                          return 1;
+                        }
+                        if (a.time < b.time) {
+                          return -1;
+                        }
+                        return 0;
+                      });
+                      const DATA2 = [];
+                      const temps = DATA.map(item => item.temperature);
+                      const times = DATA.map(item => item.time);
+                      if (DATA.length > 0) {
+                        for (let i = 0; i < DATA.length; i++) {
+                          DATA2[i] = {
+                            time:
+                              times[i] < 16 && times[i] >= 0
+                                ? String(`000${(times[i]).toString(16)}`) 
+                                : times[i] > 15 && times[i] < 255
+                                  ? String(`00${(times[i]).toString(16)}`) 
+                                  : times[i] > 254 && times[i] < 4096
+                                    ? String(`0${(times[i]).toString(16)}`) 
+                                    : times[i] > 4095 && times[i] < 10080
+                                      ? String(`${(times[i]).toString(16)}`)
+                                      : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
+                            temperature:
+                              temps[i] < 16 && temps[i] > -1
+                                ? String(`0${(temps[i]).toString(16)}`)
+                                : temps[i] < 0
+                                  ? String((256 + temps[i]).toString(16))
+                                  : temps[i] > 15
+                                    ? String((temps[i]).toString(16))
+                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
+                          };
+                        }
+                      }
+                      const timeerror = () => {
+                        for (let i = 1; i < DATA.length; i++)
+                          if (DATA[i - 1].time >= DATA[i].time) {
+                            this.setState({data: this._getAll(), god: this._getLenth()});
+                            return 1;
+                          }
+                        return 0;
+                      };
+                      if (timeerror() === 1) {TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});} else {
+                        const L10 = DATA2.length;
+                        const L0 = (DATA2.length).toString(16);
+                        const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+
+                        let part1 = DATA2.slice(0, 84);
+                        console.log(DATA2.length, L0, L, 'jason');
+                        part1 = part1.map(a => (Object.values(a)).join('')).join('');
+                        part1 = JSON.parse(JSON.stringify(part1));
+                        TYDevice.putDeviceData({
+                          [chart_1_part_1Code]: String(L + part1),
+                        });
+                        let part2 = DATA2.slice(84, 168);
+                        part2 = part2.map(a => (Object.values(a)).join('')).join('');
+                        part2 = JSON.parse(JSON.stringify(part2));
+                        TYDevice.putDeviceData({
+                          [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
+                        });
+                        let part3 = DATA2.slice(168, 252);
+                        part3 = part3.map(a => (Object.values(a)).join('')).join('');
+                        part3 = JSON.parse(JSON.stringify(part3));
+                        TYDevice.putDeviceData({
+                          [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
+                        });
+                        let part4 = DATA2.slice(252, 336); 
+                        part4 = part4.map(a => (Object.values(a)).join('')).join('');
+                        part4 = JSON.parse(JSON.stringify(part4));
+                        TYDevice.putDeviceData({
+                          [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
+                        });
+                        this.setState({data: DATA, god: DATA.length});
+                        Popup.close();
+                      }
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={18} />
+                    <Text style={styles.title}>{Strings.getLang('eraseday')}</Text>
+                  </TouchableOpacity>
+                  <View>
+                    <Divider style={{marginBottom: 10, marginTop: 10}} />
+                    <FontAwesomeIcon icon={faInfoCircle} size={16} margin={10} alignSelf="center" />
+                    <Text style={styles.annotation}>
+                      {Strings.getLang('copyNote')}
+                    </Text>
+                  </View>
+                </View>
+              ),
+              title: Strings.getLang('adtnopt'),
+              cancelText,
+              confirmText: 'OK',
+              onMaskPress: ({ close }) => {
+                close();
+              },
+              onConfirm: (idx, { close }) => {
+                close();  
+              },
+            });
+          }}
+        >
+          {G !== 0 && dayDATA.length !== 0 ? <FontAwesomeIcon icon={faCogs} color="#90EE90" size={20} />
+            : <FontAwesomeIcon icon={faCogs} color="#d6d6d6" size={20} />}
+          <Text style={styles.titleADD}>{Strings.getLang('options')}</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.insideADD}
-          onPress={() => {
-            TYDevice.putDeviceData({
-              [chart_1_part_1Code]: '000000',
+          onPress={G === 0 ? null : () => {
+            Popup.custom({
+              content: (
+                <View
+                  style={{
+                    // flexDirection: 'row',
+                    height: 130,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#fff',
+                    padding: 8,
+                  }}
+                >
+                  <Text style={styles.deletet}>{Strings.getLang('allpointdeltext')}</Text>
+                </View>
+              ),
+              title: Strings.getLang('allpointdeltitle'),
+              cancelText,
+              confirmText: btndelete,
+              onMaskPress: ({ close }) => {
+                close();
+              },
+              onConfirm: (idx, { close }) => {
+                TYDevice.putDeviceData({
+                  [chart_1_part_1Code]: '000000',
+                });
+                TYDevice.putDeviceData({
+                  [chart_1_part_2Code]: '000000',
+                });
+                TYDevice.putDeviceData({
+                  [chart_1_part_3Code]: '000000',
+                });
+                TYDevice.putDeviceData({
+                  [chart_1_part_4Code]: '000000',
+                });
+                this.setState({data: 0, god: 0});
+                close();  
+              },
             });
-            TYDevice.putDeviceData({
-              [chart_1_part_2Code]: '000000',
-            });
-            TYDevice.putDeviceData({
-              [chart_1_part_3Code]: '000000',
-            });
-            TYDevice.putDeviceData({
-              [chart_1_part_4Code]: '000000',
-            });
-            this.setState({data: 0, god: 0});
           }}
         >
           {G === 0 ? <FontAwesomeIcon icon={faTrashAlt} color="#d6d6d6" size={20} />
@@ -500,13 +857,6 @@ class ChartClimateT extends Component {
           <Text style={styles.titleADD}>{Strings.getLang('deleteAll')}</Text>
         </TouchableOpacity>
       </View>);
-    const monDATA = G > 0 ? this.state.data.filter(item => item.day === 1) : null;
-    const tuyDATA = G > 0 ? this.state.data.filter(item => item.day === 2) : null;
-    const wedDATA = G > 0 ? this.state.data.filter(item => item.day === 3) : null;
-    const thuDATA = G > 0 ? this.state.data.filter(item => item.day === 4) : null;
-    const friDATA = G > 0 ? this.state.data.filter(item => item.day === 5) : null;
-    const satDATA = G > 0 ? this.state.data.filter(item => item.day === 6) : null;
-    const sunDATA = G > 0 ? this.state.data.filter(item => item.day === 7) : null;
     const Item = ({ id, title, subTitle, day }) => (
       <Swipeout 
         autoClose={true}
@@ -547,11 +897,6 @@ class ChartClimateT extends Component {
                   close();
                 },
                 onConfirm: (idx, { close }) => {
-                  const N = DATA.indexOf({
-                    time: subTitle,
-                    temperature: title,
-                  });
-                  console.log(id, N, 'НАЙДЕННЫЙ ИНДЕКС ЭЛЕМЕНТА');
                   DATA.splice(id, 1);
                   DATA.sort(function(a, b) {
                     if (a.time > b.time) {
@@ -785,10 +1130,6 @@ class ChartClimateT extends Component {
                     });
                     this.setState({data: DATA, god: DATA.length});
                     console.log(temp, time, day, DATA2, 'Changed HEX data');
-                    console.log(part1, 'DATA 1');
-                    console.log(part2, 'DATA 2');
-                    console.log(part3, 'DATA 3');
-                    console.log(part4, 'DATA 4');
                   }
                   close();  
                 },
@@ -818,6 +1159,11 @@ class ChartClimateT extends Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: '#f0f0f0' }}>
+        {this.state.apl === true ? 
+          <View>
+            <Text style={styles.wait}>{Strings.getLang('apl')}</Text>
+            <ActivityIndicator color="#90EE90" /> 
+          </View> : null}
         <Tabs
           style={{borderRadius: 10, padding: 8, marginVertical: 5}}
           maxItem={7}
@@ -834,42 +1180,41 @@ class ChartClimateT extends Component {
           tabActiveStyle={{backgroundColor: '#fff'}}
           underlineStyle={{backgroundColor: '#fff'}}
         >
-          <Tabs.TabPanel>
+          <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
             {/* <Divider color="#FFF" /> */}
-            <FlatList data={monDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {ICO}
+            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
-          <Tabs.TabPanel>
+          <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={tuyDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {ICO}
+            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
-          <Tabs.TabPanel>
+          <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={wedDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {ICO}
+            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
-          <Tabs.TabPanel>
+          <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={thuDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {ICO}
+            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
-          <Tabs.TabPanel>
+          <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={friDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {ICO}
+            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
-          <Tabs.TabPanel>
+          <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={satDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {ICO}
+            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
-          <Tabs.TabPanel>
+          <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={sunDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {/* {sunDATA.length !== 0 ? null : ICO} */}
-            {ICO}
+            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
+            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
         </Tabs>
       </View>
@@ -885,10 +1230,10 @@ ChartClimateT.propTypes = {
 };
 
 ChartClimateT.defaultProps = {
-  chart_1_part_1: '0000000000',
-  chart_1_part_2: '0000000000',
-  chart_1_part_3: '0000000000',
-  chart_1_part_4: '0000000000',
+  chart_1_part_1: '000000',
+  chart_1_part_2: '000000',
+  chart_1_part_3: '000000',
+  chart_1_part_4: '000000',
 };
 
 const styles = StyleSheet.create({
@@ -941,6 +1286,9 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+  list:{
+    paddingBottom: 14,
+  },
   divider: {
     flexDirection: 'column',
     height: 20,
@@ -967,6 +1315,24 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around',
     // alignContent: 'center',
     // alignItems: 'center',
+  },
+  annotation: {
+    textAlign: 'center',
+    fontWeight: '200',
+    fontSize: 10,
+    color: 'black',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    letterSpacing: 1,
+  },
+  wait: {
+    textAlign: 'center',
+    fontWeight: '200',
+    fontSize: 10,
+    color: 'black',
+    justifyContent: 'center',
+    paddingBottom: 1,
+    letterSpacing: 1,
   },
 });
 

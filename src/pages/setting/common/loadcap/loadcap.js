@@ -31,8 +31,8 @@ export default class LoadCapacity extends Component {
             onMaskPress: ({ close }) => {
               close();
             },
-            onConfirm: () => {
-              Popup.close();
+            onConfirm: (value, { close }) => {
+              close();
             },
           });
         },

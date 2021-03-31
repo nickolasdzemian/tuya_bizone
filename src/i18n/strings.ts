@@ -1,5 +1,8 @@
+/* eslint-disable max-len */
 export default {
   en: {
+    apl: 'Wait for applying..',
+
     // HomeScreen
     now_temp: 'curr. temp',
     airtemp: 'current air temperature',
@@ -119,12 +122,24 @@ export default {
     pointdelete: 'Delete selected point',
     pointdeltext: 'Do you really want do delete this value?',
     pointadd: 'Add new point for ',
-    pointleft: ' point(s) left',
+    pointleft: ' left',
+    options: 'Options',
     UERROR: 'There is a error. Please, try again later.',
-    nullcharts: 'There is no data, device is suspended. Please, configure your charts and enjoy!',
-    sametimeerr: 'Sorry, but you cant add more than one point for the same time. Please, choose another time.',
+    nullcharts: 'There is no data, device is suspended. \nPlease, configure your charts and enjoy!',
+    nullchartsday: 'Device mode is equal to the last set point',
+    sametimeerr:
+      'You cant add more than one point for the same time. \nPlease, choose another time.',
     addNew: 'Add',
     deleteAll: 'Delete all',
+    allpointdeltext: 'This operation will erase all charts data in programm mode. \nAre you sure?',
+    allpointdeltitle: 'Reseting programm mode',
+    adtnopt: 'Additional options',
+    eraseday: 'Erase all points of the day',
+    copyF: 'Copy chart to next day >',
+    maxitems: 'You cannot add more than 336 points',
+    copyB: 'Copy chart to previous day <',
+    copyNote:
+      'Dublicated chart will totally replace chart for previous or next day. \nErasing will totally delete the chart of the day. \n\nFor editing single point swipe right> on it. \nFor erasing single point swipe left< on it. \nPress on appeared button to start operation.',
     '00': 'OFF',
     '01': 'ON',
 
@@ -156,6 +171,8 @@ export default {
     unBindUnlock: 'unlock',
   },
   ru_RU: {
+    apl: 'Ждите применения..',
+
     // HomeScreen
     now_temp: 'Текущ. темп.',
     airtemp: 'Текущая температура воздуха',
@@ -271,16 +288,28 @@ export default {
     sun: 'ВС',
     pointset: 'Редактирование точки',
     pointadd: 'Добавление новой точки для ',
-    pointleft: ' можно добавить',
+    pointleft: ' доступно',
+    options: 'Опции',
     btnedit: 'Изменить',
     btndelete: 'Удалить',
     pointdelete: 'Удаление выбранной точки',
     pointdeltext: 'Вы действительно хотите удалить выбранное значение?',
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
-    nullcharts: 'Нет данных, работа приостановлена. Настройте программу или измените режим.',
-    sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
+    nullcharts: 'Нет данных, работа приостановлена. \nНастройте программу или измените режим.',
+    nullchartsday: 'Режим работы по последней установленной точке',
+    sametimeerr: 'Нельзя добавить более одной точки на одно время. \nВыберите другое время.',
     addNew: 'Добавить',
     deleteAll: 'Удалить все',
+    allpointdeltext:
+      'Операция удалит все графики работы для программного режима. \nПодтвердить удаление?',
+    allpointdeltitle: 'Сброс программного режима',
+    adtnopt: 'Дополнительные опции',
+    eraseday: 'Удалить уставки выбранного дня',
+    copyF: 'Копировать уставки на день вперед >',
+    maxitems: 'Нельзя установить больше 336 точек',
+    copyB: 'Копировать уставки на день назад <',
+    copyNote:
+      'Копирование полностью перезапишет график работы следующего или предыдущего дня. \nУдаление очистит все уставки выбранного дня. \n\nДля редактирования одной точки смахните по ней вправо>. \nДля удаления одной точки смахните по ней влево<. \nДействие запустится при нажатии на появившуюся кнопку.',
     '00': 'ВЫКЛ',
     '01': 'ВКЛ',
 
@@ -312,6 +341,8 @@ export default {
     unBindUnlock: 'unlock',
   },
   ru: {
+    apl: 'Ждите применения..',
+
     // HomeScreen
     now_temp: 'Текущ. темп.',
     airtemp: 'Текущая температура воздуха',
@@ -427,16 +458,28 @@ export default {
     sun: 'ВС',
     pointset: 'Редактирование точки',
     pointadd: 'Добавление новой точки для ',
-    pointleft: ' можно добавить',
+    pointleft: ' доступно',
+    options: 'Опции',
     btnedit: 'Изменить',
     btndelete: 'Удалить',
     pointdelete: 'Удаление выбранной точки',
     pointdeltext: 'Вы действительно хотите удалить выбранное значение?',
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
-    nullcharts: 'Нет данных, работа приостановлена. Настройте программу или измените режим.',
-    sametimeerr: 'К сожалению, вы не можете добавить более одной точки на одно и то же время. Пожалуйста, выберите другое время.',
+    nullcharts: 'Нет данных, работа приостановлена. \nНастройте программу или измените режим.',
+    nullchartsday: 'Режим работы по последней установленной точке',
+    sametimeerr: 'Нельзя добавить более одной точки на одно время. \nВыберите другое время.',
     addNew: 'Добавить',
     deleteAll: 'Удалить все',
+    allpointdeltext:
+      'Операция удалит все графики работы для программного режима. \nПодтвердить удаление?',
+    allpointdeltitle: 'Сброс программного режима',
+    adtnopt: 'Дополнительные опции',
+    eraseday: 'Удалить уставки выбранного дня',
+    copyF: 'Копировать уставки на день вперед >',
+    maxitems: 'Нельзя установить больше 336 точек',
+    copyB: 'Копировать уставки на день назад <',
+    copyNote:
+      'Копирование полностью перезапишет график работы следующего или предыдущего дня. \nУдаление очистит все уставки выбранного дня. \n\nДля редактирования одной точки смахните по ней вправо>. \nДля удаления одной точки смахните по ней влево<. \nДействие запустится при нажатии на появившуюся кнопку.',
     '00': 'ВЫКЛ',
     '01': 'ВКЛ',
 

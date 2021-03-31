@@ -10,12 +10,31 @@ import Strings from '../../../../i18n/index.ts';
 import dpCodes from '../../../../config/dpCodes.ts';
 import ButtonMode12 from './buttons-mode12';
 
-const { ClimateSelector: ClimateSelectorCode } = dpCodes;
+const { ClimateSelector: ClimateSelectorCode, ButtonSettings: ButtonSettingsCode } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
 
 class ButtonMode extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      apl: false,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.ButtonSettings !== nextProps.ButtonSettings) {
+      this.setState({ apl: true });
+    }
+
+    if (nextProps.ButtonSettings) {
+      setTimeout(() => {
+        this.setState({ apl: false });
+      }, 3000);
+    }
+  }
+
   get data() {
     return [
       {
@@ -31,7 +50,12 @@ class ButtonMode extends Component {
                   {/* <FontAwesomeIcon icon={faTh} color="#FF7300" size={25} alignSelf="center" /> */}
                 </View>
                 <ButtonMode12 />
-                {this.props.isLoading === true ? <ActivityIndicator /> : null}
+                {this.state.apl === true ? (
+                  <View>
+                    <Text style={styles.wait}>{Strings.getLang('apl')}</Text>
+                    <ActivityIndicator />
+                  </View>
+                ) : null}
                 {CliSel === true ? (
                   <View>
                     <Divider />
@@ -51,8 +75,8 @@ class ButtonMode extends Component {
             onMaskPress: ({ close }) => {
               close();
             },
-            onConfirm: () => {
-              Popup.close();
+            onConfirm: (value, { close }) => {
+              close();
             },
           });
         },
@@ -66,12 +90,12 @@ class ButtonMode extends Component {
 }
 ButtonMode.propTypes = {
   ClimateSelector: PropTypes.bool,
-  isLoading: PropTypes.any,
+  ButtonSettings: PropTypes.string,
 };
 
 ButtonMode.defaultProps = {
   ClimateSelector: false,
-  isLoading: '',
+  ButtonSettings: '0000',
 };
 
 const styles = StyleSheet.create({
@@ -84,8 +108,18 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     letterSpacing: 1,
   },
+  wait: {
+    textAlign: 'center',
+    fontWeight: '200',
+    fontSize: 10,
+    color: 'black',
+    justifyContent: 'center',
+    paddingBottom: 1,
+    letterSpacing: 1,
+  },
 });
 
 export default connect(({ dpState }) => ({
   ClimateSelector: dpState[ClimateSelectorCode],
+  ButtonSettings: dpState[ButtonSettingsCode],
 }))(ButtonMode);

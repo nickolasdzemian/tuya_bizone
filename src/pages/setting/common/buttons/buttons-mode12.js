@@ -20,21 +20,8 @@ const buttonsmodetap2 = Strings.getLang('buttonsmodetap2');
 class ButtonMode12 extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  mapStateToProps(state) {
-    const { selectedReddit, postsByReddit } = state;
-    const { isFetching, lastUpdated, items: posts } = postsByReddit[selectedReddit] || {
-      isFetching: true,
-      items: [],
-    };
-
-    return {
-      selectedReddit,
-      posts,
-      isFetching,
-      lastUpdated,
+    this.state = {
+      apl: false,
     };
   }
 
@@ -58,7 +45,8 @@ class ButtonMode12 extends Component {
             onChange={checked =>
               TYDevice.putDeviceData({
                 [ButtonSettingsCode]: String(`00${this.props.ButtonSettings.substring(2, 4)}`),
-              })}
+              })
+            }
           >
             {Strings.getLang('buttonsmodenametemp')}
           </Checkbox>
@@ -70,7 +58,8 @@ class ButtonMode12 extends Component {
             onChange={checked =>
               TYDevice.putDeviceData({
                 [ButtonSettingsCode]: String(`01${this.props.ButtonSettings.substring(2, 4)}`),
-              })}
+              })
+            }
           >
             {Strings.getLang('buttonsmodenametimer')}
           </Checkbox>
@@ -81,7 +70,8 @@ class ButtonMode12 extends Component {
             onChange={checked =>
               TYDevice.putDeviceData({
                 [ButtonSettingsCode]: String(`02${this.props.ButtonSettings.substring(2, 4)}`),
-              })}
+              })
+            }
           >
             {Strings.getLang('buttonsmodenamemode')}
           </Checkbox>
@@ -115,7 +105,8 @@ class ButtonMode12 extends Component {
               onChange={checked =>
                 TYDevice.putDeviceData({
                   [ButtonSettingsCode]: String(`${this.props.ButtonSettings.substring(0, 2)}00`),
-                })}
+                })
+              }
             >
               {Strings.getLang('buttonsmodenametemp')}
             </Checkbox>
@@ -126,7 +117,8 @@ class ButtonMode12 extends Component {
               onChange={checked =>
                 TYDevice.putDeviceData({
                   [ButtonSettingsCode]: String(`${this.props.ButtonSettings.substring(0, 2)}01`),
-                })}
+                })
+              }
             >
               {Strings.getLang('buttonsmodenametimer')}
             </Checkbox>
@@ -137,7 +129,8 @@ class ButtonMode12 extends Component {
               onChange={checked =>
                 TYDevice.putDeviceData({
                   [ButtonSettingsCode]: String(`${this.props.ButtonSettings.substring(0, 2)}02`),
-                })}
+                })
+              }
             >
               {Strings.getLang('buttonsmodenamemode')}
             </Checkbox>

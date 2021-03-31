@@ -55,7 +55,7 @@ class ClimateM extends PureComponent {
     const T = this.props.SetTemperature.substring(8, 10);
     const V = parseInt(T, 16);
     this.state = { 
-      valueM0: V > 100 ? V - 256 : V,
+      valueM0: this.getDataTemp(),
       fan: this.props.FanSpeed,
     };
   }
@@ -124,7 +124,6 @@ class ClimateM extends PureComponent {
             [SetTemperatureCode]: TfinMin,
           })
           : null;
-    this.forceUpdate();
   };
 
   render() {
@@ -152,7 +151,7 @@ class ClimateM extends PureComponent {
                 maximumValue={80}
                 stepValue={1}
                 minimumValue={-15}
-                value={this.getDataTemp()}
+                value={this.state.valueM0}
                 maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
                 minimumTrackTintColor="#90EE90"
                 onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
@@ -170,7 +169,7 @@ class ClimateM extends PureComponent {
               max={80}
               stepValue={1}
               min={-15}
-              value={this.getDataTemp()}
+              value={this.state.valueM0}
             />
           </View>
         ) : (

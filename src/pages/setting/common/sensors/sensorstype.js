@@ -55,8 +55,8 @@ export default class SensorsType extends Component {
             onMaskPress: ({ close }) => {
               close();
             },
-            onConfirm: () => {
-              Popup.close();
+            onConfirm: (value, { close }) => {
+              close();
             },
           });
         },

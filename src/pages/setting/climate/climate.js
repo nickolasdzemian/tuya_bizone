@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Divider, SwitchButton, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -29,7 +29,18 @@ class ClimateScene extends React.PureComponent {
     super(props);
     this.state = {
       climate: this.props.ClimateSelector,
+      apl: false,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props !== nextProps) {
+      this.setState({ apl: true });
+    }
+
+    if (nextProps) {
+      setTimeout(() => { this.setState({ apl: false }); }, 3000);
+    }
   }
 
   getDataSelector() {
@@ -48,6 +59,7 @@ class ClimateScene extends React.PureComponent {
             <TYText style={styles.items}>{Strings.getLang('climateSw')}</TYText>
           </SafeAreaView>
           <SwitchButton
+            disabled={this.state.apl}
             style={styles.switch}
             tintColor="#ffb700"
             onTintColor="#90EE90"
@@ -87,7 +99,10 @@ class ClimateScene extends React.PureComponent {
               </SafeAreaView>
             )}
           </SafeAreaView>
+          {this.state.apl === true ? 
+            <ActivityIndicator color="#90EE90" /> : null}
           <SwitchButton
+            disabled={this.state.apl}
             style={styles.switch}
             tintColor="#ffb700"
             onTintColor="#ffb700"

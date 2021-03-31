@@ -93,7 +93,7 @@ class ClimateReport extends React.PureComponent {
             ) : (
               <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
             )}
-            <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
+            {/* <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text> */}
             <Text style={styles.num}>
               {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
             </Text>
@@ -110,7 +110,7 @@ class ClimateReport extends React.PureComponent {
             ) : (
               <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
             )}
-            <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text>
+            {/* <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text> */}
             <Text style={styles.num}>
               {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
             </Text>
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: 170,
-    height: 118,
+    height: 115,
   },
   num: {
     textAlign: 'center',

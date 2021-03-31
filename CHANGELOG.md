@@ -4,6 +4,7 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ### Known issues | Известные ограничения
+--- степпер +-2 по нажатию
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
 * UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
 
@@ -11,10 +12,20 @@ All notable changes to this project will be documented in this file. See [standa
 #### 2.0.3
 * updated main settings menu design | обновлен дизайн домашней страницы настроек
 * updated buttons configuration menu | обновлено меню настройки кнопок
+* updated some UI-elements | обновлены некоторые UI-элементы
+* added spinner indication when force updating states | добавлен спиннер при принудительном обновлении состояний
+* added normal pull-up animations in popup | добавлена анимация вытягивания во всплывающих окнах
+* some performance fixes | некоторые улучшения производительности
+* fixed turning off spinner when data is null | исправлено выключение спиннера при пустой дате
 * fixed Samsung's edge random swipe
+* fixed bottom native navigator bar in charts (cross area) | исправлен нативный бар навигации в графиках (перекрытие)
 * fixed problem when state of new point (when chart is totally empty) may not be visible before force update | исправлена ошибка, когда состояние новой точки (при добавлении с нуля, когда графики полностью пустые) может быть невидимым до принудительного обновления
 #### Cloud func. | Функции облака
----* !added adoptation for new data type in charts (hardware's firmware changes) | добавлена адаптация под новый тип данных графиков (изменения в прошивке устройства)
+* fixed deleting points | исправлено удаление точек
+* fixed bugs with editing and erasing new points and points wihtout id | исправлены ошибки с редактированием и удалением новых точек и точек без id
+* !added adoptation for new data type in charts (hardware's firmware changes) | добавлена адаптация под новый тип данных графиков (изменения в прошивке устройства)
+* added func for copying chart to next and to previous day | добавлена функция копирования графика на следующий и предыдущий день
+* added func for erasing chart for one selected day | добавлена функция сброса/очистки графика для одного выбранного дня
 
 #### 2.0.2
 * added new design for charts menu | добавлен новый дизайн для графиков
