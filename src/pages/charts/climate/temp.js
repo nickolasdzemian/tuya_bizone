@@ -5,9 +5,9 @@
 /* eslint-disable react/destructuring-assignment */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Easing, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Easing, ActivityIndicator, AsyncStorage } from 'react-native';
 import {
   TYSdk,
   TYFlatList,
@@ -30,6 +30,7 @@ import {
   faCopy,
   faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
+import { Cache } from 'react-native-cache';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
@@ -52,7 +53,15 @@ const {
   chart_1_part_4: chart_1_part_4Code,
 } = dpCodes;
 
-class ChartClimateT extends Component {
+const cache = new Cache({
+  namespace: 'ChartClimateT',
+  policy: {
+    maxEntries: 50000
+  },
+  backend: AsyncStorage
+});
+
+class ChartClimateT extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -256,10 +265,12 @@ class ChartClimateT extends Component {
     });
   } 
 
-  _addpoint() {
-    this.setState({stepperValue: 6, timeSelectionValue: 366});
+  async _addpoint() {
+    const entries = cache.getAll();
+    console.dir(entries);
     const day = this.state.activeKey;
-    const temp = this.state.stepperValue;
+    const temp = await cache.get('temp');
+    console.log(temp);
     const time = this.dayToMin();
     const DATA = this._getAll();
     DATA.push({
@@ -344,6 +355,7 @@ class ChartClimateT extends Component {
       });
       this.setState({data: DATA, god: DATA.length});
       console.log(temp, time, day, DATA, 'Changed data');
+      cache.clearAll();
     }
   };
 
@@ -356,8 +368,8 @@ class ChartClimateT extends Component {
   };
 
   render() {
-    const magic = this._getLenth() > 0 ? this._getAll() && this._getLenth() : null;
-    console.log(magic, 'AVADA KEDAVRA!');
+    // const magic = this._getLenth() > 0 ? this._getAll() && this._getLenth() : null;
+    // console.log(magic, 'AVADA KEDAVRA!');
     const D = this.state.activeKey;
     const G = this.state.god;
     const dayDATA = G > 0 ? this.state.data.filter(item => item.day === D) : null;
@@ -385,10 +397,6 @@ class ChartClimateT extends Component {
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={G < 336 ? () => {
-            this.setState({
-              stepperValue: 6,
-              timeSelectionValue: 366,
-            });
             const ADay = this.state.activeKey;
             const day = ADay === 1 ? 'mon' :
               ADay === 2 ? 'tuу' :
@@ -422,9 +430,9 @@ class ChartClimateT extends Component {
                     itemStyle={styles.tempPicker}
                     selectedValue={this.state.stepperValue}
                     onValueChange={stepperValue =>
-                      this.setState({
-                        stepperValue: parseInt(stepperValue, 10),
-                      })}
+                      cache.set(
+                        'temp', stepperValue,
+                      )}
                   >
                     {this.state.dutemps.map(stepperValue => (
                       <Picker.Item
@@ -976,10 +984,6 @@ class ChartClimateT extends Component {
             text: Strings.getLang('btnedit'),
             textStyle: { color: '#fff', alignSelf: 'center' },
             onPress: () => {
-              this.setState({
-                stepperValue: title,
-                timeSelectionValue: this.convertMinsToMins(subTitle),
-              });
               let temp = title;
               let time = this.convertMinsToMins(subTitle);
               Popup.custom({
@@ -1172,8 +1176,8 @@ class ChartClimateT extends Component {
           swipeable={false}
           onChange={this._handleD1Change}
           preload={true}
-          preloadTimeout={500}
-          animationConfig={{duration: 200, easing: Easing.cubic}}
+          preloadTimeout={G * 120}
+          animationConfig={{duration: 20, easing: Easing.cubic}}
           activeColor="#90EE90"
           tabActiveTextStyle={{fontWeight: 'bold', fontSize: 20}}
           tabStyle={{width: 50}}

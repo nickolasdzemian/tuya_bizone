@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file. See [standa
 * UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
 
 
+#### 2.0.4
+* 
+
 #### 2.0.3
 * updated main settings menu design | обновлен дизайн домашней страницы настроек
 * updated buttons configuration menu | обновлено меню настройки кнопок

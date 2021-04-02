@@ -43,6 +43,12 @@ class MainLayout extends NavigatorLayout<Props> {
           '90%': '#FF624C',
         };
         break;
+      case 'SettingScene':
+        routeProps.background = {
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
+        };
+        break;
       default:
         break;
     }
@@ -72,7 +78,7 @@ class MainLayout extends NavigatorLayout<Props> {
         component = <Home />;
         break;
       case 'SettingScene':
-        component = <Setting />;
+        component = <Setting navigator={navigator} {...route} />;
         break;
       case 'ChartClimateScene':
         component = <Climate />;

@@ -95,11 +95,19 @@ class ClimateController extends PureComponent {
   };
 
   // функции навиготора
-  goToSettingsPage = () => {
+  goToSettingsPageЩдв = () => {
     TYSdk.Navigator.push({
       id: 'SettingScene',
       title: Strings.getLang('settings'),
     });
+  };
+
+  goToSettingsPage = () => {
+    const route = {
+      id: 'SettingScene',
+      title: Strings.getLang('settings'),
+    };
+    TYSdk.Navigator.push(route);
   };
 
   goToClimateChart = () => {
