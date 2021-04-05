@@ -2,6 +2,7 @@
 export default {
   en: {
     apl: 'Wait for applying..',
+    apl2: 'Downloading..',
 
     // HomeScreen
     now_temp: 'curr. temp',
@@ -142,6 +143,8 @@ export default {
       'Dublicated chart will totally replace chart for previous or next day. \nErasing will totally delete the chart of the day. \n\nFor editing single point swipe right> on it. \nFor erasing single point swipe left< on it. \nPress on appeared button to start operation.',
     '00': 'OFF',
     '01': 'ON',
+    edit: 'Edit',
+    dell: 'Delete',
 
     tabAlarm: 'Warn Records',
     set: 'Set',
@@ -172,6 +175,7 @@ export default {
   },
   ru_RU: {
     apl: 'Ждите применения..',
+    apl2: 'Загрузка данных..',
 
     // HomeScreen
     now_temp: 'Текущ. темп.',
@@ -312,6 +316,8 @@ export default {
       'Копирование полностью перезапишет график работы следующего или предыдущего дня. \nУдаление очистит все уставки выбранного дня. \n\nДля редактирования одной точки смахните по ней вправо>. \nДля удаления одной точки смахните по ней влево<. \nДействие запустится при нажатии на появившуюся кнопку.',
     '00': 'ВЫКЛ',
     '01': 'ВКЛ',
+    edit: 'Изменить',
+    dell: 'Удалить',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',
@@ -342,6 +348,7 @@ export default {
   },
   ru: {
     apl: 'Ждите применения..',
+    apl2: 'Загрузка данных..',
 
     // HomeScreen
     now_temp: 'Текущ. темп.',
@@ -482,6 +489,8 @@ export default {
       'Копирование полностью перезапишет график работы следующего или предыдущего дня. \nУдаление очистит все уставки выбранного дня. \n\nДля редактирования одной точки смахните по ней вправо>. \nДля удаления одной точки смахните по ней влево<. \nДействие запустится при нажатии на появившуюся кнопку.',
     '00': 'ВЫКЛ',
     '01': 'ВКЛ',
+    edit: 'Изменить',
+    dell: 'Удалить',
 
     tabAlarm: 'Warn Records',
     set: 'Установить',

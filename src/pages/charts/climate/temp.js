@@ -7,16 +7,24 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Easing, ActivityIndicator, AsyncStorage } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  ActivityIndicator, 
+  AsyncStorage, 
+  // Dimensions, 
+} from 'react-native';
+import { SwipeListView} from 'react-native-swipe-list-view';
 import {
   TYSdk,
-  TYFlatList,
   Popup,
   Tabs,
   Divider,
   TimerPicker,
   Picker,
-  Swipeout,
+  GlobalToast, 
 } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -71,7 +79,7 @@ class ChartClimateT extends PureComponent {
     
     this.state = {
       god: EVA > 0 ? EVA : 0,
-      data: this._getLenth() > 0 ? this._getAll() : null,
+      // data: this._getLenth() > 0 ? this._getAll() : null,
       activeKey: [7, 1, 2, 3, 4, 5, 6][date.getDay()],
       d1: [
         { value: 1, label: Strings.getLang('mon') },
@@ -83,20 +91,20 @@ class ChartClimateT extends PureComponent {
         { value: 7, label: Strings.getLang('sun') },
       ],
       dutemps: _.range(-15, 81),
-      stepperValue: 6,
-      timeSelectionValue: 366,
+      // stepperValue: 6,
+      // timeSelectionValue: 366,
       apl: false,
     };
   }
 
   componentWillReceiveProps() {
-    if (this._getLenth() !== this.state.data.length) {
+    if (this._getLenth() !== this.state.god) {
       this.setState({ apl: true });
       this._getLenth() === 0 ? setTimeout(() => { this.setState({ apl: false }); }, 2000) : null;
     }
 
-    if (this._getLenth() === this.state.data.length) {
-      setTimeout(() => { this.setState({ apl: false, data: this._getAll(), god: this._getLenth() }); }, 3000);
+    if (this._getLenth() === this.state.god) {
+      setTimeout(() => { this.setState({ apl: false, god: this._getLenth() }); }, 3000);
     }
   }
 
@@ -144,9 +152,8 @@ class ChartClimateT extends PureComponent {
     return MMM;
   };
 
-  dayToMin() {
+  dayToMin = time => {
     const day = this.state.activeKey;
-    const time = this.state.timeSelectionValue;
     const DTM = day === 1
       ? time
       : day === 2
@@ -205,73 +212,11 @@ class ChartClimateT extends PureComponent {
     return Data;
   }
 
-  _add0point() {
-    this.setState({stepperValue: 6, timeSelectionValue: 366});
-    const day = this.state.activeKey;
-    const temp = this.state.stepperValue;
-    const time = this.dayToMin();
-    const DATA = [];
-    for (let i = 0; i < 1; i++) {
-      DATA[i] = {
-        id: 0,
-        temperature: temp,
-        time,
-        day,
-      };
-    };
-    this.setState({data: DATA, god: DATA.length}, () => {});
-    const DATA2 = [];
-    const temps = DATA.map(item => item.temperature);
-    const times = DATA.map(item => item.time);
-    if (DATA.length > 0) {
-      for (let i = 0; i < DATA.length; i++) {
-        DATA2[i] = {
-          time:
-          times[i] < 16 && times[i] >= 0
-            ? String(`000${(times[i]).toString(16)}`) 
-            : times[i] > 15 && times[i] < 255
-              ? String(`00${(times[i]).toString(16)}`) 
-              : times[i] > 254 && times[i] < 4096
-                ? String(`0${(times[i]).toString(16)}`) 
-                : times[i] > 4095 && times[i] < 10080
-                  ? String(`${(times[i]).toString(16)}`)
-                  : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time0`, () => {}),
-          temperature:
-          temps[i] < 16 && temps[i] > -1
-            ? String(`0${(temps[i]).toString(16)}`)
-            : temps[i] < 0
-              ? String((256 + temps[i]).toString(16))
-              : temps[i] > 15
-                ? String((temps[i]).toString(16))
-                : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp0`, () => {}),
-        };
-      }
-    }
-    let part1 = DATA2.slice(0, 84);
-    const L = String(`000${(DATA2.length).toString(16)}`);
-    part1 = part1.map(a => (Object.values(a)).join('')).join('');
-    part1 = JSON.parse(JSON.stringify(part1));
-    TYDevice.putDeviceData({
-      [chart_1_part_1Code]: String(L + part1),
-    });
-    TYDevice.putDeviceData({
-      [chart_1_part_2Code]: '000100',
-    });
-    TYDevice.putDeviceData({
-      [chart_1_part_3Code]: '000100',
-    });
-    TYDevice.putDeviceData({
-      [chart_1_part_4Code]: '000100',
-    });
-  } 
-
   async _addpoint() {
-    const entries = cache.getAll();
-    console.dir(entries);
     const day = this.state.activeKey;
     const temp = await cache.get('temp');
-    console.log(temp);
-    const time = this.dayToMin();
+    const itime = await cache.get('time');
+    const time = this.dayToMin(itime);
     const DATA = this._getAll();
     DATA.push({
       id: '+',
@@ -279,6 +224,177 @@ class ChartClimateT extends PureComponent {
       time,
       day,
     });
+    this._sender(DATA);
+    DATA.length === 1 ? this.setState({god: 1}) : null;
+  };
+
+  async _editPoint(id, day) {
+    const DATA = this._getAll();
+    const temp = await cache.get('temp');
+    const itime = await cache.get('time');
+    const time = this.dayToMin(itime);
+    DATA.splice(id, 1, {
+      id,
+      temperature: temp,
+      time,
+      day,
+    });
+    this._sender(DATA);
+  };
+
+  _deletePoint(id, title, subTitle) {
+    Popup.custom({
+      content: (
+        <View
+          style={{
+            // flexDirection: 'row',
+            height: 200,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#fff',
+            padding: 8,
+          }}
+        >
+          <Text style={styles.deletet}>{Strings.getLang('pointdeltext')}</Text>
+          <Text style={styles.title}>
+            {'#'}
+            {id + 1}
+            {':   '}
+            {title}
+            {'°C  '}
+            {this.convertMinsToTime(subTitle)}
+          </Text>
+        </View>
+      ),
+      title: pointdelete,
+      cancelText,
+      confirmText: btndelete,
+      onMaskPress: ({ close }) => {
+        close();
+      },
+      onConfirm: (idx, { close }) => {
+        const DATA = this._getAll();
+        DATA.splice(id, 1);
+        close();  
+        this._sender(DATA);
+      },
+    });
+  };
+
+  async _copyDayB() {
+    const D = this.state.activeKey;
+    const oldDATA = this._getAll();
+    const dayDATA = this._getAll().filter(item => item.day === D);
+    const newdayDATA = [];
+    const newtemp = dayDATA.map(item => item.temperature);
+    const newtime = dayDATA.map(item => item.time);
+    const newday = dayDATA.map(item => item.day);
+    if (dayDATA.length > 0) {
+      for (let i = 0; i < dayDATA.length; i++) {
+        newdayDATA[i] = {
+          id: i,
+          temperature: newtemp[i],
+          time: newtime[i] - 1440,
+          day: newday[i] - 1,
+        };
+      }
+    }
+    const day = oldDATA.map(item => item.day);
+    for (let i = oldDATA.length - 1; i >= 0; i--) {
+      if (day[i] === D - 1) {
+        oldDATA.splice(i, 1);
+      }
+    }
+    const DATA = oldDATA.concat(newdayDATA);
+    if (DATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
+      this._sender(DATA);
+      this.setState({activeKey: D - 1});
+    }
+  };
+
+  async _copyDayF() {
+    const D = this.state.activeKey;
+    const oldDATA = this._getAll();
+    const dayDATA = this._getAll().filter(item => item.day === D);
+    const newdayDATA = [];
+    const newtemp = dayDATA.map(item => item.temperature);
+    const newtime = dayDATA.map(item => item.time);
+    const newday = dayDATA.map(item => item.day);
+    if (dayDATA.length > 0) {
+      for (let i = 0; i < dayDATA.length; i++) {
+        newdayDATA[i] = {
+          id: i,
+          temperature: newtemp[i],
+          time: newtime[i] + 1440,
+          day: newday[i] + 1,
+        };
+      }
+    }
+    const day = oldDATA.map(item => item.day);
+    for (let i = oldDATA.length - 1; i >= 0; i--) {
+      if (day[i] === D + 1) {
+        oldDATA.splice(i, 1);
+      }
+    }
+    const DATA = oldDATA.concat(newdayDATA);
+    if (DATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
+      this._sender(DATA);
+      this.setState({activeKey: D + 1});
+    }
+  };
+
+  async _deleteDay() {
+    const DATA = this._getAll();
+    const day = DATA.map(item => item.day);
+    for (let i = DATA.length - 1; i >= 0; i--) {
+      if (day[i] === this.state.activeKey) {
+        DATA.splice(i, 1);
+      }
+    }
+    this._sender(DATA);
+  };
+
+  _deleteAll() {
+    Popup.custom({
+      content: (
+        <View
+          style={{
+            height: 130,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#fff',
+            padding: 8,
+          }}
+        >
+          <Text style={styles.deletet}>{Strings.getLang('allpointdeltext')}</Text>
+        </View>
+      ),
+      title: Strings.getLang('allpointdeltitle'),
+      cancelText,
+      confirmText: btndelete,
+      onMaskPress: ({ close }) => {
+        close();
+      },
+      onConfirm: (idx, { close }) => {
+        close();
+        TYDevice.putDeviceData({
+          [chart_1_part_1Code]: '000000',
+        });
+        TYDevice.putDeviceData({
+          [chart_1_part_2Code]: '000000',
+        });
+        TYDevice.putDeviceData({
+          [chart_1_part_3Code]: '000000',
+        });
+        TYDevice.putDeviceData({
+          [chart_1_part_4Code]: '000000',
+        });
+        this.setState({god: 0});
+      },
+    });
+  };
+
+  _sender(DATA) {    
     DATA.sort(function(a, b) {
       if (a.time > b.time) {
         return 1;
@@ -318,7 +434,7 @@ class ChartClimateT extends PureComponent {
     const timeerror = () => {
       for (let i = 1; i < DATA.length; i++)
         if (DATA[i - 1].time >= DATA[i].time) {
-          this.setState({data: this._getAll(), god: this._getLenth()});
+          this.setState({god: this._getLenth()});
           return 1;
         }
       return 0;
@@ -353,9 +469,8 @@ class ChartClimateT extends PureComponent {
       TYDevice.putDeviceData({
         [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
       });
-      this.setState({data: DATA, god: DATA.length});
-      console.log(temp, time, day, DATA, 'Changed data');
-      cache.clearAll();
+      // this.setState({data: DATA, god: DATA.length});
+      console.log(DATA, 'Changed data');
     }
   };
 
@@ -364,15 +479,90 @@ class ChartClimateT extends PureComponent {
   };
 
   _handleD1Change = tab => {
+    // GlobalToast.show({
+    //   text: Strings.getLang('apl2'),
+    //   showIcon: true,
+    //   contentStyle: {},
+    //   showPosition: 'bottom',
+    //   onFinish: () => {
+    //     setTimeout(() => { GlobalToast.hide(); }, 2000);
+    //   },
+    // });
     this.setState({ activeKey: tab.value });
   };
 
+  _selector(temp, time) {
+    const selector = (
+      <View
+        style={{
+          flexDirection: 'row',
+          height: 'auto',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fff',
+          padding: 8,
+        }}
+      >
+        <FontAwesomeIcon
+          icon={faThermometerHalf}
+          color="#474747"
+          size={25}
+          marginRight={20}
+          marginLeft={10}
+        />
+        <Picker
+          style={styles.tempPicker}
+          // loop={true} - not working with iOS 14 and above
+          itemStyle={styles.tempPicker}
+          selectedValue={temp}
+          onValueChange={stepperValue =>
+            cache.set(
+              'temp', stepperValue,
+            )}
+        >
+          {this.state.dutemps.map(stepperValue => (
+            <Picker.Item
+              style={styles.tempPicker}
+              key={stepperValue}
+              value={stepperValue}
+              label={String(`${stepperValue} °C`)}
+            />
+          ))}
+        </Picker>
+        <Divider
+          style={{
+            flexDirection: 'column',
+            alignSelf: 'center',
+            height: 100,
+            marginLeft: 20,
+            margin: 20,
+          }}
+        />
+        <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
+        <TimerPicker
+          style={styles.timerPicker}
+          startTime={time}
+          is12Hours={false}
+          singlePicker={true}
+          onTimerChange={timeSelectionValue => 
+            cache.set('time', timeSelectionValue
+            )}
+        />
+      </View>);
+    return selector;  
+  };
+
   render() {
-    // const magic = this._getLenth() > 0 ? this._getAll() && this._getLenth() : null;
-    // console.log(magic, 'AVADA KEDAVRA!');
     const D = this.state.activeKey;
     const G = this.state.god;
-    const dayDATA = G > 0 ? this.state.data.filter(item => item.day === D) : null;
+    const dayDATA = G > 0 ? this._getAll().filter(item => item.day === D) : null;
+    const monDATA = G > 0 ? this._getAll().filter(item => item.day === 1) : null;
+    const tueDATA = G > 0 ? this._getAll().filter(item => item.day === 2) : null;
+    const wedDATA = G > 0 ? this._getAll().filter(item => item.day === 3) : null;
+    const thuDATA = G > 0 ? this._getAll().filter(item => item.day === 4) : null;
+    const friDATA = G > 0 ? this._getAll().filter(item => item.day === 5) : null;
+    const satDATA = G > 0 ? this._getAll().filter(item => item.day === 6) : null;
+    const sunDATA = G > 0 ? this._getAll().filter(item => item.day === 7) : null;
     const ICO = 
       (
         <View style={styles.info}>
@@ -391,86 +581,33 @@ class ChartClimateT extends PureComponent {
         </Text>
       </View>
     );
-    const DATA = this.state.data;
     const ADDPOINT = (
       <View style={styles.edit}>
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={G < 336 ? () => {
-            const ADay = this.state.activeKey;
-            const day = ADay === 1 ? 'mon' :
-              ADay === 2 ? 'tuу' :
-                ADay === 3 ? 'wed' :
-                  ADay === 4 ? 'thu' :
-                    ADay === 5 ? 'fri' :
-                      ADay === 6 ? 'sat' :
-                        ADay === 7 ? 'sun' : alert(Strings.getLang('UERROR'));
+            const temp = 6;
+            const time = 366;
+            cache.set('temp', temp);
+            cache.set('time', time);
+            const day = D === 1 ? 'mon' :
+              D === 2 ? 'tuу' :
+                D === 3 ? 'wed' :
+                  D === 4 ? 'thu' :
+                    D === 5 ? 'fri' :
+                      D === 6 ? 'sat' :
+                        D === 7 ? 'sun' : alert(Strings.getLang('UERROR'));
             Popup.custom({
-              content: (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    height: 'auto',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#fff',
-                    padding: 8,
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faThermometerHalf}
-                    color="#474747"
-                    size={25}
-                    marginRight={20}
-                    marginLeft={10}
-                  />
-                  <Picker
-                    style={styles.tempPicker}
-                    // loop={true} - not working with iOS 14 and above
-                    itemStyle={styles.tempPicker}
-                    selectedValue={this.state.stepperValue}
-                    onValueChange={stepperValue =>
-                      cache.set(
-                        'temp', stepperValue,
-                      )}
-                  >
-                    {this.state.dutemps.map(stepperValue => (
-                      <Picker.Item
-                        style={styles.tempPicker}
-                        key={stepperValue}
-                        value={stepperValue}
-                        label={String(`${stepperValue} °C`)}
-                      />
-                    ))}
-                  </Picker>
-                  <Divider
-                    style={{
-                      flexDirection: 'column',
-                      alignSelf: 'center',
-                      height: 100,
-                      marginLeft: 20,
-                      margin: 20,
-                    }}
-                  />
-                  <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
-                  <TimerPicker
-                    style={styles.timerPicker}
-                    startTime={this.state.timeSelectionValue}
-                    is12Hours={false}
-                    singlePicker={true}
-                    onTimerChange={timeSelectionValue => this.setState({ timeSelectionValue })}
-                  />
-                </View>
-              ),
+              content: (this._selector(temp, time)),
               title: pointadd + Strings.getLang(day),
               cancelText,
               confirmText,
               onMaskPress: ({ close }) => {
                 close();
               },
-              onConfirm: (idx, { close }) => {G > 0 ? this._addpoint() : this._add0point(); close();},
+              onConfirm: (idx, { close }) => {this._addpoint(); close();},
             });
-          } : null}
+          } : TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {})}
           style={styles.insideADD}
         >
           {G < 336 ? <FontAwesomeIcon icon={faPlus} color="#90EE90" size={20} />
@@ -480,7 +617,19 @@ class ChartClimateT extends PureComponent {
         <TouchableOpacity 
           style={styles.insideADD} 
           onPress={() => {
-            this.setState({data: this._getAll(), god: this._getLenth()});
+            // this.setState({data: this._getAll(), god: this._getLenth()});
+            TYDevice.putDeviceData({
+              [chart_1_part_1Code]: '014A',
+            });
+            TYDevice.putDeviceData({
+              [chart_1_part_2Code]: '014A',
+            });
+            TYDevice.putDeviceData({
+              [chart_1_part_3Code]: '014A',
+            });
+            TYDevice.putDeviceData({
+              [chart_1_part_4Code]: '014A',
+            });
           }}
         >
           {G < 336 ? <FontAwesomeIcon icon={faCoins} color="#90EE90" size={20} />
@@ -505,288 +654,31 @@ class ChartClimateT extends PureComponent {
                     <TouchableOpacity 
                       style={styles.insideADD}
                       onPress={() => {
-                        const newdayDATA = [];
-                        const newtemp = dayDATA.map(item => item.temperature);
-                        const newtime = dayDATA.map(item => item.time);
-                        const newday = dayDATA.map(item => item.day);
-                        if (dayDATA.length > 0) {
-                          for (let i = 0; i < dayDATA.length; i++) {
-                            newdayDATA[i] = {
-                              id: i,
-                              temperature: newtemp[i],
-                              time: newtime[i] - 1440,
-                              day: newday[i] - 1,
-                            };
-                          }
-                        }
-                        const day = DATA.map(item => item.day);
-                        for (let i = DATA.length - 1; i >= 0; i--) {
-                          if (day[i] === D - 1) {
-                            DATA.splice(i, 1);
-                          }
-                        }
-                        const newDATA = DATA.concat(newdayDATA);
-                        newDATA.sort(function(a, b) {
-                          if (a.time > b.time) {
-                            return 1;
-                          }
-                          if (a.time < b.time) {
-                            return -1;
-                          }
-                          return 0;
-                        });
-                        const DATA2 = [];
-                        const temps = newDATA.map(item => item.temperature);
-                        const times = newDATA.map(item => item.time);
-                        if (newDATA.length > 0) {
-                          for (let i = 0; i < newDATA.length; i++) {
-                            DATA2[i] = {
-                              time:
-                              times[i] < 16 && times[i] >= 0
-                                ? String(`000${(times[i]).toString(16)}`) 
-                                : times[i] > 15 && times[i] < 255
-                                  ? String(`00${(times[i]).toString(16)}`) 
-                                  : times[i] > 254 && times[i] < 4096
-                                    ? String(`0${(times[i]).toString(16)}`) 
-                                    : times[i] > 4095 && times[i] < 10080
-                                      ? String(`${(times[i]).toString(16)}`)
-                                      : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
-                              temperature:
-                              temps[i] < 16 && temps[i] > -1
-                                ? String(`0${(temps[i]).toString(16)}`)
-                                : temps[i] < 0
-                                  ? String((256 + temps[i]).toString(16))
-                                  : temps[i] > 15
-                                    ? String((temps[i]).toString(16))
-                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
-                            };
-                          }
-                        }
-                        if (newDATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
-                          const L10 = DATA2.length;
-                          const L0 = (DATA2.length).toString(16);
-                          const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
-
-                          let part1 = DATA2.slice(0, 84);
-                          console.log(DATA2.length, L0, L, 'jason');
-                          part1 = part1.map(a => (Object.values(a)).join('')).join('');
-                          part1 = JSON.parse(JSON.stringify(part1));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_1Code]: String(L + part1),
-                          });
-                          let part2 = DATA2.slice(84, 168);
-                          part2 = part2.map(a => (Object.values(a)).join('')).join('');
-                          part2 = JSON.parse(JSON.stringify(part2));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
-                          });
-                          let part3 = DATA2.slice(168, 252);
-                          part3 = part3.map(a => (Object.values(a)).join('')).join('');
-                          part3 = JSON.parse(JSON.stringify(part3));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
-                          });
-                          let part4 = DATA2.slice(252, 336); 
-                          part4 = part4.map(a => (Object.values(a)).join('')).join('');
-                          part4 = JSON.parse(JSON.stringify(part4));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
-                          });
-                          this.setState({data: newDATA, god: newDATA.length, activeKey: D - 1});
-                          Popup.close();
-                        }
+                        Popup.close();
+                        this._copyDayB();
                       }}
                     >
                       <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
                       <Text style={styles.title}>{Strings.getLang('copyB')}</Text>
+                      <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
                     </TouchableOpacity>)}
-                  <Divider style={{marginBottom: 10, marginTop: 10}} />
                   {D === 7 ? null : (
                     <TouchableOpacity 
                       style={styles.insideADD}
-                      onPress={() => {
-                        const newdayDATA = [];
-                        const newtemp = dayDATA.map(item => item.temperature);
-                        const newtime = dayDATA.map(item => item.time);
-                        const newday = dayDATA.map(item => item.day);
-                        if (dayDATA.length > 0) {
-                          for (let i = 0; i < dayDATA.length; i++) {
-                            newdayDATA[i] = {
-                              id: i,
-                              temperature: newtemp[i],
-                              time: newtime[i] + 1440,
-                              day: newday[i] + 1,
-                            };
-                          }
-                        }
-                        const day = DATA.map(item => item.day);
-                        for (let i = DATA.length - 1; i >= 0; i--) {
-                          if (day[i] === D + 1) {
-                            DATA.splice(i, 1);
-                          }
-                        }
-                        const newDATA = DATA.concat(newdayDATA);
-                        newDATA.sort(function(a, b) {
-                          if (a.time > b.time) {
-                            return 1;
-                          }
-                          if (a.time < b.time) {
-                            return -1;
-                          }
-                          return 0;
-                        });
-                        const DATA2 = [];
-                        const temps = newDATA.map(item => item.temperature);
-                        const times = newDATA.map(item => item.time);
-                        if (newDATA.length > 0) {
-                          for (let i = 0; i < newDATA.length; i++) {
-                            DATA2[i] = {
-                              time:
-                              times[i] < 16 && times[i] >= 0
-                                ? String(`000${(times[i]).toString(16)}`) 
-                                : times[i] > 15 && times[i] < 255
-                                  ? String(`00${(times[i]).toString(16)}`) 
-                                  : times[i] > 254 && times[i] < 4096
-                                    ? String(`0${(times[i]).toString(16)}`) 
-                                    : times[i] > 4095 && times[i] < 10080
-                                      ? String(`${(times[i]).toString(16)}`)
-                                      : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
-                              temperature:
-                              temps[i] < 16 && temps[i] > -1
-                                ? String(`0${(temps[i]).toString(16)}`)
-                                : temps[i] < 0
-                                  ? String((256 + temps[i]).toString(16))
-                                  : temps[i] > 15
-                                    ? String((temps[i]).toString(16))
-                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
-                            };
-                          }
-                        }
-                        if (newDATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
-                          const L10 = DATA2.length;
-                          const L0 = (DATA2.length).toString(16);
-                          const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
-
-                          let part1 = DATA2.slice(0, 84);
-                          console.log(DATA2.length, L0, L, 'jason');
-                          part1 = part1.map(a => (Object.values(a)).join('')).join('');
-                          part1 = JSON.parse(JSON.stringify(part1));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_1Code]: String(L + part1),
-                          });
-                          let part2 = DATA2.slice(84, 168);
-                          part2 = part2.map(a => (Object.values(a)).join('')).join('');
-                          part2 = JSON.parse(JSON.stringify(part2));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
-                          });
-                          let part3 = DATA2.slice(168, 252);
-                          part3 = part3.map(a => (Object.values(a)).join('')).join('');
-                          part3 = JSON.parse(JSON.stringify(part3));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
-                          });
-                          let part4 = DATA2.slice(252, 336); 
-                          part4 = part4.map(a => (Object.values(a)).join('')).join('');
-                          part4 = JSON.parse(JSON.stringify(part4));
-                          TYDevice.putDeviceData({
-                            [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
-                          });
-                          this.setState({data: newDATA, god: newDATA.length, activeKey: D + 1});
-                          Popup.close();
-                        }
+                      onPress={() => { 
+                        Popup.close();
+                        this._copyDayF();
                       }}
                     >
                       <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
                       <Text style={styles.title}>{Strings.getLang('copyF')}</Text>
+                      <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
                     </TouchableOpacity>)}
-                  <Divider style={{marginBottom: 10, marginTop: 10}} />
                   <TouchableOpacity 
                     style={styles.insideADD} 
                     onPress={() => {
-                      const day = DATA.map(item => item.day);
-                      for (let i = DATA.length - 1; i >= 0; i--) {
-                        if (day[i] === this.state.activeKey) {
-                          DATA.splice(i, 1);
-                        }
-                      }
-                      DATA.sort(function(a, b) {
-                        if (a.time > b.time) {
-                          return 1;
-                        }
-                        if (a.time < b.time) {
-                          return -1;
-                        }
-                        return 0;
-                      });
-                      const DATA2 = [];
-                      const temps = DATA.map(item => item.temperature);
-                      const times = DATA.map(item => item.time);
-                      if (DATA.length > 0) {
-                        for (let i = 0; i < DATA.length; i++) {
-                          DATA2[i] = {
-                            time:
-                              times[i] < 16 && times[i] >= 0
-                                ? String(`000${(times[i]).toString(16)}`) 
-                                : times[i] > 15 && times[i] < 255
-                                  ? String(`00${(times[i]).toString(16)}`) 
-                                  : times[i] > 254 && times[i] < 4096
-                                    ? String(`0${(times[i]).toString(16)}`) 
-                                    : times[i] > 4095 && times[i] < 10080
-                                      ? String(`${(times[i]).toString(16)}`)
-                                      : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
-                            temperature:
-                              temps[i] < 16 && temps[i] > -1
-                                ? String(`0${(temps[i]).toString(16)}`)
-                                : temps[i] < 0
-                                  ? String((256 + temps[i]).toString(16))
-                                  : temps[i] > 15
-                                    ? String((temps[i]).toString(16))
-                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
-                          };
-                        }
-                      }
-                      const timeerror = () => {
-                        for (let i = 1; i < DATA.length; i++)
-                          if (DATA[i - 1].time >= DATA[i].time) {
-                            this.setState({data: this._getAll(), god: this._getLenth()});
-                            return 1;
-                          }
-                        return 0;
-                      };
-                      if (timeerror() === 1) {TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});} else {
-                        const L10 = DATA2.length;
-                        const L0 = (DATA2.length).toString(16);
-                        const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
-
-                        let part1 = DATA2.slice(0, 84);
-                        console.log(DATA2.length, L0, L, 'jason');
-                        part1 = part1.map(a => (Object.values(a)).join('')).join('');
-                        part1 = JSON.parse(JSON.stringify(part1));
-                        TYDevice.putDeviceData({
-                          [chart_1_part_1Code]: String(L + part1),
-                        });
-                        let part2 = DATA2.slice(84, 168);
-                        part2 = part2.map(a => (Object.values(a)).join('')).join('');
-                        part2 = JSON.parse(JSON.stringify(part2));
-                        TYDevice.putDeviceData({
-                          [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
-                        });
-                        let part3 = DATA2.slice(168, 252);
-                        part3 = part3.map(a => (Object.values(a)).join('')).join('');
-                        part3 = JSON.parse(JSON.stringify(part3));
-                        TYDevice.putDeviceData({
-                          [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
-                        });
-                        let part4 = DATA2.slice(252, 336); 
-                        part4 = part4.map(a => (Object.values(a)).join('')).join('');
-                        part4 = JSON.parse(JSON.stringify(part4));
-                        TYDevice.putDeviceData({
-                          [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
-                        });
-                        this.setState({data: DATA, god: DATA.length});
-                        Popup.close();
-                      }
+                      Popup.close();
+                      this._deleteDay();
                     }}
                   >
                     <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={18} />
@@ -819,346 +711,70 @@ class ChartClimateT extends PureComponent {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.insideADD}
-          onPress={G === 0 ? null : () => {
-            Popup.custom({
-              content: (
-                <View
-                  style={{
-                    // flexDirection: 'row',
-                    height: 130,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#fff',
-                    padding: 8,
-                  }}
-                >
-                  <Text style={styles.deletet}>{Strings.getLang('allpointdeltext')}</Text>
-                </View>
-              ),
-              title: Strings.getLang('allpointdeltitle'),
-              cancelText,
-              confirmText: btndelete,
-              onMaskPress: ({ close }) => {
-                close();
-              },
-              onConfirm: (idx, { close }) => {
-                TYDevice.putDeviceData({
-                  [chart_1_part_1Code]: '000000',
-                });
-                TYDevice.putDeviceData({
-                  [chart_1_part_2Code]: '000000',
-                });
-                TYDevice.putDeviceData({
-                  [chart_1_part_3Code]: '000000',
-                });
-                TYDevice.putDeviceData({
-                  [chart_1_part_4Code]: '000000',
-                });
-                this.setState({data: 0, god: 0});
-                close();  
-              },
-            });
-          }}
+          onPress={G === 0 ? null : () => {this._deleteAll();}}
         >
           {G === 0 ? <FontAwesomeIcon icon={faTrashAlt} color="#d6d6d6" size={20} />
             : <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={20} />}
           <Text style={styles.titleADD}>{Strings.getLang('deleteAll')}</Text>
         </TouchableOpacity>
       </View>);
-    const Item = ({ id, title, subTitle, day }) => (
-      <Swipeout 
-        autoClose={true}
-        buttonWidth={100}
-        right={[
-          {
-            backgroundColor: '#FF4040',
-            text: Strings.getLang('btndelete'),
-            textStyle: { color: '#fff' },
-            onPress: () => {
-              Popup.custom({
-                content: (
-                  <View
-                    style={{
-                      // flexDirection: 'row',
-                      height: 200,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#fff',
-                      padding: 8,
-                    }}
-                  >
-                    <Text style={styles.deletet}>{Strings.getLang('pointdeltext')}</Text>
-                    <Text style={styles.title}>
-                      {'#'}
-                      {id + 1}
-                      {':   '}
-                      {title}
-                      {'°C  '}
-                      {this.convertMinsToTime(subTitle)}
-                    </Text>
-                  </View>
-                ),
-                title: pointdelete,
-                cancelText,
-                confirmText: btndelete,
-                onMaskPress: ({ close }) => {
-                  close();
-                },
-                onConfirm: (idx, { close }) => {
-                  DATA.splice(id, 1);
-                  DATA.sort(function(a, b) {
-                    if (a.time > b.time) {
-                      return 1;
-                    }
-                    if (a.time < b.time) {
-                      return -1;
-                    }
-                    return 0;
-                  });
-                  const DATA2 = [];
-                  const temps = DATA.map(item => item.temperature);
-                  const times = DATA.map(item => item.time);
-                  if (DATA.length > 0) {
-                    for (let i = 0; i < DATA.length; i++) {
-                      DATA2[i] = {
-                        time:
-                            times[i] < 16 && times[i] >= 0
-                              ? String(`000${(times[i]).toString(16)}`) 
-                              : times[i] > 15 && times[i] < 255
-                                ? String(`00${(times[i]).toString(16)}`) 
-                                : times[i] > 254 && times[i] < 4096
-                                  ? String(`0${(times[i]).toString(16)}`) 
-                                  : times[i] > 4095 && times[i] < 10080
-                                    ? String(`${(times[i]).toString(16)}`)
-                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time`, () => {}),
-                        temperature:
-                            temps[i] < 16 && temps[i] > -1
-                              ? String(`0${(temps[i]).toString(16)}`)
-                              : temps[i] < 0
-                                ? String((256 + temps[i]).toString(16))
-                                : temps[i] > 15
-                                  ? String((temps[i]).toString(16))
-                                  : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp`, () => {}),
-                      };
-                    }
-                  }
-                  const L10 = DATA2.length;
-                  const L0 = (DATA2.length).toString(16);
-                  const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
 
-                  let part1 = DATA2.slice(0, 84);
-                  console.log(DATA2.length, L0, L, 'jason');
-                  part1 = part1.map(a => (Object.values(a)).join('')).join('');
-                  part1 = JSON.parse(JSON.stringify(part1));
-                  TYDevice.putDeviceData({
-                    [chart_1_part_1Code]: String(L + part1),
-                  });
-                  let part2 = DATA2.slice(84, 168);
-                  part2 = part2.map(a => (Object.values(a)).join('')).join('');
-                  part2 = JSON.parse(JSON.stringify(part2));
-                  TYDevice.putDeviceData({
-                    [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
-                  });
-                  let part3 = DATA2.slice(168, 252);
-                  part3 = part3.map(a => (Object.values(a)).join('')).join('');
-                  part3 = JSON.parse(JSON.stringify(part3));
-                  TYDevice.putDeviceData({
-                    [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
-                  });
-                  let part4 = DATA2.slice(252, 336); 
-                  part4 = part4.map(a => (Object.values(a)).join('')).join('');
-                  part4 = JSON.parse(JSON.stringify(part4));
-                  TYDevice.putDeviceData({
-                    [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
-                  });
-                  this.setState({data: DATA, god: DATA.length});
-                  close();  
-                },
-              });
-            },
-          },
-        ]}
-        left={[
-          {
-            backgroundColor: '#90EE90',
-            text: Strings.getLang('btnedit'),
-            textStyle: { color: '#fff', alignSelf: 'center' },
-            onPress: () => {
-              let temp = title;
-              let time = this.convertMinsToMins(subTitle);
-              Popup.custom({
-                content: (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      height: 'auto',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#fff',
-                      padding: 8,
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faThermometerHalf}
-                      color="#474747"
-                      size={25}
-                      marginRight={20}
-                      marginLeft={10}
-                    />
-                    <Picker
-                      style={styles.tempPicker}
-                      // loop={true} - not working with iOS 14 and above
-                      itemStyle={styles.tempPicker}
-                      selectedValue={title}
-                      onValueChange={stepperValue =>
-                        this.setState({
-                          stepperValue: parseInt(stepperValue, 10),
-                        })}
-                    >
-                      {this.state.dutemps.map(stepperValue => (
-                        <Picker.Item
-                          style={styles.tempPicker}
-                          key={stepperValue}
-                          value={stepperValue}
-                          label={String(`${stepperValue} °C`)}
-                        />
-                      ))}
-                    </Picker>
-                    <Divider
-                      style={{
-                        flexDirection: 'column',
-                        alignSelf: 'center',
-                        height: 100,
-                        marginLeft: 20,
-                        margin: 20,
-                      }}
-                    />
-                    <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
-                    <TimerPicker
-                      style={styles.timerPicker}
-                      startTime={time}
-                      is12Hours={false}
-                      singlePicker={true}
-                      onTimerChange={timeSelectionValue => this.setState({ timeSelectionValue })}
-                    />
-                  </View>
-                ),
-                title: pointset,
-                cancelText,
-                confirmText,
-                onMaskPress: ({ close }) => {
-                  close();
-                },
-                onConfirm: (idx, { close }) => {
-                  temp = this.state.stepperValue;
-                  time = this.dayToMin(day);
-                  DATA.splice(id, 1, {
-                    id,
-                    temperature: temp,
-                    time,
-                    day,
-                  });
-                  DATA.sort(function(a, b) {
-                    if (a.time > b.time) {
-                      return 1;
-                    }
-                    if (a.time < b.time) {
-                      return -1;
-                    }
-                    return 0;
-                  });
-                  const DATA2 = [];
-                  const temps = DATA.map(item => item.temperature);
-                  const times = DATA.map(item => item.time);
-                  if (DATA.length > 0) {
-                    for (let i = 0; i < DATA.length; i++) {
-                      DATA2[i] = {
-                        time:
-                            times[i] < 16 && times[i] >= 0
-                              ? String(`000${(times[i]).toString(16)}`) 
-                              : times[i] > 15 && times[i] < 255
-                                ? String(`00${(times[i]).toString(16)}`) 
-                                : times[i] > 254 && times[i] < 4096
-                                  ? String(`0${(times[i]).toString(16)}`) 
-                                  : times[i] > 4095 && times[i] < 10080
-                                    ? String(`${(times[i]).toString(16)}`)
-                                    : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time`, () => {}),
-                        temperature:
-                            temps[i] < 16 && temps[i] > -1
-                              ? String(`0${(temps[i]).toString(16)}`)
-                              : temps[i] < 0
-                                ? String((256 + temps[i]).toString(16))
-                                : temps[i] > 15
-                                  ? String((temps[i]).toString(16))
-                                  : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp`, () => {}),
-                      };
-                    }
-                  }
-                  const timeerror = () => {
-                    for (let i = 1; i < DATA.length; i++)
-                      if (DATA[i - 1].time >= DATA[i].time) {
-                        this.setState({data: this._getAll(), god: this._getLenth()});
-                        return 1;
-                      }
-                    return 0;
-                  };
-                  if (timeerror() === 1) {TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});} else {
-                    const L10 = DATA2.length;
-                    const L0 = (DATA2.length).toString(16);
-                    const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+    const empty = () => (
+      <View>
+        <Text style={styles.wait}>{Strings.getLang('apl2')}</Text>
+        <ActivityIndicator color="#90EE90" /> 
+      </View>
+    );
 
-                    let part1 = DATA2.slice(0, 84);
-                    console.log(DATA2.length, L0, L, 'jason');
-                    part1 = part1.map(a => (Object.values(a)).join('')).join('');
-                    part1 = JSON.parse(JSON.stringify(part1));
-                    TYDevice.putDeviceData({
-                      [chart_1_part_1Code]: String(L + part1),
-                    });
-                    let part2 = DATA2.slice(84, 168);
-                    part2 = part2.map(a => (Object.values(a)).join('')).join('');
-                    part2 = JSON.parse(JSON.stringify(part2));
-                    TYDevice.putDeviceData({
-                      [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
-                    });
-                    let part3 = DATA2.slice(168, 252);
-                    part3 = part3.map(a => (Object.values(a)).join('')).join('');
-                    part3 = JSON.parse(JSON.stringify(part3));
-                    TYDevice.putDeviceData({
-                      [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
-                    });
-                    let part4 = DATA2.slice(252, 336); 
-                    part4 = part4.map(a => (Object.values(a)).join('')).join('');
-                    part4 = JSON.parse(JSON.stringify(part4));
-                    TYDevice.putDeviceData({
-                      [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
-                    });
-                    this.setState({data: DATA, god: DATA.length});
-                    console.log(temp, time, day, DATA2, 'Changed HEX data');
-                  }
-                  close();  
-                },
-              });
-            },
-          },
-        ]}
-        style={styles.item}
-      >
-        <View style={styles.inside}>
-          <Text style={styles.title}>{id + 1}</Text>
-          <Divider style={styles.divider} />
-          <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={20} />
-          <Text style={styles.title}>
-            {title}
-            °C
-          </Text>
-          <Divider style={styles.divider} />
-          <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={20} />
-          <Text style={styles.title}>{this.convertMinsToTime(subTitle)}</Text>
-        </View>
-      </Swipeout>
+    const Item = ({ id, title, subTitle }) => (
+      <View style={styles.item}>
+        <Text style={styles.title}>{id + 1}</Text>
+        <Divider style={styles.divider} />
+        <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={20} />
+        <Text style={styles.title}>
+          {title}
+          °C
+        </Text>
+        <Divider style={styles.divider} />
+        <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={20} />
+        <Text style={styles.title}>{this.convertMinsToTime(subTitle)}</Text>
+      </View>
     );
     const renderItem = ({ item }) => (
       <Item title={item.temperature} subTitle={item.time} id={item.id} day={item.day} />
+    );
+    const renderHiddenItem = ({ item }) => (
+      <View style={styles.backitem}>
+        <TouchableOpacity
+          style={styles.e}
+          onPress={() => {
+            const temp = item.temperature;
+            const time = this.convertMinsToMins(item.time);
+            cache.set('temp', temp);
+            cache.set('time', time);
+            Popup.custom({
+              content: (this._selector(temp, time)),
+              title: pointset,
+              cancelText,
+              confirmText,
+              onMaskPress: ({ close }) => {
+                close();
+              },
+              onConfirm: (idx, { close }) => {
+                close();
+                this._editPoint(item.id, item.day);
+              }});
+          }}
+        >
+          <Text style={styles.backTextWhite}>{Strings.getLang('edit')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
+          onPress={() =>{this._deletePoint(item.id, item.temperature, item.time);}}
+        >
+          <Text style={styles.backTextWhite}>{Strings.getLang('dell')}</Text>
+        </TouchableOpacity>
+      </View>
     );
 
     return (
@@ -1169,15 +785,17 @@ class ChartClimateT extends PureComponent {
             <ActivityIndicator color="#90EE90" /> 
           </View> : null}
         <Tabs
-          style={{borderRadius: 10, padding: 8, marginVertical: 5}}
+          style={{borderRadius: 10, marginVertical: 5}}
           maxItem={7}
-          activeKey={this.state.activeKey}
+          activeKey={D}
           dataSource={this.state.d1}
           swipeable={false}
           onChange={this._handleD1Change}
           preload={true}
-          preloadTimeout={G * 120}
-          animationConfig={{duration: 20, easing: Easing.cubic}}
+          preloadTimeout={G * 15}
+          renderPlaceholder={empty}
+          animationConfig={{duration: 10000, delay: 10, useNativeDriver: false}}
+          velocityThreshold={1}
           activeColor="#90EE90"
           tabActiveTextStyle={{fontWeight: 'bold', fontSize: 20}}
           tabStyle={{width: 50}}
@@ -1186,39 +804,104 @@ class ChartClimateT extends PureComponent {
         >
           <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            {/* <Divider color="#FFF" /> */}
-            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
+            <SwipeListView
+              data={monDATA}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={82} 
+              stopLeftSwipe={100}
+              rightOpenValue={-70}
+              stopRightSwipe={-100}
+              keyExtractor={item => item.id}
+              previewRowKey={0}
+              previewOpenValue={90}
+              previewOpenDelay={3000}
+            />
+            {G === 0 ? ICO : monDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
+            <SwipeListView
+              data={tueDATA}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={82} 
+              stopLeftSwipe={100}
+              rightOpenValue={-70}
+              stopRightSwipe={-100}
+              keyExtractor={item => item.id}
+            />
+            {G === 0 ? ICO : tueDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
+            <SwipeListView
+              data={wedDATA}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={82} 
+              stopLeftSwipe={100}
+              rightOpenValue={-70}
+              stopRightSwipe={-100}
+              keyExtractor={item => item.id}
+            />
+            {G === 0 ? ICO : wedDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
+            <SwipeListView
+              data={thuDATA}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={82} 
+              stopLeftSwipe={100}
+              rightOpenValue={-70}
+              stopRightSwipe={-100}
+              keyExtractor={item => item.id}
+            />
+            {G === 0 ? ICO : thuDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
+            <SwipeListView
+              data={friDATA}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={82} 
+              stopLeftSwipe={100}
+              rightOpenValue={-70}
+              stopRightSwipe={-100}
+              keyExtractor={item => item.id}
+            />
+            {G === 0 ? ICO : friDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
+            <SwipeListView
+              data={satDATA}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={82} 
+              stopLeftSwipe={100}
+              rightOpenValue={-70}
+              stopRightSwipe={-100}
+              keyExtractor={item => item.id}
+            />
+            {G === 0 ? ICO : satDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
             {ADDPOINT}
-            <FlatList data={dayDATA} renderItem={renderItem} keyExtractor={item => item.id} />
-            {G === 0 ? ICO : dayDATA.length === 0 ? ICODAY : null}
+            <SwipeListView
+              data={sunDATA}
+              renderItem={renderItem}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={82} 
+              stopLeftSwipe={100}
+              rightOpenValue={-70}
+              stopRightSwipe={-100}
+              keyExtractor={item => item.id}
+            />
+            {G === 0 ? ICO : sunDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
         </Tabs>
       </View>
@@ -1241,35 +924,72 @@ ChartClimateT.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  // },
-  item: {
+  backTextWhite: {
+    color: '#FFF',
+  },
+  e: {
+    height: 60,
+    width: '50%',
+    alignItems: 'center',
+    backgroundColor: '#90EE90',
+    flexDirection: 'row',
+    borderRadius: 6,
+    marginHorizontal: 0,
+  },
+  backRightBtn: {
+    height: 60,
+    width: '50%',
+    alignItems: 'center',
+    backgroundColor: '#FF4040',
+    flexDirection: 'row-reverse',
+    borderRadius: 8,
+    marginHorizontal: 0,
+  },
+  backitem: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    height: 60,
     backgroundColor: '#fff',
     borderLeftColor: '#90EE90',
     borderRightColor: '#FF4040',
-    borderLeftWidth: 10,
+    borderLeftWidth: 5,
     borderRightWidth: 3,
-    borderRadius: 20,
+    borderRadius: 12,
+    marginVertical: 5,
+    marginHorizontal: 16,
+    color: 'black',
+    flexWrap: 'wrap',
+  },
+  item: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: '#fff',
+    borderLeftColor: '#90EE90',
+    borderRightColor: '#FF4040',
+    borderLeftWidth: 5,
+    borderRightWidth: 3,
+    borderRadius: 12,
     padding: 20,
     marginVertical: 5,
     marginHorizontal: 16,
     color: 'black',
-    alignContent: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     flexWrap: 'wrap',
   },
-  inside: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
+  // inside: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  //   alignContent: 'center',
+  //   alignItems: 'center',
+  // },
   edit: {
     flexDirection: 'row',
     // backgroundColor: '#fff',
     width: '100%',
-    height: 40,
+    // height: 40,
     paddingRight: 20,
     paddingLeft: 20,
     marginBottom: 5,

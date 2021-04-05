@@ -10,7 +10,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 
 #### 2.0.4
-* 
+* rebuild UI components without using states (workaround render problem) | перестроены UI компоненты без использования состояний (обход проблемы постоянного рендеринга)
+* upgraded UI for charts (swipable menu added) | обновлен UI для графиков (смахивающиеся меню)
+* updated internal components | обновлены внутренние компоненты
+* updated some design elements | обновлены некоторые элементы дизайна
+* added optimizations | добавлены оптимизации
+* added async cache support | добавлена поддержка асинхр. кеширования
+* fixed performance problems with big data | исправлены проблемы производительности с большим объемом даных
+* removed unnecessary functions and code | убран ненужный код и ненужные функции
+#### Cloud func. | Функции облака
+* better performance and faster getting big data in chart programm menu | улучшенная производительность и более быстрое получение больших объемов данных в графиках программного режима
 
 #### 2.0.3
 * updated main settings menu design | обновлен дизайн домашней страницы настроек
