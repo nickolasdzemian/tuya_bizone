@@ -3,23 +3,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### ToDo
+* add state of fan in climate mode when fan is set to AUTO | добавление состояния вентилятора в климат-контроле, когда вент. в АВТОматическом режиме
+* add gradient colors (from blue to orange) in sliders that controll manual temp | добавление переходящего цвета в слайдерах, которые управляют темп. ручного поддержания
+* add statistics | добавление статистики
+
 ### Known issues | Известные ограничения
---- степпер +-2 по нажатию
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
 * UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
+* fast repeating sliding between days in programm mode (charts) may cause some lags (tests with 300 points in one-day list menu haven't been passed) | быстрое повторное переключение между днями в программном режиме (графики) может вызывать задержки (тесты с 300 точками в списке на один день)
 
 
 #### 2.0.4
 * rebuild UI components without using states (workaround render problem) | перестроены UI компоненты без использования состояний (обход проблемы постоянного рендеринга)
-* upgraded UI for charts (swipable menu added) | обновлен UI для графиков (смахивающиеся меню)
+* upgraded UI for charts | обновлен UI для графиков
 * updated internal components | обновлены внутренние компоненты
 * updated some design elements | обновлены некоторые элементы дизайна
+* added swipable menu | добавлены смахивающиеся меню
+* added swipe-switch day, if there's //free space on screen//no data for this day | добавлена возможность переключения между вкладками, когда на экране //есть свободное место//нет данных для выбранного дня
+* added new params for scrolling depends on day data length | добавлены новые параметры прокрутки, которые зависят от данных текущего дня
 * added optimizations | добавлены оптимизации
 * added async cache support | добавлена поддержка асинхр. кеширования
+* added preview for swipe menu | добавлен предпросмотр меню свайпа
+* added auto-close swipe menu | добавлено автоматическое закрытие меню свайпа
 * fixed performance problems with big data | исправлены проблемы производительности с большим объемом даных
 * removed unnecessary functions and code | убран ненужный код и ненужные функции
 #### Cloud func. | Функции облака
 * better performance and faster getting big data in chart programm menu | улучшенная производительность и более быстрое получение больших объемов данных в графиках программного режима
+* fixed problem with delete the last point in charts | исправлена проблема с удалением последней точки в графике
+* fixed problems with 0 temp and 0 time in cache | исправлена проблема с 0 темп. и 0 врменем в кеше
+#### Test components (won't be in release) | Тестовые компоненты (не войдут в релиз)
+\* added new non-rerendering test component with ideal performance (climate/tempNAVI) | добавлен новый необновляющийся компонент с идеальной производительностью
+\* !all test components may have bugs and they're not ready for using in prod
 
 #### 2.0.3
 * updated main settings menu design | обновлен дизайн домашней страницы настроек

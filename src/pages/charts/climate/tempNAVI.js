@@ -1,0 +1,1214 @@
+// /* eslint-disable no-unused-expressions */
+// /* eslint-disable max-len */
+// /* eslint-disable prettier/prettier */
+// /* eslint-disable no-alert */
+// /* eslint-disable react/destructuring-assignment */
+// import _ from 'lodash';
+// import PropTypes from 'prop-types';
+// import React, { PureComponent } from 'react';
+// import { connect } from 'react-redux';
+// import { 
+//   View, 
+//   Text, 
+//   StyleSheet, 
+//   TouchableOpacity, 
+//   ActivityIndicator, 
+//   AsyncStorage, 
+//   // Dimensions, 
+// } from 'react-native';
+// import { SwipeListView} from 'react-native-swipe-list-view';
+// import {
+//   TYSdk,
+//   Popup,
+//   Tabs,
+//   Divider,
+//   TimerPicker,
+//   Picker,
+//   GlobalToast, 
+// } from 'tuya-panel-kit';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+// import {
+//   faThermometerHalf,
+//   faBusinessTime,
+//   faTrashAlt,
+//   faChartPie,
+//   faPlus,
+//   faCoins,
+//   faCogs,
+//   faCopy,
+//   faInfoCircle,
+// } from '@fortawesome/free-solid-svg-icons';
+// import { Cache } from 'react-native-cache';
+// import Strings from '../../../i18n/index.ts';
+// import dpCodes from '../../../config/dpCodes.ts';
+
+// const TYNative = TYSdk.native;
+// const TYDevice = TYSdk.device;
+
+// const cancelText = Strings.getLang('cancelText');
+// const confirmText = Strings.getLang('confirmText');
+// const btndelete = Strings.getLang('btndelete');
+// const hrss = Strings.getLang('hrss');
+// const minss = Strings.getLang('minss');
+// const pointset = Strings.getLang('pointset');
+// const pointadd = Strings.getLang('pointadd');
+// const pointdelete = Strings.getLang('pointdelete');
+
+// const {
+//   chart_1_part_1: chart_1_part_1Code,
+//   chart_1_part_2: chart_1_part_2Code,
+//   chart_1_part_3: chart_1_part_3Code,
+//   chart_1_part_4: chart_1_part_4Code,
+// } = dpCodes;
+
+// const cache = new Cache({
+//   namespace: 'ChartClimateT',
+//   policy: {
+//     maxEntries: 50000
+//   },
+//   backend: AsyncStorage
+// });
+
+// const Tab = createBottomTabNavigator();
+
+// class ChartClimateT extends PureComponent {
+//   constructor(props) {
+//     super(props);
+
+//     const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
+
+//     const date = new Date();
+    
+//     this.state = {
+//       god: EVA > 0 ? EVA : 0,
+//       // data: this._getLenth() > 0 ? this._getAll() : null,
+//       activeKey: [7, 1, 2, 3, 4, 5, 6][date.getDay()],
+//       // d1: [
+//       //   { value: 1, label: Strings.getLang('mon') },
+//       //   { value: 2, label: Strings.getLang('tuу') },
+//       //   { value: 3, label: Strings.getLang('wed') },
+//       //   { value: 4, label: Strings.getLang('thu') },
+//       //   { value: 5, label: Strings.getLang('fri') },
+//       //   { value: 6, label: Strings.getLang('sat') },
+//       //   { value: 7, label: Strings.getLang('sun') },
+//       // ],
+//       dutemps: _.range(-15, 81),
+//       // stepperValue: 6,
+//       // timeSelectionValue: 366,
+//       apl: false,
+//     };
+//   }
+
+//   componentWillReceiveProps() {
+//     if (this._getLenth() !== this.state.god) {
+//       this.setState({ apl: true });
+//       this._getLenth() === 0 ? setTimeout(() => { this.setState({ apl: false }); }, 2000) : null;
+//     }
+
+//     if (this._getLenth() === this.state.god) {
+//       setTimeout(() => { this.setState({ apl: false, god: this._getLenth() }); }, 3000);
+//     }
+//   }
+
+//   convertMinsToTime = mins => {
+//     // const hours = (Math.floor(mins / 60) - ((this.state.activeKey - 1) * 24));
+//     let hours =
+//       mins < 1440
+//         ? Math.floor(mins / 60)
+//         : mins > 1439 && mins < 2880
+//           ? Math.floor((mins - 1440) / 60)
+//           : mins > 2879 && mins < 4320
+//             ? Math.floor((mins - 2880) / 60)
+//             : mins > 4319 && mins < 5760
+//               ? Math.floor((mins - 4320) / 60)
+//               : mins > 5759 && mins < 7200
+//                 ? Math.floor((mins - 5760) / 60)
+//                 : mins > 7199 && mins < 8640
+//                   ? Math.floor((mins - 7200) / 60)
+//                   : mins > 8639 && mins < 10081
+//                     ? Math.floor((mins - 8640) / 60)
+//                     : null;
+//     hours = hours < 10 ? `0${hours}` : hours;
+//     let minutes = mins % 60;
+//     minutes = minutes < 10 ? `0${minutes}` : minutes;
+//     return `${hours}${hrss}:${minutes}${minss}`;
+//   };
+
+//   convertMinsToMins = mins => {
+//     const MMM =
+//       mins < 1440
+//         ? Math.floor(mins)
+//         : mins > 1439 && mins < 2880
+//           ? Math.floor(mins - 1440)
+//           : mins > 2879 && mins < 4320
+//             ? Math.floor(mins - 2880)
+//             : mins > 4319 && mins < 5760
+//               ? Math.floor(mins - 4320)
+//               : mins > 5759 && mins < 7200
+//                 ? Math.floor(mins - 5760)
+//                 : mins > 7199 && mins < 8640
+//                   ? Math.floor(mins - 7200)
+//                   : mins > 8639 && mins < 10081
+//                     ? Math.floor(mins - 8640)
+//                     : null;
+//     return MMM;
+//   };
+
+//   dayToMin(time, day) {
+//     console.log(day, 'riuvhesuomprmpo');
+//     const DTM = day === 1
+//       ? time
+//       : day === 2
+//         ? time + 1440
+//         : day === 3
+//           ? time + 2880
+//           : day === 4
+//             ? time + 4320
+//             : day === 5
+//               ? time + 5760
+//               : day === 6
+//                 ? time + 7200
+//                 : day === 7
+//                   ? time + 8640
+//                   : null;
+//     return DTM;              
+//   }
+
+//   _getLenth() {
+//     const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
+//     const LENA = EVA > 0 ? EVA : 0;
+//     console.log(EVA, LENA, 'EVA, LENA');
+//     return LENA;
+//   }
+
+//   _getAll() {
+//     const L = this._getLenth();
+//     const I = this.props.chart_1_part_1.substring(4);
+//     const II = this.props.chart_1_part_2.substring(4);
+//     const III = this.props.chart_1_part_3.substring(4);
+//     const IV = this.props.chart_1_part_4.substring(4);
+//     const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
+//     const part1 = EVA > 0 ? I : '000000';
+//     const part2 = EVA > 0 ? II : '';
+//     const part3 = EVA > 0 ? III : '';
+//     const part4 = EVA > 0 ? IV : '';
+//     const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
+//     const temp = part0.map(item =>
+//       parseInt(item.substring(4, 6), 16) > 100
+//         ? parseInt(item.substring(4, 6), 16) - 256
+//         : parseInt(item.substring(4, 6), 16)
+//     );
+//     const time = part0.map(item => parseInt(item.substring(0, 4), 16));
+//     const Data = [];
+//     if (L > 0) {
+//       for (let i = 0; i < L; i++) {
+//         Data[i] = {
+//           id: i,
+//           temperature: temp[i],
+//           time: time[i],
+//           day: Math.floor(time[i] / 1440) + 1,
+//         };
+//       }
+//     }
+//     console.log('chart for list', Data);
+//     return Data;
+//   }
+
+//   async _addpoint() {
+//     const day = await cache.get('activeKey');
+//     const temp = await cache.get('temp');
+//     const itime = await cache.get('time');
+//     const time = this.dayToMin(itime, day);
+//     const DATA = this._getAll();
+//     DATA.push({
+//       id: '+',
+//       temperature: temp,
+//       time,
+//       day,
+//     });
+//     this._sender(DATA);
+//   };
+
+//   async _editPoint(id) {
+//     const day = await cache.get('activeKey');
+//     const DATA = this._getAll();
+//     const temp = await cache.get('temp');
+//     const itime = await cache.get('time');
+//     const time = this.dayToMin(itime, day);
+//     DATA.splice(id, 1, {
+//       id,
+//       temperature: temp,
+//       time,
+//       day,
+//     });
+//     this._sender(DATA);
+//   };
+
+//   _deletePoint(id, title, subTitle) {
+//     Popup.custom({
+//       content: (
+//         <View
+//           style={{
+//             // flexDirection: 'row',
+//             height: 200,
+//             alignItems: 'center',
+//             justifyContent: 'center',
+//             backgroundColor: '#fff',
+//             padding: 8,
+//           }}
+//         >
+//           <Text style={styles.deletet}>{Strings.getLang('pointdeltext')}</Text>
+//           <Text style={styles.title}>
+//             {'#'}
+//             {id + 1}
+//             {':   '}
+//             {title}
+//             {'°C  '}
+//             {this.convertMinsToTime(subTitle)}
+//           </Text>
+//         </View>
+//       ),
+//       title: pointdelete,
+//       cancelText,
+//       confirmText: btndelete,
+//       onMaskPress: ({ close }) => {
+//         close();
+//       },
+//       onConfirm: (idx, { close }) => {
+//         const DATA = this._getAll();
+//         DATA.splice(id, 1);
+//         close();  
+//         this._sender(DATA);
+//       },
+//     });
+//   };
+
+//   async _copyDayB() {
+//     const D = await cache.get('activeKey');
+//     const oldDATA = this._getAll();
+//     const dayDATA = this._getAll().filter(item => item.day === D);
+//     const newdayDATA = [];
+//     const newtemp = dayDATA.map(item => item.temperature);
+//     const newtime = dayDATA.map(item => item.time);
+//     const newday = dayDATA.map(item => item.day);
+//     if (dayDATA.length > 0) {
+//       for (let i = 0; i < dayDATA.length; i++) {
+//         newdayDATA[i] = {
+//           id: i,
+//           temperature: newtemp[i],
+//           time: newtime[i] - 1440,
+//           day: newday[i] - 1,
+//         };
+//       }
+//     }
+//     const day = oldDATA.map(item => item.day);
+//     for (let i = oldDATA.length - 1; i >= 0; i--) {
+//       if (day[i] === D - 1) {
+//         oldDATA.splice(i, 1);
+//       }
+//     }
+//     const DATA = oldDATA.concat(newdayDATA);
+//     if (DATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
+//       this._sender(DATA);
+//       this.setState({activeKey: D - 1});
+//     }
+//   };
+
+//   async _copyDayF() {
+//     const D = await cache.get('activeKey');
+//     const oldDATA = this._getAll();
+//     const dayDATA = this._getAll().filter(item => item.day === D);
+//     const newdayDATA = [];
+//     const newtemp = dayDATA.map(item => item.temperature);
+//     const newtime = dayDATA.map(item => item.time);
+//     const newday = dayDATA.map(item => item.day);
+//     if (dayDATA.length > 0) {
+//       for (let i = 0; i < dayDATA.length; i++) {
+//         newdayDATA[i] = {
+//           id: i,
+//           temperature: newtemp[i],
+//           time: newtime[i] + 1440,
+//           day: newday[i] + 1,
+//         };
+//       }
+//     }
+//     const day = oldDATA.map(item => item.day);
+//     for (let i = oldDATA.length - 1; i >= 0; i--) {
+//       if (day[i] === D + 1) {
+//         oldDATA.splice(i, 1);
+//       }
+//     }
+//     const DATA = oldDATA.concat(newdayDATA);
+//     if (DATA.length >= 336) {TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {});} else {
+//       this._sender(DATA);
+//       this.setState({activeKey: D + 1});
+//     }
+//   };
+
+//   async _deleteDay() {
+//     const DATA = this._getAll();
+//     const day = DATA.map(item => item.day);
+//     const activeKey = await cache.get('activeKey');
+//     for (let i = DATA.length - 1; i >= 0; i--) {
+//       if (day[i] === activeKey) {
+//         DATA.splice(i, 1);
+//       }
+//     }
+//     this._sender(DATA);
+//   };
+
+//   _deleteAll() {
+//     Popup.custom({
+//       content: (
+//         <View
+//           style={{
+//             height: 130,
+//             alignItems: 'center',
+//             justifyContent: 'center',
+//             backgroundColor: '#fff',
+//             padding: 8,
+//           }}
+//         >
+//           <Text style={styles.deletet}>{Strings.getLang('allpointdeltext')}</Text>
+//         </View>
+//       ),
+//       title: Strings.getLang('allpointdeltitle'),
+//       cancelText,
+//       confirmText: btndelete,
+//       onMaskPress: ({ close }) => {
+//         close();
+//       },
+//       onConfirm: (idx, { close }) => {
+//         close();
+//         TYDevice.putDeviceData({
+//           [chart_1_part_1Code]: '000000',
+//         });
+//         TYDevice.putDeviceData({
+//           [chart_1_part_2Code]: '000000',
+//         });
+//         TYDevice.putDeviceData({
+//           [chart_1_part_3Code]: '000000',
+//         });
+//         TYDevice.putDeviceData({
+//           [chart_1_part_4Code]: '000000',
+//         });
+//         this.setState({god: 0});
+//       },
+//     });
+//   };
+
+//   _sender(DATA) {    
+//     DATA.sort(function(a, b) {
+//       if (a.time > b.time) {
+//         return 1;
+//       }
+//       if (a.time < b.time) {
+//         return -1;
+//       }
+//       return 0;
+//     });
+//     const DATA2 = [];
+//     const temps = DATA.map(item => item.temperature);
+//     const times = DATA.map(item => item.time);
+//     if (DATA.length > 0) {
+//       for (let i = 0; i < DATA.length; i++) {
+//         DATA2[i] = {
+//           time:
+//           times[i] < 16 && times[i] >= 0
+//             ? String(`000${(times[i]).toString(16)}`) 
+//             : times[i] > 15 && times[i] < 255
+//               ? String(`00${(times[i]).toString(16)}`) 
+//               : times[i] > 254 && times[i] < 4096
+//                 ? String(`0${(times[i]).toString(16)}`) 
+//                 : times[i] > 4095 && times[i] < 10080
+//                   ? String(`${(times[i]).toString(16)}`)
+//                   : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-time+`, () => {}),
+//           temperature:
+//           temps[i] < 16 && temps[i] > -1
+//             ? String(`0${(temps[i]).toString(16)}`)
+//             : temps[i] < 0
+//               ? String((256 + temps[i]).toString(16))
+//               : temps[i] > 15
+//                 ? String((temps[i]).toString(16))
+//                 : TYNative.simpleTipDialog(`${Strings.getLang('UERROR')} Send-temp+`, () => {}),
+//         };
+//       }
+//     }
+//     const timeerror = () => {
+//       for (let i = 1; i < DATA.length; i++)
+//         if (DATA[i - 1].time >= DATA[i].time) {
+//           this.setState({god: this._getLenth()});
+//           return 1;
+//         }
+//       return 0;
+//     };
+//     if (timeerror() === 1) {TYNative.simpleTipDialog(`${Strings.getLang('sametimeerr')}`, () => {});} else {
+//       const L10 = DATA2.length;
+//       const L0 = (DATA2.length).toString(16);
+//       const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
+
+//       let part1 = DATA2.slice(0, 84);
+//       console.log(DATA2.length, L0, L, 'jason');
+//       part1 = part1.map(a => (Object.values(a)).join('')).join('');
+//       part1 = JSON.parse(JSON.stringify(part1));
+//       TYDevice.putDeviceData({
+//         [chart_1_part_1Code]: part1.length === 0 ? String(`${L}00`) : String(L + part1),
+//       });
+//       let part2 = DATA2.slice(84, 168);
+//       part2 = part2.map(a => (Object.values(a)).join('')).join('');
+//       part2 = JSON.parse(JSON.stringify(part2));
+//       TYDevice.putDeviceData({
+//         [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
+//       });
+//       let part3 = DATA2.slice(168, 252);
+//       part3 = part3.map(a => (Object.values(a)).join('')).join('');
+//       part3 = JSON.parse(JSON.stringify(part3));
+//       TYDevice.putDeviceData({
+//         [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
+//       });
+//       let part4 = DATA2.slice(252, 336); 
+//       part4 = part4.map(a => (Object.values(a)).join('')).join('');
+//       part4 = JSON.parse(JSON.stringify(part4));
+//       TYDevice.putDeviceData({
+//         [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
+//       });
+//       // this.setState({data: DATA, god: DATA.length});
+//       console.log(DATA, 'Changed data');
+//     }
+//   };
+
+//   _handleItemPress = value => () => {
+//     TYNative.simpleTipDialog(`Click Item ${value}`, () => {});
+//   };
+
+//   _handleD1Change = tab => {
+//     // GlobalToast.show({
+//     //   text: Strings.getLang('apl2'),
+//     //   showIcon: true,
+//     //   contentStyle: {},
+//     //   showPosition: 'bottom',
+//     //   onFinish: () => {
+//     //     setTimeout(() => { GlobalToast.hide(); }, 2000);
+//     //   },
+//     // });
+//     this.setState({ activeKey: tab.value });
+//   };
+
+//   _selector(temp, time) {
+//     const selector = (
+//       <View
+//         style={{
+//           flexDirection: 'row',
+//           height: 'auto',
+//           alignItems: 'center',
+//           justifyContent: 'center',
+//           backgroundColor: '#fff',
+//           padding: 8,
+//         }}
+//       >
+//         <FontAwesomeIcon
+//           icon={faThermometerHalf}
+//           color="#474747"
+//           size={25}
+//           marginRight={20}
+//           marginLeft={10}
+//         />
+//         <Picker
+//           style={styles.tempPicker}
+//           // loop={true} - not working with iOS 14 and above
+//           itemStyle={styles.tempPicker}
+//           selectedValue={temp}
+//           onValueChange={stepperValue =>
+//             cache.set(
+//               'temp', stepperValue,
+//             )}
+//         >
+//           {this.state.dutemps.map(stepperValue => (
+//             <Picker.Item
+//               style={styles.tempPicker}
+//               key={stepperValue}
+//               value={stepperValue}
+//               label={String(`${stepperValue} °C`)}
+//             />
+//           ))}
+//         </Picker>
+//         <Divider
+//           style={{
+//             flexDirection: 'column',
+//             alignSelf: 'center',
+//             height: 100,
+//             marginLeft: 20,
+//             margin: 20,
+//           }}
+//         />
+//         <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
+//         <TimerPicker
+//           style={styles.timerPicker}
+//           startTime={time}
+//           is12Hours={false}
+//           singlePicker={true}
+//           onTimerChange={timeSelectionValue => 
+//             cache.set('time', timeSelectionValue
+//             )}
+//         />
+//       </View>);
+//     return selector;  
+//   };
+
+//   async dayDATA() {
+//     const activeKey = await cache.get('activeKey');
+//     const DATA = this._getAll();
+//     const dayDATA = DATA.length > 0 ? DATA.filter(item => item.day === activeKey) : null;
+//     return dayDATA;
+//   };
+
+//   render() {
+//     const D = this.state.activeKey;
+//     const G = this.state.god;
+//     const A = this.state.apl;
+//     const DATA = this._getAll();
+//     const dayDATA = this.dayDATA();
+//     const monDATA = G > 0 ? DATA.filter(item => item.day === 1) : null;
+//     const tueDATA = G > 0 ? DATA.filter(item => item.day === 2) : null;
+//     const wedDATA = G > 0 ? DATA.filter(item => item.day === 3) : null;
+//     const thuDATA = G > 0 ? DATA.filter(item => item.day === 4) : null;
+//     const friDATA = G > 0 ? DATA.filter(item => item.day === 5) : null;
+//     const satDATA = G > 0 ? DATA.filter(item => item.day === 6) : null;
+//     const sunDATA = G > 0 ? DATA.filter(item => item.day === 7) : null;
+//     const ICO = 
+//       (
+//         <View style={styles.info}>
+//           <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
+//           <Text style={styles.info}>
+//             {Strings.getLang('nullcharts')}
+//           </Text>
+//         </View>
+//       );
+//     const ICODAY = 
+//     (
+//       <View style={styles.info}>
+//         <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
+//         <Text style={styles.info}>
+//           {Strings.getLang('nullchartsday')}
+//         </Text>
+//       </View>
+//     );
+//     const ADDPOINT = (
+//       <View style={styles.edit}>
+//         <TouchableOpacity
+//           activeOpacity={0.6}
+//           onPress={
+//             G >= 336 ? TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {})
+//               : A === true ? null 
+//                 : () => {
+//                   const temp = 6;
+//                   const time = 366;
+//                   cache.set('temp', temp);
+//                   cache.set('time', time);
+//                   Popup.custom({
+//                     content: (this._selector(temp, time)),
+//                     title: pointadd,
+//                     cancelText,
+//                     confirmText,
+//                     onMaskPress: ({ close }) => {
+//                       close();
+//                     },
+//                     onConfirm: (idx, { close }) => {this._addpoint(); close();},
+//                   });
+//                 }
+//           }
+//           style={styles.insideADD}
+//         >
+//           {G > 336 || A === true ? <FontAwesomeIcon icon={faPlus} color="#d6d6d6" size={20} />
+//             : <FontAwesomeIcon icon={faPlus} color="#90EE90" size={20} />}
+//           <Text style={styles.titleADD}>{Strings.getLang('addNew')}</Text>  
+//         </TouchableOpacity>
+//         <TouchableOpacity 
+//           style={styles.insideADD} 
+//           onPress={() => {
+//             // this.setState({data: this._getAll(), god: this._getLenth()});
+//             TYDevice.putDeviceData({
+//               [chart_1_part_1Code]: '014A',
+//             });
+//             TYDevice.putDeviceData({
+//               [chart_1_part_2Code]: '014A',
+//             });
+//             TYDevice.putDeviceData({
+//               [chart_1_part_3Code]: '014A',
+//             });
+//             TYDevice.putDeviceData({
+//               [chart_1_part_4Code]: '014A',
+//             });
+//           }}
+//         >
+//           {G > 336 || A === true ? <FontAwesomeIcon icon={faCoins} color="#d6d6d6" size={20} />
+//             : <FontAwesomeIcon icon={faCoins} color="#90EE90" size={20} />}
+//           <Text style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity 
+//           style={styles.insideADD} 
+//           onPress={G === 0 || dayDATA.length === 0 || A === true ? null : () => {
+//             Popup.custom({
+//               content: (
+//                 <View
+//                   style={{
+//                     // height: 380,
+//                     alignItems: 'center',
+//                     justifyContent: 'center',
+//                     backgroundColor: '#fff',
+//                     padding: 8,
+//                   }}
+//                 >
+//                   {D === 1 ? null : (
+//                     <TouchableOpacity 
+//                       style={styles.insideADD}
+//                       onPress={() => {
+//                         Popup.close();
+//                         this._copyDayB();
+//                       }}
+//                     >
+//                       <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
+//                       <Text style={styles.title}>{Strings.getLang('copyB')}</Text>
+//                       <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
+//                     </TouchableOpacity>)}
+//                   {D === 7 ? null : (
+//                     <TouchableOpacity 
+//                       style={styles.insideADD}
+//                       onPress={() => { 
+//                         Popup.close();
+//                         this._copyDayF();
+//                       }}
+//                     >
+//                       <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
+//                       <Text style={styles.title}>{Strings.getLang('copyF')}</Text>
+//                       <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
+//                     </TouchableOpacity>)}
+//                   <TouchableOpacity 
+//                     style={styles.insideADD} 
+//                     onPress={() => {
+//                       Popup.close();
+//                       this._deleteDay();
+//                     }}
+//                   >
+//                     <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={18} />
+//                     <Text style={styles.title}>{Strings.getLang('eraseday')}</Text>
+//                   </TouchableOpacity>
+//                   <View>
+//                     <Divider style={{marginBottom: 10, marginTop: 10}} />
+//                     <FontAwesomeIcon icon={faInfoCircle} size={16} margin={10} alignSelf="center" />
+//                     <Text style={styles.annotation}>
+//                       {Strings.getLang('copyNote')}
+//                     </Text>
+//                   </View>
+//                 </View>
+//               ),
+//               title: Strings.getLang('adtnopt'),
+//               cancelText,
+//               confirmText: 'OK',
+//               onMaskPress: ({ close }) => {
+//                 close();
+//               },
+//               onConfirm: (idx, { close }) => {
+//                 close();  
+//               },
+//             });
+//           }}
+//         >
+//           {G !== 0 && dayDATA.length !== 0 && A !== true ? <FontAwesomeIcon icon={faCogs} color="#90EE90" size={20} />
+//             : <FontAwesomeIcon icon={faCogs} color="#d6d6d6" size={20} />}
+//           <Text style={styles.titleADD}>{Strings.getLang('options')}</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity
+//           style={styles.insideADD}
+//           onPress={G === 0 || A === true ? null : () => {this._deleteAll();}}
+//         >
+//           {G === 0 || A === true ? <FontAwesomeIcon icon={faTrashAlt} color="#d6d6d6" size={20} />
+//             : <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={20} />}
+//           <Text style={styles.titleADD}>{Strings.getLang('deleteAll')}</Text>
+//         </TouchableOpacity>
+//       </View>);
+
+//     const empty = () => (
+//       <View>
+//         <Text style={styles.wait}>{Strings.getLang('apl2')}</Text>
+//         <ActivityIndicator color="#90EE90" /> 
+//       </View>
+//     );
+
+//     const Item = ({ id, title, subTitle }) => (
+//       <View style={styles.item}>
+//         <Text style={styles.title}>{id + 1}</Text>
+//         <Divider style={styles.divider} />
+//         <FontAwesomeIcon icon={faThermometerHalf} color="#474747" size={20} />
+//         <Text style={styles.title}>
+//           {title}
+//           °C
+//         </Text>
+//         <Divider style={styles.divider} />
+//         <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={20} />
+//         <Text style={styles.title}>{this.convertMinsToTime(subTitle)}</Text>
+//       </View>
+//     );
+//     const renderItem = ({ item }) => (
+//       <Item title={item.temperature} subTitle={item.time} id={item.id} day={item.day} />
+//     );
+//     const renderHiddenItem = ({ item }) => (
+//       <View style={styles.backitem}>
+//         <TouchableOpacity
+//           style={styles.e}
+//           onPress={A === true ? null : () => {
+//             const temp = item.temperature;
+//             const time = this.convertMinsToMins(item.time);
+//             cache.set('temp', temp);
+//             cache.set('time', time);
+//             Popup.custom({
+//               content: (this._selector(temp, time)),
+//               title: pointset,
+//               cancelText,
+//               confirmText,
+//               onMaskPress: ({ close }) => {
+//                 close();
+//               },
+//               onConfirm: (idx, { close }) => {
+//                 close();
+//                 this._editPoint(item.id, item.day);
+//               }});
+//           }}
+//         >
+//           <Text style={styles.backTextWhite}>{Strings.getLang('edit')}</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity
+//           style={[styles.backRightBtn, styles.backRightBtnRight]}
+//           onPress={A === true ? null : () => {this._deletePoint(item.id, item.temperature, item.time);}}
+//         >
+//           <Text style={styles.backTextWhite}>{Strings.getLang('dell')}</Text>
+//         </TouchableOpacity>
+//       </View>
+//     );
+
+//     function mon() {
+//       return (
+//         <View style={styles.list}>
+//           {ADDPOINT}
+//           <SwipeListView
+//             data={monDATA}
+//             renderItem={renderItem}
+//             renderHiddenItem={renderHiddenItem}
+//             leftOpenValue={82} 
+//             stopLeftSwipe={100}
+//             rightOpenValue={-70}
+//             stopRightSwipe={-100}
+//             keyExtractor={item => item.id}
+//             previewRowKey={0}
+//             previewOpenValue={90}
+//             previewOpenDelay={3000}
+//             onRowOpen={(rowKey, rowMap) => {
+//               setTimeout(() => {
+//                 rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
+//               }, 2500);
+//             }}
+//           />
+//           {G === 0 ? ICO : monDATA.length === 0 ? ICODAY : null}
+//         </View>
+//       );
+//     }
+//     function tue() {
+//       return (
+//         <View style={styles.list}>
+//           {ADDPOINT}
+//           <SwipeListView
+//             data={tueDATA}
+//             renderItem={renderItem}
+//             renderHiddenItem={renderHiddenItem}
+//             leftOpenValue={82} 
+//             stopLeftSwipe={100}
+//             rightOpenValue={-70}
+//             stopRightSwipe={-100}
+//             keyExtractor={item => item.id}
+//             previewRowKey={0}
+//             previewOpenValue={90}
+//             previewOpenDelay={3000}
+//             onRowOpen={(rowKey, rowMap) => {
+//               setTimeout(() => {
+//                 rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
+//               }, 2500);
+//             }}
+//           />
+//           {G === 0 ? ICO : tueDATA.length === 0 ? ICODAY : null}
+//         </View>
+//       );
+//     }    
+//     function wed() {
+//       return (
+//         <View style={styles.list}>
+//           {ADDPOINT}
+//           <SwipeListView
+//             data={wedDATA}
+//             renderItem={renderItem}
+//             renderHiddenItem={renderHiddenItem}
+//             leftOpenValue={82} 
+//             stopLeftSwipe={100}
+//             rightOpenValue={-70}
+//             stopRightSwipe={-100}
+//             keyExtractor={item => item.id}
+//             previewRowKey={0}
+//             previewOpenValue={90}
+//             previewOpenDelay={3000}
+//             onRowOpen={(rowKey, rowMap) => {
+//               setTimeout(() => {
+//                 rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
+//               }, 2500);
+//             }}
+//           />
+//           {G === 0 ? ICO : wedDATA.length === 0 ? ICODAY : null}
+//         </View>
+//       );
+//     }    
+//     function thu() {
+//       return (
+//         <View style={styles.list}>
+//           {ADDPOINT}
+//           <SwipeListView
+//             data={thuDATA}
+//             renderItem={renderItem}
+//             renderHiddenItem={renderHiddenItem}
+//             leftOpenValue={82} 
+//             stopLeftSwipe={100}
+//             rightOpenValue={-70}
+//             stopRightSwipe={-100}
+//             keyExtractor={item => item.id}
+//             previewRowKey={0}
+//             previewOpenValue={90}
+//             previewOpenDelay={3000}
+//             onRowOpen={(rowKey, rowMap) => {
+//               setTimeout(() => {
+//                 rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
+//               }, 2500);
+//             }}
+//           />
+//           {G === 0 ? ICO : thuDATA.length === 0 ? ICODAY : null}
+//         </View>
+//       );
+//     }    
+//     function fri() {
+//       return (
+//         <View style={styles.list}>
+//           {ADDPOINT}
+//           <SwipeListView
+//             data={friDATA}
+//             renderItem={renderItem}
+//             renderHiddenItem={renderHiddenItem}
+//             leftOpenValue={82} 
+//             stopLeftSwipe={100}
+//             rightOpenValue={-70}
+//             stopRightSwipe={-100}
+//             keyExtractor={item => item.id}
+//             previewRowKey={0}
+//             previewOpenValue={90}
+//             previewOpenDelay={3000}
+//             onRowOpen={(rowKey, rowMap) => {
+//               setTimeout(() => {
+//                 rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
+//               }, 2500);
+//             }}
+//           />
+//           {G === 0 ? ICO : friDATA.length === 0 ? ICODAY : null}
+//         </View>
+//       );
+//     }    
+//     function sat() {
+//       return (
+//         <View style={styles.list}>
+//           {ADDPOINT}
+//           <SwipeListView
+//             data={satDATA}
+//             renderItem={renderItem}
+//             renderHiddenItem={renderHiddenItem}
+//             leftOpenValue={82} 
+//             stopLeftSwipe={100}
+//             rightOpenValue={-70}
+//             stopRightSwipe={-100}
+//             keyExtractor={item => item.id}
+//             previewRowKey={0}
+//             previewOpenValue={90}
+//             previewOpenDelay={3000}
+//             onRowOpen={(rowKey, rowMap) => {
+//               setTimeout(() => {
+//                 rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
+//               }, 2500);
+//             }}
+//           />
+//           {G === 0 ? ICO : satDATA.length === 0 ? ICODAY : null}
+//         </View>
+//       );
+//     }    
+//     function sun() {
+//       return (
+//         <View style={styles.list}>
+//           {ADDPOINT}
+//           <SwipeListView
+//             data={sunDATA}
+//             renderItem={renderItem}
+//             renderHiddenItem={renderHiddenItem}
+//             leftOpenValue={82} 
+//             stopLeftSwipe={100}
+//             rightOpenValue={-70}
+//             stopRightSwipe={-100}
+//             keyExtractor={item => item.id}
+//             previewRowKey={0}
+//             previewOpenValue={90}
+//             previewOpenDelay={3000}
+//             onRowOpen={(rowKey, rowMap) => {
+//               setTimeout(() => {
+//                 rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
+//               }, 2500);
+//             }}
+//           />
+//           {G === 0 ? ICO : sunDATA.length === 0 ? ICODAY : null}
+//         </View>
+//       );
+//     }
+
+//     // function MyTabs() {
+//     //   return (
+//     //     <Tab.Navigator initialRouteName={this.state.activeKey}>
+//     //       <Tab.Screen name="mon" component={mon} />
+//     //       <Tab.Screen name="tue" component={tue} />
+//     //       <Tab.Screen name="wed" component={wed} />
+//     //       <Tab.Screen name="thu" component={thu} />
+//     //       <Tab.Screen name="fri" component={fri} />
+//     //       <Tab.Screen name="sat" component={sat} />
+//     //       <Tab.Screen name="sun" component={sun} />
+//     //     </Tab.Navigator>
+//     //   );
+//     // }
+
+//     return (
+//       <NavigationContainer>
+//         {this.state.apl === true ? 
+//           <View>
+//             <Text style={styles.wait}>{Strings.getLang('apl')}</Text>
+//             <ActivityIndicator color="#90EE90" /> 
+//           </View> : null}
+        
+//         <Tab.Navigator
+//           tabBarOptions={{
+//             activeTintColor: '#90EE90',
+//             inactiveTintColor: 'gray',
+//           }}
+//           // style={styles.tabbar}
+//           initialRouteName={this.state.activeKey === 3 ? 'wed' : 'sun'}
+//         >
+//           <Tab.Screen
+//             name={Strings.getLang('mon')}
+//             component={mon}
+//             listeners={() => ({
+//               tabPress: e => { cache.set('activeKey', 1);},
+//             })}
+//           />
+//           <Tab.Screen
+//             name={Strings.getLang('tuу')}
+//             component={tue} 
+//             listeners={() => ({
+//               tabPress: e => { cache.set('activeKey', 2);},
+//             })}
+//           />
+//           <Tab.Screen
+//             name="wed"
+//             component={wed} 
+//             listeners={() => ({
+//               tabPress: e => { cache.set('activeKey', 3);},
+//             })}
+//           />
+//           <Tab.Screen
+//             name={Strings.getLang('thu')}
+//             component={thu} 
+//             listeners={() => ({
+//               tabPress: e => { cache.set('activeKey', 4);},
+//             })}
+//           />
+//           <Tab.Screen
+//             name={Strings.getLang('fri')}
+//             component={fri} 
+//             listeners={() => ({
+//               tabPress: e => { cache.set('activeKey', 5);},
+//             })}
+//           />
+//           <Tab.Screen
+//             name={Strings.getLang('sat')}
+//             component={sat} 
+//             listeners={() => ({
+//               tabPress: e => { cache.set('activeKey', 6);},
+//             })}
+//           />
+//           <Tab.Screen
+//             name={Strings.getLang('sun')}
+//             component={sun} 
+//             listeners={() => ({
+//               tabPress: e => { cache.set('activeKey', 7);},
+//             })}
+//           />
+//         </Tab.Navigator>
+//       </NavigationContainer>);
+//   }
+// }
+
+// ChartClimateT.propTypes = {
+//   chart_1_part_1: PropTypes.string,
+//   chart_1_part_2: PropTypes.string,
+//   chart_1_part_3: PropTypes.string,
+//   chart_1_part_4: PropTypes.string,
+// };
+
+// ChartClimateT.defaultProps = {
+//   chart_1_part_1: '000000',
+//   chart_1_part_2: '000000',
+//   chart_1_part_3: '000000',
+//   chart_1_part_4: '000000',
+// };
+
+// const styles = StyleSheet.create({
+//   backTextWhite: {
+//     color: '#FFF',
+//   },
+//   e: {
+//     height: 60,
+//     width: '50%',
+//     alignItems: 'center',
+//     backgroundColor: '#90EE90',
+//     flexDirection: 'row',
+//     borderRadius: 6,
+//     marginHorizontal: 0,
+//   },
+//   backRightBtn: {
+//     height: 60,
+//     width: '50%',
+//     alignItems: 'center',
+//     backgroundColor: '#FF4040',
+//     flexDirection: 'row-reverse',
+//     borderRadius: 8,
+//     marginHorizontal: 0,
+//   },
+//   backitem: {
+//     flexDirection: 'row',
+//     alignContent: 'center',
+//     alignItems: 'center',
+//     height: 60,
+//     backgroundColor: '#fff',
+//     borderLeftColor: '#90EE90',
+//     borderRightColor: '#FF4040',
+//     borderLeftWidth: 5,
+//     borderRightWidth: 3,
+//     borderRadius: 12,
+//     marginVertical: 5,
+//     marginHorizontal: 16,
+//     color: 'black',
+//     flexWrap: 'wrap',
+//   },
+//   item: {
+//     flexDirection: 'row',
+//     alignContent: 'center',
+//     alignItems: 'center',
+//     height: 60,
+//     backgroundColor: '#fff',
+//     borderLeftColor: '#90EE90',
+//     borderRightColor: '#FF4040',
+//     borderLeftWidth: 5,
+//     borderRightWidth: 3,
+//     borderRadius: 12,
+//     padding: 20,
+//     marginVertical: 5,
+//     marginHorizontal: 16,
+//     color: 'black',
+//     justifyContent: 'space-around',
+//     flexWrap: 'wrap',
+//   },
+//   // inside: {
+//   //   flexDirection: 'row',
+//   //   justifyContent: 'space-around',
+//   //   alignContent: 'center',
+//   //   alignItems: 'center',
+//   // },
+//   edit: {
+//     flexDirection: 'row',
+//     // backgroundColor: '#fff',
+//     width: '100%',
+//     // height: 40,
+//     paddingRight: 20,
+//     paddingLeft: 20,
+//     marginBottom: 5,
+//     marginTop: 5,
+//     color: 'black',
+//     alignContent: 'center',
+//     justifyContent: 'space-between',
+//   },
+//   insideADD: {
+//     alignContent: 'center',
+//     alignItems: 'center',
+//   },
+//   tempPicker: {
+//     width: 70,
+//     height: 200,
+//   },
+//   timerPicker: {
+//     width: 200,
+//     height: 200,
+//   },
+//   list: {
+//     paddingBottom: 14,
+//   },
+//   divider: {
+//     flexDirection: 'column',
+//     height: 20,
+//   },
+//   title: {
+//     color: '#474747',
+//   },
+//   titleADD: {
+//     color: '#474747',
+//     fontSize: 12,
+//     marginTop: 2,
+//   },
+//   deletet: {
+//     fontWeight: 'bold',
+//     color: 'red',
+//     margin: 20,
+//   },
+//   info: {
+//     flexWrap: 'wrap',
+//     color: '#474747',
+//     textAlign: 'center',
+//     margin: 30,
+//     alignSelf: 'center',
+//     // justifyContent: 'space-around',
+//     // alignContent: 'center',
+//     // alignItems: 'center',
+//   },
+//   annotation: {
+//     textAlign: 'center',
+//     fontWeight: '200',
+//     fontSize: 10,
+//     color: 'black',
+//     justifyContent: 'center',
+//     paddingBottom: 10,
+//     letterSpacing: 1,
+//   },
+//   wait: {
+//     textAlign: 'center',
+//     fontWeight: '200',
+//     fontSize: 10,
+//     color: 'black',
+//     justifyContent: 'center',
+//     paddingBottom: 1,
+//     letterSpacing: 1,
+//   },
+// });
+
+// export default connect(({ dpState }) => ({
+//   chart_1_part_1: dpState[chart_1_part_1Code],
+//   chart_1_part_2: dpState[chart_1_part_2Code],
+//   chart_1_part_3: dpState[chart_1_part_3Code],
+//   chart_1_part_4: dpState[chart_1_part_4Code],
+// }))(ChartClimateT);

@@ -14,7 +14,6 @@ import {
   TouchableOpacity, 
   ActivityIndicator, 
   AsyncStorage, 
-  // Dimensions, 
 } from 'react-native';
 import { SwipeListView} from 'react-native-swipe-list-view';
 import {
@@ -24,7 +23,6 @@ import {
   Divider,
   TimerPicker,
   Picker,
-  GlobalToast, 
 } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -48,8 +46,6 @@ const TYDevice = TYSdk.device;
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
 const btndelete = Strings.getLang('btndelete');
-const hrss = Strings.getLang('hrss');
-const minss = Strings.getLang('minss');
 const pointset = Strings.getLang('pointset');
 const pointadd = Strings.getLang('pointadd');
 const pointdelete = Strings.getLang('pointdelete');
@@ -79,7 +75,6 @@ class ChartClimateT extends PureComponent {
     
     this.state = {
       god: EVA > 0 ? EVA : 0,
-      // data: this._getLenth() > 0 ? this._getAll() : null,
       activeKey: [7, 1, 2, 3, 4, 5, 6][date.getDay()],
       d1: [
         { value: 1, label: Strings.getLang('mon') },
@@ -91,8 +86,6 @@ class ChartClimateT extends PureComponent {
         { value: 7, label: Strings.getLang('sun') },
       ],
       dutemps: _.range(-15, 81),
-      // stepperValue: 6,
-      // timeSelectionValue: 366,
       apl: false,
     };
   }
@@ -109,47 +102,46 @@ class ChartClimateT extends PureComponent {
   }
 
   convertMinsToTime = mins => {
-    // const hours = (Math.floor(mins / 60) - ((this.state.activeKey - 1) * 24));
     let hours =
       mins < 1440
-        ? Math.floor(mins / 60)
+        ? mins / 60
         : mins > 1439 && mins < 2880
-          ? Math.floor((mins - 1440) / 60)
+          ? (mins - 1440) / 60
           : mins > 2879 && mins < 4320
-            ? Math.floor((mins - 2880) / 60)
+            ? (mins - 2880) / 60
             : mins > 4319 && mins < 5760
-              ? Math.floor((mins - 4320) / 60)
+              ? (mins - 4320) / 60
               : mins > 5759 && mins < 7200
-                ? Math.floor((mins - 5760) / 60)
+                ? (mins - 5760) / 60
                 : mins > 7199 && mins < 8640
-                  ? Math.floor((mins - 7200) / 60)
+                  ? (mins - 7200) / 60
                   : mins > 8639 && mins < 10081
-                    ? Math.floor((mins - 8640) / 60)
+                    ? (mins - 8640) / 60
                     : null;
-    hours = hours < 10 ? `0${hours}` : hours;
+    hours = hours < 10 ? `0${Math.floor(hours)}` : Math.floor(hours);
     let minutes = mins % 60;
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-    return `${hours}${hrss}:${minutes}${minss}`;
+    minutes = minutes < 10 ? `0${Math.floor(minutes)}` : Math.floor(minutes);
+    return `${hours}:${minutes}`;
   };
 
   convertMinsToMins = mins => {
     const MMM =
       mins < 1440
-        ? Math.floor(mins)
+        ? mins
         : mins > 1439 && mins < 2880
-          ? Math.floor(mins - 1440)
+          ? mins - 1440
           : mins > 2879 && mins < 4320
-            ? Math.floor(mins - 2880)
+            ? mins - 2880
             : mins > 4319 && mins < 5760
-              ? Math.floor(mins - 4320)
+              ? mins - 4320
               : mins > 5759 && mins < 7200
-                ? Math.floor(mins - 5760)
+                ? mins - 5760
                 : mins > 7199 && mins < 8640
-                  ? Math.floor(mins - 7200)
+                  ? mins - 7200
                   : mins > 8639 && mins < 10081
-                    ? Math.floor(mins - 8640)
+                    ? mins - 8640
                     : null;
-    return MMM;
+    return Math.floor(MMM);
   };
 
   dayToMin = time => {
@@ -175,7 +167,6 @@ class ChartClimateT extends PureComponent {
   _getLenth() {
     const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
     const LENA = EVA > 0 ? EVA : 0;
-    console.log(EVA, LENA, 'EVA, LENA');
     return LENA;
   }
 
@@ -191,18 +182,14 @@ class ChartClimateT extends PureComponent {
     const part3 = EVA > 0 ? III : '';
     const part4 = EVA > 0 ? IV : '';
     const part0 = (part1 + part2 + part3 + part4).match(/(......?)/g);
-    const temp = part0.map(item =>
-      parseInt(item.substring(4, 6), 16) > 100
-        ? parseInt(item.substring(4, 6), 16) - 256
-        : parseInt(item.substring(4, 6), 16)
-    );
+    const temp = part0.map(item => parseInt(item.substring(4, 6), 16));
     const time = part0.map(item => parseInt(item.substring(0, 4), 16));
     const Data = [];
     if (L > 0) {
       for (let i = 0; i < L; i++) {
         Data[i] = {
           id: i,
-          temperature: temp[i],
+          temperature: temp[i] > 100 ? temp[i] - 256 : temp [i],
           time: time[i],
           day: Math.floor(time[i] / 1440) + 1,
         };
@@ -216,11 +203,11 @@ class ChartClimateT extends PureComponent {
     const day = this.state.activeKey;
     const temp = await cache.get('temp');
     const itime = await cache.get('time');
-    const time = this.dayToMin(itime);
+    const time = this.dayToMin(itime === undefined ? 0 : itime);
     const DATA = this._getAll();
     DATA.push({
       id: '+',
-      temperature: temp,
+      temperature: temp === undefined ? 0 : temp,
       time,
       day,
     });
@@ -232,10 +219,10 @@ class ChartClimateT extends PureComponent {
     const DATA = this._getAll();
     const temp = await cache.get('temp');
     const itime = await cache.get('time');
-    const time = this.dayToMin(itime);
+    const time = this.dayToMin(itime === undefined ? 0 : itime);
     DATA.splice(id, 1, {
       id,
-      temperature: temp,
+      temperature: temp === undefined ? 0 : temp,
       time,
       day,
     });
@@ -247,7 +234,6 @@ class ChartClimateT extends PureComponent {
       content: (
         <View
           style={{
-            // flexDirection: 'row',
             height: 200,
             alignItems: 'center',
             justifyContent: 'center',
@@ -284,7 +270,7 @@ class ChartClimateT extends PureComponent {
   async _copyDayB() {
     const D = this.state.activeKey;
     const oldDATA = this._getAll();
-    const dayDATA = this._getAll().filter(item => item.day === D);
+    const dayDATA = oldDATA.filter(item => item.day === D);
     const newdayDATA = [];
     const newtemp = dayDATA.map(item => item.temperature);
     const newtime = dayDATA.map(item => item.time);
@@ -315,7 +301,7 @@ class ChartClimateT extends PureComponent {
   async _copyDayF() {
     const D = this.state.activeKey;
     const oldDATA = this._getAll();
-    const dayDATA = this._getAll().filter(item => item.day === D);
+    const dayDATA = oldDATA.filter(item => item.day === D);
     const newdayDATA = [];
     const newtemp = dayDATA.map(item => item.temperature);
     const newtime = dayDATA.map(item => item.time);
@@ -343,7 +329,7 @@ class ChartClimateT extends PureComponent {
     }
   };
 
-  async _deleteDay() {
+  _deleteDay() {
     const DATA = this._getAll();
     const day = DATA.map(item => item.day);
     for (let i = DATA.length - 1; i >= 0; i--) {
@@ -445,11 +431,10 @@ class ChartClimateT extends PureComponent {
       const L = L10 < 16 ? String(`000${L0}`) : L10 > 15 && L10 < 256 ? String(`00${L0}`) : String(`0${L0}`);
 
       let part1 = DATA2.slice(0, 84);
-      console.log(DATA2.length, L0, L, 'jason');
       part1 = part1.map(a => (Object.values(a)).join('')).join('');
       part1 = JSON.parse(JSON.stringify(part1));
       TYDevice.putDeviceData({
-        [chart_1_part_1Code]: String(L + part1),
+        [chart_1_part_1Code]: part1.length === 0 ? String(`${L}00`) : String(L + part1),
       });
       let part2 = DATA2.slice(84, 168);
       part2 = part2.map(a => (Object.values(a)).join('')).join('');
@@ -469,25 +454,10 @@ class ChartClimateT extends PureComponent {
       TYDevice.putDeviceData({
         [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
       });
-      // this.setState({data: DATA, god: DATA.length});
-      console.log(DATA, 'Changed data');
     }
   };
 
-  _handleItemPress = value => () => {
-    TYNative.simpleTipDialog(`Click Item ${value}`, () => {});
-  };
-
   _handleD1Change = tab => {
-    // GlobalToast.show({
-    //   text: Strings.getLang('apl2'),
-    //   showIcon: true,
-    //   contentStyle: {},
-    //   showPosition: 'bottom',
-    //   onFinish: () => {
-    //     setTimeout(() => { GlobalToast.hide(); }, 2000);
-    //   },
-    // });
     this.setState({ activeKey: tab.value });
   };
 
@@ -516,9 +486,7 @@ class ChartClimateT extends PureComponent {
           itemStyle={styles.tempPicker}
           selectedValue={temp}
           onValueChange={stepperValue =>
-            cache.set(
-              'temp', stepperValue,
-            )}
+            cache.set('temp', stepperValue)}
         >
           {this.state.dutemps.map(stepperValue => (
             <Picker.Item
@@ -545,8 +513,7 @@ class ChartClimateT extends PureComponent {
           is12Hours={false}
           singlePicker={true}
           onTimerChange={timeSelectionValue => 
-            cache.set('time', timeSelectionValue
-            )}
+            cache.set('time', timeSelectionValue)}
         />
       </View>);
     return selector;  
@@ -555,14 +522,16 @@ class ChartClimateT extends PureComponent {
   render() {
     const D = this.state.activeKey;
     const G = this.state.god;
-    const dayDATA = G > 0 ? this._getAll().filter(item => item.day === D) : null;
-    const monDATA = G > 0 ? this._getAll().filter(item => item.day === 1) : null;
-    const tueDATA = G > 0 ? this._getAll().filter(item => item.day === 2) : null;
-    const wedDATA = G > 0 ? this._getAll().filter(item => item.day === 3) : null;
-    const thuDATA = G > 0 ? this._getAll().filter(item => item.day === 4) : null;
-    const friDATA = G > 0 ? this._getAll().filter(item => item.day === 5) : null;
-    const satDATA = G > 0 ? this._getAll().filter(item => item.day === 6) : null;
-    const sunDATA = G > 0 ? this._getAll().filter(item => item.day === 7) : null;
+    const A = this.state.apl;
+    const DATA = this._getAll();
+    const dayDATA = DATA.filter(item => item.day === D);
+    const monDATA = G > 0 ? DATA.filter(item => item.day === 1) : null;
+    const tueDATA = G > 0 ? DATA.filter(item => item.day === 2) : null;
+    const wedDATA = G > 0 ? DATA.filter(item => item.day === 3) : null;
+    const thuDATA = G > 0 ? DATA.filter(item => item.day === 4) : null;
+    const friDATA = G > 0 ? DATA.filter(item => item.day === 5) : null;
+    const satDATA = G > 0 ? DATA.filter(item => item.day === 6) : null;
+    const sunDATA = G > 0 ? DATA.filter(item => item.day === 7) : null;
     const ICO = 
       (
         <View style={styles.info}>
@@ -585,65 +554,66 @@ class ChartClimateT extends PureComponent {
       <View style={styles.edit}>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={G < 336 ? () => {
-            const temp = 6;
-            const time = 366;
-            cache.set('temp', temp);
-            cache.set('time', time);
-            const day = D === 1 ? 'mon' :
-              D === 2 ? 'tuу' :
-                D === 3 ? 'wed' :
-                  D === 4 ? 'thu' :
-                    D === 5 ? 'fri' :
-                      D === 6 ? 'sat' :
-                        D === 7 ? 'sun' : alert(Strings.getLang('UERROR'));
-            Popup.custom({
-              content: (this._selector(temp, time)),
-              title: pointadd + Strings.getLang(day),
-              cancelText,
-              confirmText,
-              onMaskPress: ({ close }) => {
-                close();
-              },
-              onConfirm: (idx, { close }) => {this._addpoint(); close();},
-            });
-          } : TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {})}
+          onPress={
+            G === 336 ? TYNative.simpleTipDialog(`${Strings.getLang('maxitems')}`, () => {}) 
+              : A === true ? null 
+                : () => {
+                  const temp = 6;
+                  const time = 366;
+                  cache.set('temp', temp);
+                  cache.set('time', time);
+                  const day = D === 1 ? 'mon' :
+                    D === 2 ? 'tuу' :
+                      D === 3 ? 'wed' :
+                        D === 4 ? 'thu' :
+                          D === 5 ? 'fri' :
+                            D === 6 ? 'sat' :
+                              D === 7 ? 'sun' : alert(Strings.getLang('UERROR'));
+                  Popup.custom({
+                    content: (this._selector(temp, time)),
+                    title: pointadd + Strings.getLang(day),
+                    cancelText,
+                    confirmText,
+                    onMaskPress: ({ close }) => {
+                      close();
+                    },
+                    onConfirm: (idx, { close }) => {this._addpoint(); close();},
+                  });
+                }
+          }
           style={styles.insideADD}
         >
-          {G < 336 ? <FontAwesomeIcon icon={faPlus} color="#90EE90" size={20} />
-            : <FontAwesomeIcon icon={faPlus} color="#d6d6d6" size={20} />}
+          <FontAwesomeIcon icon={faPlus} color={G >= 336 || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
           <Text style={styles.titleADD}>{Strings.getLang('addNew')}</Text>  
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.insideADD} 
           onPress={() => {
-            // this.setState({data: this._getAll(), god: this._getLenth()});
-            TYDevice.putDeviceData({
-              [chart_1_part_1Code]: '014A',
-            });
-            TYDevice.putDeviceData({
-              [chart_1_part_2Code]: '014A',
-            });
-            TYDevice.putDeviceData({
-              [chart_1_part_3Code]: '014A',
-            });
-            TYDevice.putDeviceData({
-              [chart_1_part_4Code]: '014A',
-            });
+            this.setState({god: this._getLenth()});
+            // TYDevice.putDeviceData({
+            //   [chart_1_part_1Code]: '014A',
+            // });
+            // TYDevice.putDeviceData({
+            //   [chart_1_part_2Code]: '014A',
+            // });
+            // TYDevice.putDeviceData({
+            //   [chart_1_part_3Code]: '014A',
+            // });
+            // TYDevice.putDeviceData({
+            //   [chart_1_part_4Code]: '014A',
+            // });
           }}
         >
-          {G < 336 ? <FontAwesomeIcon icon={faCoins} color="#90EE90" size={20} />
-            : <FontAwesomeIcon icon={faCoins} color="#d6d6d6" size={20} />}
+          <FontAwesomeIcon icon={faCoins} color={G >= 336 || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
           <Text style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.insideADD} 
-          onPress={G === 0 || dayDATA.length === 0 ? null : () => {
+          onPress={G === 0 || A === true || dayDATA.length === 0 ? null : () => {
             Popup.custom({
               content: (
                 <View
                   style={{
-                    // height: 380,
                     alignItems: 'center',
                     justifyContent: 'center',
                     backgroundColor: '#fff',
@@ -705,16 +675,14 @@ class ChartClimateT extends PureComponent {
             });
           }}
         >
-          {G !== 0 && dayDATA.length !== 0 ? <FontAwesomeIcon icon={faCogs} color="#90EE90" size={20} />
-            : <FontAwesomeIcon icon={faCogs} color="#d6d6d6" size={20} />}
+          <FontAwesomeIcon icon={faCogs} color={(G === 0 && dayDATA.length === 0) || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
           <Text style={styles.titleADD}>{Strings.getLang('options')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.insideADD}
           onPress={G === 0 ? null : () => {this._deleteAll();}}
         >
-          {G === 0 ? <FontAwesomeIcon icon={faTrashAlt} color="#d6d6d6" size={20} />
-            : <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={20} />}
+          <FontAwesomeIcon icon={faTrashAlt} color={G === 0 || A === true ? '#d6d6d6' : '#FF4040'} size={20} />
           <Text style={styles.titleADD}>{Strings.getLang('deleteAll')}</Text>
         </TouchableOpacity>
       </View>);
@@ -779,33 +747,36 @@ class ChartClimateT extends PureComponent {
 
     return (
       <View style={{ flex: 1, backgroundColor: '#f0f0f0' }}>
+        {ADDPOINT}
         {this.state.apl === true ? 
           <View>
             <Text style={styles.wait}>{Strings.getLang('apl')}</Text>
             <ActivityIndicator color="#90EE90" /> 
           </View> : null}
         <Tabs
-          style={{borderRadius: 10, marginVertical: 5}}
+          style={{borderRadius: 10, paddingBottom: 30, paddingTop: 1}}
+          tabPosition="bottom"
+          disabled={A === true}
           maxItem={7}
           activeKey={D}
           dataSource={this.state.d1}
-          swipeable={false}
+          swipeable={dayDATA.length === 0}
           onChange={this._handleD1Change}
           preload={true}
           preloadTimeout={G * 15}
           renderPlaceholder={empty}
           animationConfig={{duration: 10000, delay: 10, useNativeDriver: false}}
           velocityThreshold={1}
-          activeColor="#90EE90"
+          activeColor={A === true ? '#d6d6d6' : '#90EE90'}
           tabActiveTextStyle={{fontWeight: 'bold', fontSize: 20}}
           tabStyle={{width: 50}}
           tabActiveStyle={{backgroundColor: '#fff'}}
           underlineStyle={{backgroundColor: '#fff'}}
         >
           <Tabs.TabPanel style={styles.list}>
-            {ADDPOINT}
             <SwipeListView
               data={monDATA}
+              scrollEnabled={monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -816,13 +787,18 @@ class ChartClimateT extends PureComponent {
               previewRowKey={0}
               previewOpenValue={90}
               previewOpenDelay={3000}
+              onRowOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                }, 2300);
+              }}
             />
             {G === 0 ? ICO : monDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
-            {ADDPOINT}
             <SwipeListView
               data={tueDATA}
+              scrollEnabled={monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -830,13 +806,18 @@ class ChartClimateT extends PureComponent {
               rightOpenValue={-70}
               stopRightSwipe={-100}
               keyExtractor={item => item.id}
+              onRowOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                }, 2300);
+              }}
             />
             {G === 0 ? ICO : tueDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
-            {ADDPOINT}
             <SwipeListView
               data={wedDATA}
+              scrollEnabled={monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -844,13 +825,18 @@ class ChartClimateT extends PureComponent {
               rightOpenValue={-70}
               stopRightSwipe={-100}
               keyExtractor={item => item.id}
+              onRowOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                }, 2300);
+              }}
             />
             {G === 0 ? ICO : wedDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
-            {ADDPOINT}
             <SwipeListView
               data={thuDATA}
+              scrollEnabled={monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -858,13 +844,18 @@ class ChartClimateT extends PureComponent {
               rightOpenValue={-70}
               stopRightSwipe={-100}
               keyExtractor={item => item.id}
+              onRowOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                }, 2300);
+              }}
             />
             {G === 0 ? ICO : thuDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
-            {ADDPOINT}
             <SwipeListView
               data={friDATA}
+              scrollEnabled={monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -872,13 +863,18 @@ class ChartClimateT extends PureComponent {
               rightOpenValue={-70}
               stopRightSwipe={-100}
               keyExtractor={item => item.id}
+              onRowOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                }, 2300);
+              }}
             />
             {G === 0 ? ICO : friDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
-            {ADDPOINT}
             <SwipeListView
               data={satDATA}
+              scrollEnabled={monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -886,13 +882,18 @@ class ChartClimateT extends PureComponent {
               rightOpenValue={-70}
               stopRightSwipe={-100}
               keyExtractor={item => item.id}
+              onRowOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                }, 2300);
+              }}
             />
             {G === 0 ? ICO : satDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
           <Tabs.TabPanel style={styles.list}>
-            {ADDPOINT}
             <SwipeListView
               data={sunDATA}
+              scrollEnabled={monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -900,6 +901,11 @@ class ChartClimateT extends PureComponent {
               rightOpenValue={-70}
               stopRightSwipe={-100}
               keyExtractor={item => item.id}
+              onRowOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                }, 2300);
+              }}
             />
             {G === 0 ? ICO : sunDATA.length === 0 ? ICODAY : null}
           </Tabs.TabPanel>
@@ -950,7 +956,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     height: 60,
-    backgroundColor: '#fff',
+    backgroundColor: '#f7f7f7',
     borderLeftColor: '#90EE90',
     borderRightColor: '#FF4040',
     borderLeftWidth: 5,
@@ -966,7 +972,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     height: 60,
-    backgroundColor: '#fff',
+    backgroundColor: '#fafafa',
     borderLeftColor: '#90EE90',
     borderRightColor: '#FF4040',
     borderLeftWidth: 5,
@@ -979,21 +985,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flexWrap: 'wrap',
   },
-  // inside: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-around',
-  //   alignContent: 'center',
-  //   alignItems: 'center',
-  // },
   edit: {
     flexDirection: 'row',
-    // backgroundColor: '#fff',
+    backgroundColor: '#fff',
     width: '100%',
-    // height: 40,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
     paddingRight: 20,
     paddingLeft: 20,
     marginBottom: 5,
-    marginTop: 5,
     color: 'black',
     alignContent: 'center',
     justifyContent: 'space-between',
@@ -1010,8 +1012,8 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
-  list:{
-    paddingBottom: 14,
+  list: {
+    padding: 0,
   },
   divider: {
     flexDirection: 'column',
@@ -1036,9 +1038,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 30,
     alignSelf: 'center',
-    // justifyContent: 'space-around',
-    // alignContent: 'center',
-    // alignItems: 'center',
   },
   annotation: {
     textAlign: 'center',
