@@ -525,6 +525,7 @@ class ChartClimateT extends PureComponent {
     const A = this.state.apl;
     const DATA = this._getAll();
     const dayDATA = DATA.filter(item => item.day === D);
+    const L = G === 0 ? 0 : dayDATA.length;
     const monDATA = G > 0 ? DATA.filter(item => item.day === 1) : null;
     const tueDATA = G > 0 ? DATA.filter(item => item.day === 2) : null;
     const wedDATA = G > 0 ? DATA.filter(item => item.day === 3) : null;
@@ -609,7 +610,7 @@ class ChartClimateT extends PureComponent {
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.insideADD} 
-          onPress={G === 0 || A === true || dayDATA.length === 0 ? null : () => {
+          onPress={G === 0 || A === true || L === 0 ? null : () => {
             Popup.custom({
               content: (
                 <View
@@ -675,7 +676,7 @@ class ChartClimateT extends PureComponent {
             });
           }}
         >
-          <FontAwesomeIcon icon={faCogs} color={(G === 0 && dayDATA.length === 0) || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
+          <FontAwesomeIcon icon={faCogs} color={(G === 0 && L === 0) || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
           <Text style={styles.titleADD}>{Strings.getLang('options')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -760,7 +761,7 @@ class ChartClimateT extends PureComponent {
           maxItem={7}
           activeKey={D}
           dataSource={this.state.d1}
-          swipeable={dayDATA.length === 0}
+          swipeable={L === 0}
           onChange={this._handleD1Change}
           preload={true}
           preloadTimeout={G * 15}
@@ -776,7 +777,7 @@ class ChartClimateT extends PureComponent {
           <Tabs.TabPanel style={styles.list}>
             <SwipeListView
               data={monDATA}
-              scrollEnabled={monDATA.length > 7}
+              scrollEnabled={G === 0 || monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -798,7 +799,7 @@ class ChartClimateT extends PureComponent {
           <Tabs.TabPanel style={styles.list}>
             <SwipeListView
               data={tueDATA}
-              scrollEnabled={monDATA.length > 7}
+              scrollEnabled={G === 0 || tueDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -817,7 +818,7 @@ class ChartClimateT extends PureComponent {
           <Tabs.TabPanel style={styles.list}>
             <SwipeListView
               data={wedDATA}
-              scrollEnabled={monDATA.length > 7}
+              scrollEnabled={G === 0 || wedDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -836,7 +837,7 @@ class ChartClimateT extends PureComponent {
           <Tabs.TabPanel style={styles.list}>
             <SwipeListView
               data={thuDATA}
-              scrollEnabled={monDATA.length > 7}
+              scrollEnabled={G === 0 || thuDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -855,7 +856,7 @@ class ChartClimateT extends PureComponent {
           <Tabs.TabPanel style={styles.list}>
             <SwipeListView
               data={friDATA}
-              scrollEnabled={monDATA.length > 7}
+              scrollEnabled={G === 0 || friDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -874,7 +875,7 @@ class ChartClimateT extends PureComponent {
           <Tabs.TabPanel style={styles.list}>
             <SwipeListView
               data={satDATA}
-              scrollEnabled={monDATA.length > 7}
+              scrollEnabled={G === 0 || satDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
@@ -893,7 +894,7 @@ class ChartClimateT extends PureComponent {
           <Tabs.TabPanel style={styles.list}>
             <SwipeListView
               data={sunDATA}
-              scrollEnabled={monDATA.length > 7}
+              scrollEnabled={G === 0 || sunDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={82} 
