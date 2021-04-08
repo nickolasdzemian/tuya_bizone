@@ -2,8 +2,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, Text, ActivityIndicator } from 'react-native';
-import { TYFlatList, Popup, Divider } from 'tuya-panel-kit';
+import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
+import { TYFlatList, Popup, Divider, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTh, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n/index.ts';
@@ -52,7 +52,7 @@ class ButtonMode extends Component {
                 <ButtonMode12 />
                 {this.state.apl === true ? (
                   <View>
-                    <Text style={styles.wait}>{Strings.getLang('apl')}</Text>
+                    <TYText style={styles.wait}>{Strings.getLang('apl')}</TYText>
                     <ActivityIndicator />
                   </View>
                 ) : null}
@@ -60,11 +60,11 @@ class ButtonMode extends Component {
                   <View>
                     <Divider />
                     <FontAwesomeIcon icon={faInfoCircle} size={16} margin={10} alignSelf="center" />
-                    <Text style={styles.annotation}>
+                    <TYText style={styles.annotation}>
                       {Strings.getLang('btn2cli')}
                       {'\n'}
                       {Strings.getLang('btn1cli')}
-                    </Text>
+                    </TYText>
                   </View>
                 ) : null}
               </ScrollView>

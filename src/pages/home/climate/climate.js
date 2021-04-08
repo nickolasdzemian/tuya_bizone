@@ -3,8 +3,8 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
-import { Slider, Stepper, TabBar, TYSdk } from 'tuya-panel-kit';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { Slider, Stepper, TabBar, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFan, faHandPointUp, faWaveSquare } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
@@ -135,16 +135,16 @@ class ClimateM extends PureComponent {
       <SafeAreaView style={styles.container}>
         {modeCli === '00' ? (
           <View style={styles.area}>
-            <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
+            <TYText style={styles.titlekwh}>{Strings.getLang('manualtemp')}</TYText>
             <View style={styles.title}>
               <FontAwesomeIcon icon={faHandPointUp} color="#90EE90" size={25} marginRight={10} />
-              <Text style={styles.num}>
+              <TYText style={styles.num}>
                 {this.state.valueM0}
                 °C
-              </Text>
+              </TYText>
             </View>
             <View style={styles.title}>
-              <Text style={styles.context}>-15</Text>
+              <TYText style={styles.context}>-15</TYText>
               <Slider.Horizontal
                 style={styles.slider}
                 canTouchTrack={true}
@@ -152,12 +152,12 @@ class ClimateM extends PureComponent {
                 stepValue={1}
                 minimumValue={-15}
                 value={this.state.valueM0}
-                maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
+                maximumTrackTintColor="#ffb700"
                 minimumTrackTintColor="#90EE90"
                 onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
                 onSlidingComplete={this._changeDataTemp}
               />
-              <Text style={styles.context}>+80</Text>
+              <TYText style={styles.context}>+80</TYText>
             </View>
             <Stepper
               buttonType="ellipse"
@@ -174,24 +174,24 @@ class ClimateM extends PureComponent {
           </View>
         ) : (
           <View style={styles.areaAir}>
-            <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
+            <TYText style={styles.titlekwh}>{Strings.getLang('manualtemp')}</TYText>
             <View style={styles.title}>
               <FontAwesomeIcon icon={faWaveSquare} color="#90EE90" size={25} marginRight={10} />
-              <Text style={styles.num}>
+              <TYText style={styles.num}>
                 {this.props.ReportProgTemp.substring(4, 6) === '81' ? '--' : ProgTempCli}
                 °C
-              </Text>
+              </TYText>
             </View>
           </View>
         )}
         <View style={styles.area}>
-          <Text style={styles.titlekwh}>{Strings.getLang('fantitle')}</Text>
+          <TYText style={styles.titlekwh}>{Strings.getLang('fantitle')}</TYText>
           <View style={styles.title}>
             <FontAwesomeIcon icon={faFan} color="#00e1ff" size={25} marginRight={10} />
-            <Text style={styles.num}>{Strings.getLang(this.state.fan)}</Text>
+            <TYText style={styles.num}>{Strings.getLang(this.state.fan)}</TYText>
           </View>
           <View style={styles.title}>
-            <Text style={styles.context}>Lo</Text>
+            <TYText style={styles.context}>Lo</TYText>
             <TabBar
               activeColor="#00e1ff"
               type="radio"
@@ -201,7 +201,7 @@ class ClimateM extends PureComponent {
               style={styles.bar}
               gutter={1}
             />
-            <Text style={styles.context}>Hi</Text>
+            <TYText style={styles.context}>Hi</TYText>
           </View>
         </View>
       </SafeAreaView>
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 26,
-    color: 'black',
+    color: '#474747',
     justifyContent: 'center',
     alignItems: 'center',
   },

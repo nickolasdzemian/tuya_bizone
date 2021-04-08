@@ -2,8 +2,8 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { TYSdk, Popup } from 'tuya-panel-kit';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { TYSdk, Popup, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChartBar, faTasks, faCog, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
@@ -130,7 +130,7 @@ class ClimateController extends PureComponent {
               size={30}
               margin={10}
             />
-            <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('pwr')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={modeCli === '01' ? this.goToClimateChart : null}
@@ -142,7 +142,7 @@ class ClimateController extends PureComponent {
               size={30}
               margin={10}
             />
-            <Text style={styles.title}>{Strings.getLang('prog')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('prog')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
             <FontAwesomeIcon
@@ -151,11 +151,11 @@ class ClimateController extends PureComponent {
               size={30}
               margin={10}
             />
-            <Text style={styles.title}>{Strings.getLang('mode')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('mode')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
             <FontAwesomeIcon icon={faCog} color="#ff7300" size={30} margin={10} />
-            <Text style={styles.title}>{Strings.getLang('settings')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('settings')}</TYText>
           </TouchableOpacity>
         </View>
       </View>

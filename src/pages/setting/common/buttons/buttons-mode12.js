@@ -3,8 +3,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text } from 'react-native';
-import { TYSdk, Checkbox, Divider } from 'tuya-panel-kit';
+import { View, StyleSheet } from 'react-native';
+import { TYSdk, Checkbox, Divider, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTh } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n/index.ts';
@@ -37,7 +37,7 @@ class ButtonMode12 extends Component {
             alignSelf="center"
             marginBottom={5}
           />
-          <Text style={styles.title}>{buttonsmodetap1}</Text>
+          <TYText style={styles.title}>{buttonsmodetap1}</TYText>
           <Checkbox
             style={styles.check}
             color={CliSel === true ? '#90EE90' : '#ffb700'}
@@ -97,7 +97,7 @@ class ButtonMode12 extends Component {
               alignSelf="center"
               marginBottom={5}
             />
-            <Text style={styles.title}>{buttonsmodetap2}</Text>
+            <TYText style={styles.title}>{buttonsmodetap2}</TYText>
             <Checkbox
               style={styles.check}
               color="#ff7300"

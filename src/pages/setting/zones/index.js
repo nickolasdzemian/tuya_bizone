@@ -3,7 +3,8 @@
 import React from 'react';
 // import { connect } from 'react-redux';
 // import { TYSdk } from 'tuya-panel-kit';
-import { ScrollView, StyleSheet, Text, SafeAreaView } from 'react-native';
+import { ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
@@ -15,16 +16,16 @@ const ZonesScene = () => (
     <SafeAreaView style={styles.area}>
       <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={25} />
       <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={20} />
-      <Text style={styles.title}>{Strings.getLang('zone1')}</Text>
+      <TYText style={styles.title}>{Strings.getLang('zone1')}</TYText>
     </SafeAreaView>
     <ZoneIScene />
     <SafeAreaView style={styles.area}>
       <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={20} />
       <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={25} />
-      <Text style={styles.title}>{Strings.getLang('zone2')}</Text>
+      <TYText style={styles.title}>{Strings.getLang('zone2')}</TYText>
     </SafeAreaView>
     <ZoneIIScene />
-    {/* <Text style={styles.warn}>{Strings.getLang('cliwarn')}</Text> */}
+    {/* <TYText style={styles.warn}>{Strings.getLang('cliwarn')}</TYText> */}
   </ScrollView>
 );
 
@@ -44,21 +45,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '400',
     fontSize: 18,
-    color: 'black',
+    color: '#474747',
     flexDirection: 'row',
     justifyContent: 'center',
     marginLeft: 10,
   },
-  // warn: {
-  //   textAlign: 'center',
-  //   fontWeight: '400',
-  //   fontSize: 18,
-  //   color: '#FF2D00',
-  //   flexDirection: 'row',
-  //   justifyContent: 'center',
-  //   padding: 80,
-  //   alignSelf: 'auto',
-  // },
 });
 
 export default ZonesScene;

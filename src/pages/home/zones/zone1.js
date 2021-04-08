@@ -2,8 +2,8 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from 'react-native';
-import { TYSdk, Slider, Stepper, Popup } from 'tuya-panel-kit';
+import { View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { TYSdk, Slider, Stepper, Popup, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faHandPointUp,
@@ -267,17 +267,17 @@ class Zone1 extends PureComponent {
               <View style={styles.area}>
                 <View style={styles.sel}>
                   <FontAwesomeIcon icon={faHandPointUp} color="#ffb700" size={16} marginRight={5} />
-                  <Text style={styles.titlekwh}>
+                  <TYText style={styles.titlekwh}>
                     {Strings.getLang('manualtemp')}
                     {': '}
-                  </Text>
-                  <Text style={styles.num}>
+                  </TYText>
+                  <TYText style={styles.num}>
                     {this.state.valueZ1}
                     °C
-                  </Text>
+                  </TYText>
                 </View>
                 <View style={styles.title}>
-                  <Text style={styles.context}>-15</Text>
+                  <TYText style={styles.context}>-15</TYText>
                   <Slider.Horizontal
                     style={styles.slider}
                     canTouchTrack={true}
@@ -290,7 +290,7 @@ class Zone1 extends PureComponent {
                     onValueChange={valueZ1 => this.setState({ valueZ1: Math.round(valueZ1) })}
                     onSlidingComplete={this._changeDataTemp}
                   />
-                  <Text style={styles.context}>+80</Text>
+                  <TYText style={styles.context}>+80</TYText>
                 </View>
                 <Stepper
                   buttonType="ellipse"
@@ -308,13 +308,13 @@ class Zone1 extends PureComponent {
               </View>
             ) : (
               <View style={styles.areaAir}>
-                <Text style={styles.titlekwh}>{Strings.getLang('manualtemp')}</Text>
+                <TYText style={styles.titlekwh}>{Strings.getLang('manualtemp')}</TYText>
                 <View style={styles.title}>
                   <FontAwesomeIcon icon={faWaveSquare} color="#ffb700" size={25} marginRight={10} />
-                  <Text style={styles.num}>
+                  <TYText style={styles.num}>
                     {this.props.ReportProgTemp.substring(0, 2) === '81' ? '--' : ProgTemp}
                     °C
-                  </Text>
+                  </TYText>
                 </View>
               </View>
             )}
@@ -328,7 +328,7 @@ class Zone1 extends PureComponent {
               size={30}
               margin={5}
             />
-            <Text style={styles.title}>{Strings.getLang('pwr')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('pwr')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={C === '01' && modeZ !== '02' ? this.timer1 : null}
@@ -340,11 +340,11 @@ class Zone1 extends PureComponent {
               size={30}
               margin={5}
             />
-            <Text style={styles.title}>
+            <TYText style={styles.title}>
               {TimerOn === '00'
                 ? Strings.getLang('ttimer')
                 : this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(0, 4), 16))}
-            </Text>
+            </TYText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={
@@ -368,7 +368,7 @@ class Zone1 extends PureComponent {
               size={30}
               margin={5}
             />
-            <Text style={styles.title}>{Strings.getLang('prog')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('prog')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity onPress={C === '01' ? this.onPressMode : null} style={styles.touch}>
             <FontAwesomeIcon
@@ -377,11 +377,11 @@ class Zone1 extends PureComponent {
               size={30}
               margin={5}
             />
-            <Text style={styles.title}>{Strings.getLang('mode')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('mode')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
             <FontAwesomeIcon icon={faCog} color="#ffb700" size={30} margin={5} />
-            <Text style={styles.title}>{Strings.getLang('settings')}</Text>
+            <TYText style={styles.title}>{Strings.getLang('settings')}</TYText>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 18,
-    color: 'black',
+    color: '#474747',
     justifyContent: 'center',
     alignItems: 'center',
   },

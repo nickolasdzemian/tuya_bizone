@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faExclamationTriangle,
@@ -76,13 +77,13 @@ class ClimateReport extends React.PureComponent {
       <View>
         <SafeAreaView style={styles.container}>
           <View style={styles.areaAir}>
-            <Text style={styles.titlekwh}>{Strings.getLang('climateTemp')}</Text>
+            <TYText style={styles.titlekwh}>{Strings.getLang('climateTemp')}</TYText>
             <View style={styles.air}>
               <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
-              <Text style={styles.num}>
+              <TYText style={styles.num}>
                 {FaultAlarm === 0 ? Math.round(tC) : '--'}
                 °C
-              </Text>
+              </TYText>
             </View>
           </View>
         </SafeAreaView>
@@ -93,15 +94,15 @@ class ClimateReport extends React.PureComponent {
             ) : (
               <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
             )}
-            {/* <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text> */}
-            <Text style={styles.num}>
+            {/* <TYText style={styles.titlekwh}>{Strings.getLang('status')}</TYText> */}
+            <TYText style={styles.num}>
               {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-            </Text>
+            </TYText>
             <View>
-              <Text style={styles.titlekwh}>
+              <TYText style={styles.titlekwh}>
                 {RelayPower1} 
                 {Strings.getLang('kwh')}
-              </Text>
+              </TYText>
             </View>
           </View>
           <View style={styles.areaPWR}>
@@ -110,36 +111,36 @@ class ClimateReport extends React.PureComponent {
             ) : (
               <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
             )}
-            {/* <Text style={styles.titlekwh}>{Strings.getLang('status')}</Text> */}
-            <Text style={styles.num}>
+            {/* <TYText style={styles.titlekwh}>{Strings.getLang('status')}</TYText> */}
+            <TYText style={styles.num}>
               {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-            </Text>
+            </TYText>
             <View>
-              <Text style={styles.titlekwh}>
+              <TYText style={styles.titlekwh}>
                 {RelayPower2} 
                 {Strings.getLang('kwh')}
-              </Text>
+              </TYText>
             </View>
           </View>
           {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
             <View style={styles.areaPWR}>
               <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-              <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
+              <TYText style={styles.num}>{Strings.getLang('alarma')}</TYText>
               {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
               <View>
-                <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
-                <Text style={styles.titleE}>{Strings.getLang('zone1')}</Text>
+                <TYText style={styles.title}>{Strings.getLang('sen_err')}</TYText>
+                <TYText style={styles.titleE}>{Strings.getLang('zone1')}</TYText>
               </View>
             </View>
           )}
           {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
             <View style={styles.areaPWR}>
               <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-              <Text style={styles.num}>{Strings.getLang('alarma')}</Text>
-              {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
+              <TYText style={styles.num}>{Strings.getLang('alarma')}</TYText>
+              {/* <TYText style={styles.num}>E{FaultAlarm}</TYText> */}
               <View>
-                <Text style={styles.title}>{Strings.getLang('sen_err')}</Text>
-                <Text style={styles.titleE}>{Strings.getLang('zone2')}</Text>
+                <TYText style={styles.title}>{Strings.getLang('sen_err')}</TYText>
+                <TYText style={styles.titleE}>{Strings.getLang('zone2')}</TYText>
               </View>
             </View>
           )}
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 26,
-    color: 'black',
+    color: '#474747',
     justifyContent: 'center',
   },
   title: {

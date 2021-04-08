@@ -1,7 +1,7 @@
 // окно выбора типов датчиков
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import { TYFlatList, Popup, Divider } from 'tuya-panel-kit';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { TYFlatList, Popup, Divider, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faThermometerHalf, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n';
@@ -39,14 +39,14 @@ export default class SensorsType extends Component {
                 <PickSensorType1Scene />
                 <Divider />
                 <FontAwesomeIcon icon={faInfoCircle} size={16} margin={10} alignSelf="center" />
-                <Text style={styles.title}>
+                <TYText style={styles.title}>
                   Teploluxe 6.8 kΩ {'\n'}
                   AuBe 10 kΩ {'\n'}
                   DEVI 15 kΩ {'\n'}
                   Eberle 33 kΩ {'\n'}
                   Ensto 47 kΩ {'\n'}
                   Warmup 12 kΩ
-                </Text>
+                </TYText>
               </ScrollView>
             ),
             title: sensortype0,

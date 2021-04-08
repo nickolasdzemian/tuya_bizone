@@ -1,10 +1,24 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, ScrollView, Easing } from 'react-native';
-import { Tabs } from 'tuya-panel-kit';
-import Strings from '../../i18n';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { Tabs, TYSdk, TYText, Utils } from 'tuya-panel-kit';
+import { version } from '../../../package.json';
+import Strings from '../../i18n/index.ts';
+import dpCodes from '../../config/dpCodes.ts';
 import Common from './common/index';
 import ClimateScene from './climate/climate';
 import ZonesScene from './zones/index';
+
+const TYDevice = TYSdk.device;
+const { isIos } = Utils.RatioUtils;
+const { Christ: ChristCode } = dpCodes;
+const Christ = this.props;
+
+const Christmass = () =>
+  TYDevice.putDeviceData({
+    [ChristCode]: !Christ,
+  });
 
 export default class WithContentTabsSSettings extends React.PureComponent {
   constructor(props) {
@@ -26,17 +40,15 @@ export default class WithContentTabsSSettings extends React.PureComponent {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {/* https://github.com/facebook/react-native/issues/11206 */}
         <Tabs
-          style={{ borderRadius: 10, paddingTop: 8, marginVertical: 5 }}
+          style={{ paddingBottom: 10, marginVertical: 5 }}
           maxItem={3}
           activeKey={this.state.activeKey1}
           dataSource={this.state.d1}
-          swipeable={true}
+          swipeable={isIos}
           velocityThreshold={0.65}
           onChange={this._handleD1Change}
           preload={false}
-          animationConfig={{ duration: 200, easing: Easing.cubic }}
           activeColor="#474747"
           tabActiveTextStyle={{ fontWeight: 'bold', fontSize: 20 }}
           tabStyle={{ width: 80 }}
@@ -46,6 +58,23 @@ export default class WithContentTabsSSettings extends React.PureComponent {
           <Tabs.TabPanel>
             <ScrollView>
               <Common />
+              {/* <SafeAreaView style={styles.tinyLogo}>
+                <Image style={styles.tinyLogo} source={require('../../../res/ATL.png')} />
+              </SafeAreaView> */}
+              <TouchableOpacity style={styles.ver} onLongPress={Christmass}>
+                <TYText style={styles.ver}>
+                  v
+                  {version}
+                  {' '}
+                  with Tuya cloud support
+                  {'\n'}
+                  by nickolashka
+                  {'\n'}
+                  for development purposes only
+                  {'\n'}
+                  n.pozdnyakov@sst.ru
+                </TYText>
+              </TouchableOpacity>
             </ScrollView>
           </Tabs.TabPanel>
           <Tabs.TabPanel>
@@ -63,3 +92,19 @@ export default class WithContentTabsSSettings extends React.PureComponent {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  ver: {
+    textAlign: 'center',
+    color: 'red',
+    fontWeight: '100',
+    fontSize: 10,
+    flexWrap: 'wrap',
+    letterSpacing: 2,
+    marginVertical: '30%',
+  },
+  // tinyLogo: {
+  //   alignItems: 'center',
+  //   opacity: 50,
+  // },
+});

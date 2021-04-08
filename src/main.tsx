@@ -10,6 +10,7 @@ import {
 } from 'tuya-panel-kit';
 import composeLayout from './composeLayout';
 import { store, ReduxState } from './models';
+import Strings from './i18n/index';
 import Home from './pages/home/index';
 import Setting from './pages/setting/index';
 import Zone1 from './pages/charts/zone1/index';
@@ -44,6 +45,29 @@ class MainLayout extends NavigatorLayout<Props> {
         };
         break;
       case 'SettingScene':
+        routeProps.title = Strings.getLang('mainSettings');
+        routeProps.topbarTextStyle = { color: '#474747', fontWeight: 'bold', fontSize: 20 };
+        routeProps.background = {
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
+        };
+        break;
+      case 'ChartClimateScene':
+        routeProps.title = Strings.getLang('programmW');
+        routeProps.background = {
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
+        };
+        break;
+      case 'ChartZone1Scene':
+        routeProps.title = Strings.getLang('programmW');
+        routeProps.background = {
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
+        };
+        break;
+      case 'ChartZone2Scene':
+        routeProps.title = Strings.getLang('programmW');
         routeProps.background = {
           '3%': '#FFFFFF',
           '90%': '#FFFFFF',
@@ -78,7 +102,7 @@ class MainLayout extends NavigatorLayout<Props> {
         component = <Home />;
         break;
       case 'SettingScene':
-        component = <Setting navigator={navigator} {...route} />;
+        component = <Setting />;
         break;
       case 'ChartClimateScene':
         component = <Climate />;

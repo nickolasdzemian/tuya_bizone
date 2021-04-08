@@ -3,8 +3,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, StyleSheet, ScrollView, View } from 'react-native';
-import { Slider, Divider, Stepper, TYSdk } from 'tuya-panel-kit';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Slider, Divider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n/index.ts';
@@ -143,13 +143,13 @@ class ButtonsTemp2S extends Component {
         <View style={styles.title}>
           <FontAwesomeIcon icon={faTemperatureLow} color="#ff7300" size={25} />
         </View>
-        <Text style={styles.buttontext}>
+        <TYText style={styles.buttontext}>
           {this.state.value1}
           °C
           {tonePress}
-        </Text>
+        </TYText>
         <View style={styles.title}>
-          <Text style={styles.context}>-15</Text>
+          <TYText style={styles.context}>-15</TYText>
           <Slider.Horizontal
             disabled={(this.state.value2 - -15) === 1}
             style={styles.slider}
@@ -163,7 +163,7 @@ class ButtonsTemp2S extends Component {
             onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
             onSlidingComplete={this._handleComplete1}
           />
-          <Text style={styles.context}> {this.state.value2}</Text>
+          <TYText style={styles.context}> {this.state.value2}</TYText>
         </View>
         <Stepper
           buttonType="ellipse"
@@ -179,13 +179,13 @@ class ButtonsTemp2S extends Component {
           value={this.state.value1}
         />
         <Divider />
-        <Text style={styles.buttontext}>
+        <TYText style={styles.buttontext}>
           {this.state.value2}
           °C
           {ttwoPress}
-        </Text>
+        </TYText>
         <View style={styles.title}>
-          <Text style={styles.context}>{this.state.value1}</Text>
+          <TYText style={styles.context}>{this.state.value1}</TYText>
           <Slider.Horizontal
             disabled={(this.state.value3 - this.state.value1) === 2}
             style={styles.slider}
@@ -199,7 +199,7 @@ class ButtonsTemp2S extends Component {
             onValueChange={value2 => this.setState({ value2: Math.round(value2) })}
             onSlidingComplete={this._handleComplete2}
           />
-          <Text style={styles.context}> {this.state.value3}</Text>
+          <TYText style={styles.context}> {this.state.value3}</TYText>
         </View>
         <Stepper
           buttonType="ellipse"
@@ -215,13 +215,13 @@ class ButtonsTemp2S extends Component {
           value={this.state.value2}
         />
         <Divider />
-        <Text style={styles.buttontext}>
+        <TYText style={styles.buttontext}>
           {this.state.value3}
           °C
           {tthreePress}
-        </Text>
+        </TYText>
         <View style={styles.title}>
-          <Text style={styles.context}>{this.state.value2}</Text>
+          <TYText style={styles.context}>{this.state.value2}</TYText>
           <Slider.Horizontal
             disabled={(80 - this.state.value2) === 1}
             style={styles.slider}
@@ -235,7 +235,7 @@ class ButtonsTemp2S extends Component {
             onValueChange={value3 => this.setState({ value3: Math.round(value3) })}
             onSlidingComplete={this._handleComplete3}
           />
-          <Text style={styles.context}> 80</Text>
+          <TYText style={styles.context}> 80</TYText>
         </View>
         <Stepper
           buttonType="ellipse"

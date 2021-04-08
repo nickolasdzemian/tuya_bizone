@@ -4,9 +4,13 @@ export default {
     apl: 'Wait for applying..',
     apl2: 'Downloading..',
 
+    // Navigation
+    mainSettings: 'Settings',
+    programmW: 'Week programm',
+
     // HomeScreen
     now_temp: 'curr. temp',
-    airtemp: 'current air temperature',
+    airtemp: 'Current air temperature',
     wintime: 'MIN left',
     wintitle: 'Opn window',
     sen_err: 'SENSOR FAULT',
@@ -177,6 +181,10 @@ export default {
     apl: 'Ждите применения..',
     apl2: 'Загрузка данных..',
 
+    // Navigation
+    mainSettings: 'Настройки',
+    programmW: 'Недельное программирование',
+
     // HomeScreen
     now_temp: 'Текущ. темп.',
     airtemp: 'Текущая температура воздуха',
@@ -301,7 +309,7 @@ export default {
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
     nullcharts: 'Нет данных, работа приостановлена. \nНастройте программу или измените режим.',
     nullchartsday: 'Режим работы по последней установленной точке',
-    sametimeerr: 'Нельзя добавить более одной точки на одно время. \nВыберите другое время.',
+    sametimeerr: 'Нельзя добавить несколько точек на одно время. \nВыберите другое время.',
     addNew: 'Добавить',
     deleteAll: 'Удалить все',
     allpointdeltext:
@@ -350,6 +358,10 @@ export default {
     apl: 'Ждите применения..',
     apl2: 'Загрузка данных..',
 
+    // Navigation
+    mainSettings: 'Настройки',
+    programmW: 'Недельное программирование',
+
     // HomeScreen
     now_temp: 'Текущ. темп.',
     airtemp: 'Текущая температура воздуха',
@@ -474,7 +486,7 @@ export default {
     UERROR: 'Возникла непредвиденная ошибка. Повторите попытку позднее.',
     nullcharts: 'Нет данных, работа приостановлена. \nНастройте программу или измените режим.',
     nullchartsday: 'Режим работы по последней установленной точке',
-    sametimeerr: 'Нельзя добавить более одной точки на одно время. \nВыберите другое время.',
+    sametimeerr: 'Нельзя добавить несколько точек на одно время. \nВыберите другое время.',
     addNew: 'Добавить',
     deleteAll: 'Удалить все',
     allpointdeltext:

@@ -34,7 +34,7 @@ class ButtonsModeS extends React.PureComponent {
         style={styles.panel}
         activeKey={this.state.activeKey1}
         dataSource={this.state.d1}
-        swipeable={true}
+        swipeable={false}
         onChange={this._handleD1Change}
         maxItem={2}
       >

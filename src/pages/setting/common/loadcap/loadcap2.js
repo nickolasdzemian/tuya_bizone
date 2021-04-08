@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text } from 'react-native';
-import { Slider, Stepper, TYSdk } from 'tuya-panel-kit';
+import { View, StyleSheet } from 'react-native';
+import { Slider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n';
@@ -34,15 +34,15 @@ class LoadCapacity2 extends Component {
       <View style={styles.pickerContainer}>
         <View style={styles.title}>
           <FontAwesomeIcon icon={faBolt} color="#FF7300" size={22} />
-          <Text style={styles.title}>{Strings.getLang('loadcapacity20')}</Text>
+          <TYText style={styles.title}>{Strings.getLang('loadcapacity20')}</TYText>
         </View>
-        <Text style={styles.buttontext}>{this.state.value} W</Text>
+        <TYText style={styles.buttontext}>{this.state.value} W</TYText>
         <Slider.Horizontal
           style={{ width: '90%' }}
           canTouchTrack={true}
           maximumValue={3500}
           stepValue={1}
-          minimumValue={0}
+          minimumValue={1}
           value={this.state.value}
           maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
           minimumTrackTintColor="#FF7300"
@@ -58,7 +58,7 @@ class LoadCapacity2 extends Component {
           onValueChange={this._handleComplete}
           max={3500}
           stepValue={1}
-          min={0}
+          min={1}
           value={this.state.value}
         />
       </View>

@@ -9,7 +9,6 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { 
   View, 
-  Text, 
   StyleSheet, 
   TouchableOpacity, 
   ActivityIndicator, 
@@ -23,6 +22,7 @@ import {
   Divider,
   TimerPicker,
   Picker,
+  TYText,
 } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -240,15 +240,15 @@ class ChartTime1 extends PureComponent {
             padding: 8,
           }}
         >
-          <Text style={styles.deletet}>{Strings.getLang('pointdeltext')}</Text>
-          <Text style={styles.title}>
+          <TYText style={styles.deletet}>{Strings.getLang('pointdeltext')}</TYText>
+          <TYText style={styles.title}>
             {'#'}
             {id + 1}
             {':   '}
             {Strings.getLang(title)}
             {'  '}
             {this.convertMinsToTime(subTitle)}
-          </Text>
+          </TYText>
         </View>
       ),
       title: pointdelete,
@@ -351,7 +351,7 @@ class ChartTime1 extends PureComponent {
             padding: 8,
           }}
         >
-          <Text style={styles.deletet}>{Strings.getLang('allpointdeltext')}</Text>
+          <TYText style={styles.deletet}>{Strings.getLang('allpointdelTYText')}</TYText>
         </View>
       ),
       title: Strings.getLang('allpointdeltitle'),
@@ -528,18 +528,18 @@ class ChartTime1 extends PureComponent {
       (
         <View style={styles.info}>
           <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
-          <Text style={styles.info}>
+          <TYText style={styles.info}>
             {Strings.getLang('nullcharts')}
-          </Text>
+          </TYText>
         </View>
       );
     const ICODAY = 
     (
       <View style={styles.info}>
         <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
-        <Text style={styles.info}>
+        <TYText style={styles.info}>
           {Strings.getLang('nullchartsday')}
-        </Text>
+        </TYText>
       </View>
     );
     const ADDPOINT = (
@@ -576,7 +576,7 @@ class ChartTime1 extends PureComponent {
           style={styles.insideADD}
         >
           <FontAwesomeIcon icon={faPlus} color={G >= 336 || A === true ? '#d6d6d6' : '#ffb700'} size={20} />
-          <Text style={styles.titleADD}>{Strings.getLang('addNew')}</Text>  
+          <TYText style={styles.titleADD}>{Strings.getLang('addNew')}</TYText>  
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.insideADD} 
@@ -585,7 +585,7 @@ class ChartTime1 extends PureComponent {
           }}
         >
           <FontAwesomeIcon icon={faCoins} color={G >= 336 || A === true ? '#d6d6d6' : '#ffb700'} size={20} />
-          <Text style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</Text>
+          <TYText style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</TYText>
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.insideADD} 
@@ -609,7 +609,7 @@ class ChartTime1 extends PureComponent {
                       }}
                     >
                       <FontAwesomeIcon icon={faCopy} color="#ffb700" size={20} />
-                      <Text style={styles.title}>{Strings.getLang('copyB')}</Text>
+                      <TYText style={styles.title}>{Strings.getLang('copyB')}</TYText>
                       <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
                     </TouchableOpacity>)}
                   {D === 7 ? null : (
@@ -621,7 +621,7 @@ class ChartTime1 extends PureComponent {
                       }}
                     >
                       <FontAwesomeIcon icon={faCopy} color="#ffb700" size={20} />
-                      <Text style={styles.title}>{Strings.getLang('copyF')}</Text>
+                      <TYText style={styles.title}>{Strings.getLang('copyF')}</TYText>
                       <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
                     </TouchableOpacity>)}
                   <TouchableOpacity 
@@ -632,14 +632,14 @@ class ChartTime1 extends PureComponent {
                     }}
                   >
                     <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={18} />
-                    <Text style={styles.title}>{Strings.getLang('eraseday')}</Text>
+                    <TYText style={styles.title}>{Strings.getLang('eraseday')}</TYText>
                   </TouchableOpacity>
                   <View>
                     <Divider style={{marginBottom: 10, marginTop: 10}} />
                     <FontAwesomeIcon icon={faInfoCircle} size={16} margin={10} alignSelf="center" />
-                    <Text style={styles.annotation}>
+                    <TYText style={styles.annotation}>
                       {Strings.getLang('copyNote')}
-                    </Text>
+                    </TYText>
                   </View>
                 </View>
               ),
@@ -656,33 +656,33 @@ class ChartTime1 extends PureComponent {
           }}
         >
           <FontAwesomeIcon icon={faCogs} color={(G === 0 && L === 0) || A === true ? '#d6d6d6' : '#ffb700'} size={20} />
-          <Text style={styles.titleADD}>{Strings.getLang('options')}</Text>
+          <TYText style={styles.titleADD}>{Strings.getLang('options')}</TYText>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.insideADD}
           onPress={G === 0 ? null : () => {this._deleteAll();}}
         >
           <FontAwesomeIcon icon={faTrashAlt} color={G === 0 || A === true ? '#d6d6d6' : '#FF4040'} size={20} />
-          <Text style={styles.titleADD}>{Strings.getLang('deleteAll')}</Text>
+          <TYText style={styles.titleADD}>{Strings.getLang('deleteAll')}</TYText>
         </TouchableOpacity>
       </View>);
 
     const empty = () => (
       <View>
-        <Text style={styles.wait}>{Strings.getLang('apl2')}</Text>
+        <TYText style={styles.wait}>{Strings.getLang('apl2')}</TYText>
         <ActivityIndicator color="#ffb700" /> 
       </View>
     );
 
     const Item = ({ id, title, subTitle }) => (
       <View style={styles.item}>
-        <Text style={styles.title}>{id + 1}</Text>
+        <TYText style={styles.title}>{id + 1}</TYText>
         <Divider style={styles.divider} />
         <FontAwesomeIcon icon={faPowerOff} color="#474747" size={20} />
-        <Text style={styles.title}>{Strings.getLang(title)}</Text>
+        <TYText style={styles.title}>{Strings.getLang(title)}</TYText>
         <Divider style={styles.divider} />
         <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={20} />
-        <Text style={styles.title}>{this.convertMinsToTime(subTitle)}</Text>
+        <TYText style={styles.title}>{this.convertMinsToTime(subTitle)}</TYText>
       </View>
     );
     const renderItem = ({ item }) => (
@@ -711,13 +711,13 @@ class ChartTime1 extends PureComponent {
               }});
           }}
         >
-          <Text style={styles.backTextWhite}>{Strings.getLang('edit')}</Text>
+          <TYText style={styles.backTextWhite}>{Strings.getLang('edit')}</TYText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnRight]}
           onPress={() =>{this._deletePoint(item.id, item.temperature, item.time);}}
         >
-          <Text style={styles.backTextWhite}>{Strings.getLang('dell')}</Text>
+          <TYText style={styles.backTextWhite}>{Strings.getLang('dell')}</TYText>
         </TouchableOpacity>
       </View>
     );
@@ -727,7 +727,7 @@ class ChartTime1 extends PureComponent {
         {ADDPOINT}
         {this.state.apl === true ? 
           <View>
-            <Text style={styles.wait}>{Strings.getLang('apl')}</Text>
+            <TYText style={styles.wait}>{Strings.getLang('apl')}</TYText>
             <ActivityIndicator color="#ffb700" /> 
           </View> : null}
         <Tabs

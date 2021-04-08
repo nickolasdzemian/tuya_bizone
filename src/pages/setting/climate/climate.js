@@ -39,13 +39,10 @@ class ClimateScene extends React.PureComponent {
     }
 
     if (nextProps) {
-      setTimeout(() => { this.setState({ apl: false }); }, 3000);
+      setTimeout(() => {
+        this.setState({ apl: false });
+      }, 3000);
     }
-  }
-
-  getDataSelector() {
-    const { chSelector } = this.props;
-    return chSelector;
   }
 
   render() {
@@ -77,36 +74,33 @@ class ClimateScene extends React.PureComponent {
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faExchangeAlt} color="#90EE90" size={20} />
             <TYText style={styles.items}>{Strings.getLang('chSelector')}</TYText>
-            {chSelector === false ? (
-              <SafeAreaView style={styles.полюшко}>
-                <Divider style={styles.divider} />
-                <TYText style={styles.itemsCH}>I</TYText>
-                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} marginRight={10} />
-                <Divider style={styles.divider} />
-                <TYText style={styles.itemsCH}>II</TYText>
-                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} marginRight={10} />
-                <Divider style={styles.divider} />
-              </SafeAreaView>
-            ) : (
-              <SafeAreaView style={styles.полюшко}>
-                <Divider style={styles.divider} />
-                <TYText style={styles.itemsCH}>I</TYText>
-                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={20} marginRight={10} />
-                <Divider style={styles.divider} />
-                <TYText style={styles.itemsCH}>II</TYText>
-                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={20} marginRight={10} />
-                <Divider style={styles.divider} />
-              </SafeAreaView>
-            )}
+            <SafeAreaView style={styles.полюшко}>
+              <Divider style={styles.divider} />
+              <TYText style={styles.itemsCH}>I</TYText>
+              <FontAwesomeIcon
+                icon={chSelector === false ? faSnowflake : faFireAlt}
+                color={chSelector === false ? '#00d0ff' : '#ffb700'}
+                size={20}
+                marginRight={10}
+              />
+              <Divider style={styles.divider} />
+              <TYText style={styles.itemsCH}>II</TYText>
+              <FontAwesomeIcon
+                icon={chSelector === false ? faFireAlt : faSnowflake}
+                color={chSelector === false ? '#ffb700' : '#00d0ff'}
+                size={20}
+                marginRight={10}
+              />
+              <Divider style={styles.divider} />
+            </SafeAreaView>
           </SafeAreaView>
-          {this.state.apl === true ? 
-            <ActivityIndicator color="#90EE90" /> : null}
+          {this.state.apl === true ? <ActivityIndicator color="#90EE90" /> : null}
           <SwitchButton
             disabled={this.state.apl}
             style={styles.switch}
             tintColor="#ffb700"
             onTintColor="#ffb700"
-            value={this.getDataSelector()}
+            value={chSelector}
             onValueChange={() => {
               TYDevice.putDeviceData({
                 [chSelectorCode]: !chSelector,

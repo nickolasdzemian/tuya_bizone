@@ -2,8 +2,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text } from 'react-native';
-import { Picker, TYSdk } from 'tuya-panel-kit';
+import { View, StyleSheet } from 'react-native';
+import { Picker, TYSdk, TYText } from 'tuya-panel-kit';
 import Strings from '../../../../i18n';
 import dpCodes from '../../../../config/dpCodes';
 
@@ -60,7 +60,7 @@ class PickSensorType1Scene extends Component {
     return (
       <View style={styles.pickerContainer}>
         <View>
-          <Text style={styles.title}>{sensortype1}</Text>
+          <TYText style={styles.title}>{sensortype1}</TYText>
           <Picker
             loop={true}
             style={[styles.picker]}
@@ -76,7 +76,7 @@ class PickSensorType1Scene extends Component {
           </Picker>
         </View>
         <View>
-          <Text style={styles.title}>{sensortype2}</Text>
+          <TYText style={styles.title}>{sensortype2}</TYText>
           <Picker
             loop={true}
             style={[styles.picker]}

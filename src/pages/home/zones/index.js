@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { Divider } from 'tuya-panel-kit';
+import { View, StyleSheet } from 'react-native';
+import { TYText } from 'tuya-panel-kit';
 import Strings from '../../../i18n/index.ts';
 import Zone1 from './zone1';
 import Zone2 from './zone2';
 
 const Zones = () => (
   <View style={styles.container}>
-    <Text style={styles.title1}>{Strings.getLang('zone1')}</Text>
+    <TYText style={styles.title1}>{Strings.getLang('zone1')}</TYText>
     <Zone1 />
-    <Text style={styles.title2}>{Strings.getLang('zone2')}</Text>
+    <TYText style={styles.title2}>{Strings.getLang('zone2')}</TYText>
     <Zone2 />
   </View>
 );
