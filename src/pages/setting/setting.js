@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     flexWrap: 'wrap',
     letterSpacing: 2,
-    marginVertical: '30%',
+    marginTop: 120,
   },
   // tinyLogo: {
   //   alignItems: 'center',

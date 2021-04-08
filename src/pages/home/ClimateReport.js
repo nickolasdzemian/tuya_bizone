@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 5,
-    width: 350,
+    width: '95%',
     height: 60,
   },
   areaPWR: {
@@ -207,8 +207,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 5,
-    width: 170,
-    height: 115,
+    width: '45%',
+    height: 110,
   },
   num: {
     textAlign: 'center',

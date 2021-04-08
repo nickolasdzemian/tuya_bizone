@@ -10,9 +10,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Known issues | Известные ограничения
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
-* UI needs to have adpotation for iPhone 12 mini and etc screen sizes | требуется адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
 * fast repeating sliding between days in programm mode (charts) may cause some lags (tests with 300 points in one-day list menu haven't been passed) | быстрое повторное переключение между днями в программном режиме (графики) может вызывать задержки (тесты с 300 точками в списке на один день)
 
+
+#### 2.0.5
+* added UI adpotation for iPhone 12 mini and etc screen sizes | выполнена адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
+* added ignoring adaptive system fonts | добавлено игнорирование адаптивных системных шрифтов 
+* updated some elements | обновлены некоторые элементы
+* totally upgraded fonts | глобально обновлены шрифты
+* fixed problems in Android swipe gesture handler | исправлены проблемы связанные с обработкой жестов смахивания на платформе Android
 
 #### 2.0.4
 * rebuild UI components without using states (workaround render problem) | перестроены UI компоненты без использования состояний (обход проблемы постоянного рендеринга)

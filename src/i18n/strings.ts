@@ -277,7 +277,7 @@ export default {
     chSelector: 'Канал',
 
     // Settings Zones
-    windowSw: 'Отслеживание открытого окна',
+    windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
     zone1: 'I зона',
@@ -454,7 +454,7 @@ export default {
     chSelector: 'Канал',
 
     // Settings Zones
-    windowSw: 'Отслеживание открытого окна',
+    windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
     zone1: 'I зона',

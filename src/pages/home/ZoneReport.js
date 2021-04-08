@@ -220,8 +220,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
     borderRadius: 12,
     margin: 5,
-    width: 80,
-    height: 130,
+    width: '21%',
+    height: 125,
   },
   areaAir: {
     alignItems: 'center',
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 5,
-    width: 170,
+    width: '45%',
     height: 118,
   },
   num: {
