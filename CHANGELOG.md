@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file. See [standa
 * fixed performance problems with big data | исправлены проблемы производительности с большим объемом даных
 * removed unnecessary functions and code | убран ненужный код и ненужные функции
 #### Cloud func. | Функции облака
+* updated all elements in programm-mode (charts) | обновлены все элементы в программном режиме (графики)
 * better performance and faster getting big data in chart programm menu | улучшенная производительность и более быстрое получение больших объемов данных в графиках программного режима
 * fixed problem with delete the last point in charts | исправлена проблема с удалением последней точки в графике
 * fixed problems with 0 temp and 0 time in cache | исправлена проблема с 0 темп. и 0 врменем в кеше

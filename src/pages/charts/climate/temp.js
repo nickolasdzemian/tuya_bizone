@@ -195,7 +195,6 @@ class ChartClimateT extends PureComponent {
         };
       }
     }
-    console.log('chart for list', Data);
     return Data;
   }
 
@@ -212,7 +211,6 @@ class ChartClimateT extends PureComponent {
       day,
     });
     this._sender(DATA);
-    DATA.length === 1 ? this.setState({god: 1}) : null;
   };
 
   async _editPoint(id, day) {
@@ -226,6 +224,7 @@ class ChartClimateT extends PureComponent {
       time,
       day,
     });
+    this.setState({apl: true});
     this._sender(DATA);
   };
 
@@ -420,7 +419,6 @@ class ChartClimateT extends PureComponent {
     const timeerror = () => {
       for (let i = 1; i < DATA.length; i++)
         if (DATA[i - 1].time >= DATA[i].time) {
-          this.setState({god: this._getLenth()});
           return 1;
         }
       return 0;
@@ -591,18 +589,6 @@ class ChartClimateT extends PureComponent {
           style={styles.insideADD} 
           onPress={() => {
             this.setState({god: this._getLenth()});
-            // TYDevice.putDeviceData({
-            //   [chart_1_part_1Code]: '014A',
-            // });
-            // TYDevice.putDeviceData({
-            //   [chart_1_part_2Code]: '014A',
-            // });
-            // TYDevice.putDeviceData({
-            //   [chart_1_part_3Code]: '014A',
-            // });
-            // TYDevice.putDeviceData({
-            //   [chart_1_part_4Code]: '014A',
-            // });
           }}
         >
           <FontAwesomeIcon icon={faCoins} color={G >= 336 || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
@@ -761,7 +747,7 @@ class ChartClimateT extends PureComponent {
           maxItem={7}
           activeKey={D}
           dataSource={this.state.d1}
-          swipeable={L === 0}
+          swipeable={false}
           onChange={this._handleD1Change}
           preload={true}
           preloadTimeout={G * 15}
