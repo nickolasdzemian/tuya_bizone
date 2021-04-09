@@ -6,7 +6,7 @@ English | [简体中文](./README-zh_CN.md)
 for docs, please visit [tuya docs](https://docs.tuya.com)
 for more information visit CHANGELOG
 
-![Screenshots](https://github.com/https://github.com/nickolasdzemian/res/blobs/main/2sex_screen_chart.jpg?raw=true)
+![Screenshots](https://github.com/https://github.com/[nickolasdzemian]/[res]/blobs/[main]/2sex_screen_chart.jpg?raw=true)
 
 ## Download example manually
 
