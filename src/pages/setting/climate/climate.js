@@ -29,6 +29,7 @@ class ClimateScene extends React.PureComponent {
     super(props);
     this.state = {
       climate: this.props.ClimateSelector,
+      channel: this.props.chSelector,
       apl: false,
     };
   }
@@ -100,11 +101,12 @@ class ClimateScene extends React.PureComponent {
             style={styles.switch}
             tintColor="#ffb700"
             onTintColor="#ffb700"
-            value={chSelector}
+            value={this.state.channel}
             onValueChange={() => {
               TYDevice.putDeviceData({
                 [chSelectorCode]: !chSelector,
               });
+              this.setState({ channel: !chSelector });
             }}
           />
         </View>

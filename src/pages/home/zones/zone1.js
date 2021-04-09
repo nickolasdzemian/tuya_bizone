@@ -306,7 +306,7 @@ class Zone1 extends PureComponent {
                   value={this.getDataTemp()}
                 />
               </View>
-            ) : (
+            ) : modeZ === '01' ? (
               <View style={styles.areaAir}>
                 <TYText style={styles.titlekwh}>{Strings.getLang('manualtemp')}</TYText>
                 <View style={styles.title}>
@@ -317,7 +317,13 @@ class Zone1 extends PureComponent {
                   </TYText>
                 </View>
               </View>
-            )}
+            ) : (
+              <View style={styles.areaAir}>
+                <TYText style={styles.titlekwh}>{Strings.getLang('programmtimermode')}</TYText>
+                <View style={styles.title}>
+                  <FontAwesomeIcon icon={faWaveSquare} color="#ffb700" size={25} marginRight={10} />
+                </View>
+              </View>)}
           </View>
         ) : null}
         <View style={styles.areaContols}>

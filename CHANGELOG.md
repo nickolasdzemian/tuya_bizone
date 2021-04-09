@@ -5,20 +5,25 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ToDo
 * add state of fan in climate mode when fan is set to AUTO | добавление состояния вентилятора в климат-контроле, когда вент. в АВТОматическом режиме
-* add gradient colors (from blue to orange) in sliders that controll manual temp | добавление переходящего цвета в слайдерах, которые управляют темп. ручного поддержания
 * add statistics | добавление статистики
+* some changes and corrections for UI | некоторые изменения и корректировки для UI
 
 ### Known issues | Известные ограничения
 * visible slider's width and value depends on other parent component | размер и значение видимой части зависимых слайдеров может изменяться в зависимости от родительского компонента
 * fast repeating sliding between days in programm mode (charts) may cause some lags (tests with 300 points in one-day list menu haven't been passed) | быстрое повторное переключение между днями в программном режиме (графики) может вызывать задержки (тесты с 300 точками в списке на один день)
 
 
-#### 2.0.5
+#### 2.0.5 release 1
+* added interactive connection manuals via QR-code | добавлены интерактивные инструкции по подключению через QR-код
+* added PUSH-notifications (Sensor error) | добавлены PUSH-уведомления (Ошибка датчика)
+
 * added UI adpotation for iPhone 12 mini and etc screen sizes | выполнена адаптация UI для iPhone 12 mini и экранов с аналогичным разрешением
-* added ignoring adaptive system fonts | добавлено игнорирование адаптивных системных шрифтов 
+* added ignoring adaptive system fonts | добавлено игнорирование адаптивных системных шрифтов
+* added handler for programm-timer mode on home screen | добавлен обработчик для режима программного таймера на главном экране
 * updated some elements | обновлены некоторые элементы
 * totally upgraded fonts | глобально обновлены шрифты
 * fixed problems in Android swipe gesture handler | исправлены проблемы связанные с обработкой жестов смахивания на платформе Android
+* fixed channel selector speed | исправлена скорость переключателя выбора канала
 
 #### 2.0.4
 * rebuild UI components without using states (workaround render problem) | перестроены UI компоненты без использования состояний (обход проблемы постоянного рендеринга)
