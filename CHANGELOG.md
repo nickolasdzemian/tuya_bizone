@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### ToDo
 * add state of fan in climate mode when fan is set to AUTO | добавление состояния вентилятора в климат-контроле, когда вент. в АВТОматическом режиме
 * add statistics | добавление статистики
+* add force OTA update via app | добавление принудительного OTA обновления через приложение
 * some changes and corrections for UI | некоторые изменения и корректировки для UI
 
 ### Known issues | Известные ограничения
