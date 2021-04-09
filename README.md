@@ -8,6 +8,10 @@ for more information visit CHANGELOG
 
 ![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_cli.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_zone.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_chart.jpg)
 
+## Connection
+* to connect the device scan QR-code via Tuya app and see manual
+![QR-code](https://github.com/nickolasdzemian/res/blob/main/blobs/2sexQRconn.jpg)
+
 ## Download example manually
 
 ```bash
