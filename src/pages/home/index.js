@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { TYText, TYSdk } from 'tuya-panel-kit';
 import dpCodes from '../../config/dpCodes.ts';
 import ClimateReport from './ClimateReport';
-import ZoneReport from './ZoneReport';
 import ClimateM from './climate/climate';
 import Zones from './zones/index';
 import ClimateController from './climate/controller';
+import Strings from '../../i18n/index.ts';
 
 const { ClimateSelector: ClimateSelectorCode } = dpCodes;
 
@@ -16,20 +17,28 @@ class ClimateMain extends React.PureComponent {
     const { ClimateSelector } = this.props;
     return (
       <View style={styles.container}>
-        <ScrollView>
-          {ClimateSelector === true ? (
-            <View>
-              <ClimateReport />
-              <ClimateM />
-            </View>
-          ) : (
-            <View>
-              <ZoneReport />
-              <Zones />
-            </View>
-          )}
-        </ScrollView>
-        {ClimateSelector === true ? <ClimateController /> : null}
+        {ClimateSelector === true ? (
+          <View>
+            <ClimateReport />
+            <ClimateM />
+          </View>
+        ) : (
+          <Zones />
+        )}
+        {ClimateSelector === true ? (
+          <ClimateController />
+        ) : (
+          <TouchableOpacity
+            onPress={() =>
+              TYSdk.Navigator.push({
+                id: 'SettingScene',
+                title: Strings.getLang('settings'),
+              })}
+            style={styles.touch}
+          >
+            <TYText style={styles.text}>{Strings.getLang('settings')}</TYText>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
@@ -46,8 +55,21 @@ ClimateMain.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'flex-end',
+  },
+  text: {
+    textAlign: 'center',
+    color: '#666',
+    fontSize: 20,
+  },
+  touch: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    height: 50,
+    margin: 8,
+    marginBottom: 33,
+    justifyContent: 'center',
   },
 });
 

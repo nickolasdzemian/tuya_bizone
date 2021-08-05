@@ -1,12 +1,12 @@
 /* eslint-disable react/destructuring-assignment */
 // установка температуры поддержания и настройка вентилятора для климат-режима
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { Slider, Stepper, TabBar, TYSdk, TYText } from 'tuya-panel-kit';
+import { Slider, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faFan, faHandPointUp, faWaveSquare } from '@fortawesome/free-solid-svg-icons';
+import { faFan, faThermometerQuarter } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
@@ -17,46 +17,29 @@ const {
   SetTemperature: SetTemperatureCode,
   ModeChannel: ModeChannelCode,
   ReportProgTemp: ReportProgTempCode,
+  FaultAlarm: FaultAlarmCode,
 } = dpCodes;
-
-// режимы вентилятора
-const fan = [
-  {
-    key: 'FAN_OFF',
-    title: Strings.getLang('FAN_OFF'),
-    value: 'FAN_OFF',
-  },
-  {
-    key: 'FAN_LOW',
-    title: Strings.getLang('FAN_LOW'),
-    value: 'FAN_LOW',
-  },
-  {
-    key: 'FAN_MID',
-    title: Strings.getLang('FAN_MID'),
-    value: 'FAN_MID',
-  },
-  {
-    key: 'FAN_HIGH',
-    title: Strings.getLang('FAN_HIGH'),
-    value: 'FAN_HIGH',
-  },
-  {
-    key: 'FAN_AUTO',
-    title: Strings.getLang('FAN_AUTO'),
-    value: 'FAN_AUTO',
-  },
-];
 
 class ClimateM extends PureComponent {
   constructor(props) {
     super(props);
-    // инициализация и текущий state для slidera
-    const T = this.props.SetTemperature.substring(8, 10);
-    const V = parseInt(T, 16);
-    this.state = { 
+    const fanValue = this.props.FanSpeed;
+    this.state = {
       valueM0: this.getDataTemp(),
-      fan: this.props.FanSpeed,
+      fan:
+        fanValue === number
+          ? fanValue
+          : fanValue === 'FAN_OFF'
+            ? 0
+            : fanValue === 'FAN_LOW'
+              ? 1
+              : fanValue === 'FAN_MID'
+                ? 2
+                : fanValue === 'FAN_HIGH'
+                  ? 3
+                  : fanValue === 'FAN_AUTO'
+                    ? 4
+                    : 0,
     };
   }
 
@@ -67,7 +50,19 @@ class ClimateM extends PureComponent {
     }
 
     if (this.props.FanSpeed !== nextProps.FanSpeed) {
-      this.setState({ fan: nextProps.FanSpeed });
+      const fanValue0 = nextProps.FanSpeed;
+      const fanValue = fanValue0 === 'FAN_OFF'
+        ? 0
+        : fanValue0 === 'FAN_LOW'
+          ? 1
+          : fanValue0 === 'FAN_MID'
+            ? 2
+            : fanValue0 === 'FAN_HIGH'
+              ? 3
+              : fanValue0 === 'FAN_AUTO'
+                ? 4
+                : null;
+      this.setState({ fan: fanValue });
     }
 
     if (nextProps.SetTemperature) {
@@ -76,7 +71,19 @@ class ClimateM extends PureComponent {
     }
 
     if (nextProps.FanSpeed) {
-      this.setState({ fan: nextProps.FanSpeed });
+      const fanValue0 = nextProps.FanSpeed;
+      const fanValue = fanValue0 === 'FAN_OFF'
+        ? 0
+        : fanValue0 === 'FAN_LOW'
+          ? 1
+          : fanValue0 === 'FAN_MID'
+            ? 2
+            : fanValue0 === 'FAN_HIGH'
+              ? 3
+              : fanValue0 === 'FAN_AUTO'
+                ? 4
+                : null;
+      this.setState({ fan: fanValue });
     }
   }
 
@@ -88,12 +95,24 @@ class ClimateM extends PureComponent {
   }
 
   // отправка данных по изменению в переключателях
-  changeDataFan = value => {
+  changeDataFan(value) {
     this.setState({ fan: value });
+    const sendValue =
+      value === 0
+        ? 'FAN_OFF'
+        : value === 1
+          ? 'FAN_LOW'
+          : value === 2
+            ? 'FAN_MID'
+            : value === 3
+              ? 'FAN_HIGH'
+              : value === 4
+                ? 'FAN_AUTO'
+                : 'FAN_OFF';
     TYDevice.putDeviceData({
-      [FanSpeedCode]: value,
+      [FanSpeedCode]: sendValue,
     });
-  };
+  }
 
   _changeDataTemp = valueM0 => {
     this.setState({ valueM0: Math.round(valueM0) });
@@ -131,77 +150,174 @@ class ClimateM extends PureComponent {
     const modeCli = this.props.ModeChannel.substring(4, 6);
     const ProgTempCli0 = parseInt(this.props.ReportProgTemp.substring(4, 6), 16);
     const ProgTempCli = ProgTempCli0 > 100 ? -(256 - ProgTempCli0) : ProgTempCli0;
+    const alarm = this.props.FaultAlarm;
+    const displayMode =
+      C === '00'
+        ? 'pwrOFF'
+        : modeCli === '00'
+          ? 'manualmode'
+          : modeCli === '01'
+            ? 'programmmode'
+            : 'programmtimermode';
     return C === '01' ? (
       <SafeAreaView style={styles.container}>
-        {modeCli === '00' ? (
-          <View style={styles.area}>
-            <TYText style={styles.titlekwh}>{Strings.getLang('manualtemp')}</TYText>
-            <View style={styles.title}>
-              <FontAwesomeIcon icon={faHandPointUp} color="#90EE90" size={25} marginRight={10} />
-              <TYText style={styles.num}>
-                {this.state.valueM0}
-                °C
-              </TYText>
-            </View>
-            <View style={styles.title}>
-              <TYText style={styles.context}>-15</TYText>
-              <Slider.Horizontal
-                style={styles.slider}
-                canTouchTrack={true}
-                maximumValue={80}
-                stepValue={1}
-                minimumValue={-15}
-                value={this.state.valueM0}
-                maximumTrackTintColor="#ffb700"
-                minimumTrackTintColor="#90EE90"
-                onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
-                onSlidingComplete={this._changeDataTemp}
-              />
-              <TYText style={styles.context}>+80</TYText>
-            </View>
-            <Stepper
-              buttonType="ellipse"
-              ellipseIconColor="#90EE90"
-              style={styles.stepper}
-              inputStyle={{ color: 'transparent' }}
-              editable={false}
-              onValueChange={this._changeDataTemp}
-              max={80}
+        <View style={styles.area}>
+          <TYText style={[styles.num, { fontSize: 20, color: '#949494', marginTop: 8 }]}>
+            {Strings.getLang(displayMode)}
+          </TYText>
+          <View style={styles.title}>
+            <FontAwesomeIcon
+              icon={faThermometerQuarter}
+              color="#57BCFB"
+              size={25}
+              marginRight={10}
+            />
+            <TYText style={styles.num}>
+              {modeCli === '00'
+                ? this.state.valueM0
+                : modeCli === '01'
+                  ? ProgTempCli
+                  : alarm !== 0
+                    ? '--'
+                    : '--'}
+              °C
+            </TYText>
+          </View>
+          <View style={styles.title}>
+            <Slider.Horizontal
+              animationType="spring"
+              disabled={modeCli !== '00' || C === '00' || alarm !== 0}
+              theme={{
+                width: 300,
+                height: 46,
+                trackRadius: 16,
+                trackHeight: 46,
+                thumbSize: 20,
+                thumbRadius: 20,
+                thumbTintColor: modeCli !== '00' || C === '00' || alarm ? '#E3E9EE' : '#57BCFB',
+                minimumTrackTintColor: '#f0f0f0',
+                maximumTrackTintColor: '#f0f0f0',
+              }}
+              thumbTouchSize={{ width: 46, height: 46 }}
+              thumbStyle={{
+                shadowOffset: {
+                  width: 0,
+                  height: 0,
+                },
+                shadowOpacity: 0,
+                shadowRadius: 0,
+                elevation: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              type="parcel"
+              renderMinimumTrack={() => (
+                <View
+                  style={{
+                    height: 38,
+                    borderRadius: 14,
+                    backgroundColor:
+                      modeCli !== '00' || C === '00' || alarm !== 0 ? '#E3E9EE' : '#57BCFB',
+                    marginHorizontal: 4,
+                  }}
+                />
+              )}
+              renderThumb={() => (
+                <View
+                  style={{
+                    height: 20,
+                    borderRadius: 5.5,
+                    width: 5,
+                    backgroundColor: alarm !== 0 ? 'red' : '#FFF',
+                  }}
+                />
+              )}
+              style={{
+                width: '80%',
+                alignSelf: 'center',
+                marginBottom: 8,
+              }}
+              canTouchTrack={true}
+              maximumValue={80}
               stepValue={1}
-              min={-15}
-              value={this.state.valueM0}
+              minimumValue={-15}
+              value={modeCli === '00' ? this.getDataTemp() : modeCli === '01' ? ProgTempCli : 33}
+              onValueChange={valueM0 => this.setState({ valueM0: Math.round(valueM0) })}
+              onSlidingComplete={this._changeDataTemp}
             />
           </View>
-        ) : (
-          <View style={styles.areaAir}>
-            <TYText style={styles.titlekwh}>{Strings.getLang('manualtemp')}</TYText>
-            <View style={styles.title}>
-              <FontAwesomeIcon icon={faWaveSquare} color="#90EE90" size={25} marginRight={10} />
-              <TYText style={styles.num}>
-                {this.props.ReportProgTemp.substring(4, 6) === '81' ? '--' : ProgTempCli}
-                °C
-              </TYText>
-            </View>
-          </View>
-        )}
+        </View>
         <View style={styles.area}>
-          <TYText style={styles.titlekwh}>{Strings.getLang('fantitle')}</TYText>
+          <TYText style={[styles.num, { fontSize: 20, color: '#949494', marginTop: 8 }]}>
+            {Strings.getLang('fantitle')}
+          </TYText>
           <View style={styles.title}>
-            <FontAwesomeIcon icon={faFan} color="#00e1ff" size={25} marginRight={10} />
+            <FontAwesomeIcon icon={faFan} color="#57BCFB" size={25} marginRight={10} />
             <TYText style={styles.num}>{Strings.getLang(this.state.fan)}</TYText>
           </View>
           <View style={styles.title}>
-            <TYText style={styles.context}>Lo</TYText>
-            <TabBar
-              activeColor="#00e1ff"
-              type="radio"
-              tabs={fan}
-              activeKey={this.state.fan}
-              onChange={this.changeDataFan}
-              style={styles.bar}
-              gutter={1}
+            <Slider.Horizontal
+              animationType="timing"
+              disabled={C === '00' || alarm !== 0}
+              theme={{
+                width: 300,
+                height: 46,
+                trackRadius: 16,
+                trackHeight: 46,
+                thumbSize: 20,
+                thumbRadius: 20,
+                thumbTintColor: C === '00' || alarm ? '#E3E9EE' : '#57BCFB',
+                minimumTrackTintColor: '#f0f0f0',
+                maximumTrackTintColor: '#f0f0f0',
+              }}
+              thumbTouchSize={{ width: 46, height: 46 }}
+              thumbStyle={{
+                shadowOffset: {
+                  width: 0,
+                  height: 0,
+                },
+                shadowOpacity: 0,
+                shadowRadius: 0,
+                elevation: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              type="parcel"
+              renderMinimumTrack={() => (
+                <View
+                  style={{
+                    height: 38,
+                    borderRadius: 14,
+                    backgroundColor: C === '00' || alarm !== 0 ? '#E3E9EE' : '#57BCFB',
+                    marginHorizontal: 4,
+                  }}
+                />
+              )}
+              renderThumb={() => (
+                <View
+                  style={{
+                    height: 20,
+                    borderRadius: 5.5,
+                    width: 5,
+                    backgroundColor: alarm !== 0 ? 'red' : '#FFF',
+                  }}
+                />
+              )}
+              style={{
+                width: '80%',
+                alignSelf: 'center',
+                marginBottom: 8,
+              }}
+              canTouchTrack={true}
+              maximumValue={4}
+              stepValue={1}
+              minimumValue={0}
+              value={this.state.fan}
+              onValueChange={value => this.setState({ fan: value })}
+              onSlidingComplete={value => this.changeDataFan(value)}
+              useNoun={true}
+              // minNounStyle={{ backgroundColor: '#f0f' }}
             />
-            <TYText style={styles.context}>Hi</TYText>
           </View>
         </View>
       </SafeAreaView>
@@ -215,6 +331,7 @@ ClimateM.propTypes = {
   SetTemperature: PropTypes.string,
   ReportProgTemp: PropTypes.string,
   ModeChannel: PropTypes.string,
+  FaultAlarm: PropTypes.number,
 };
 
 ClimateM.defaultProps = {
@@ -223,6 +340,7 @@ ClimateM.defaultProps = {
   SetTemperature: '1E1E141414',
   ReportProgTemp: '001515',
   ModeChannel: '000000',
+  FaultAlarm: 0,
 };
 
 const styles = StyleSheet.create({
@@ -238,72 +356,22 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: '90%',
-    height: 190,
-  },
-  areaAir: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    margin: 5,
-    width: '90%',
-    height: 60,
+    height: 140,
   },
   num: {
     textAlign: 'center',
-    fontWeight: 'bold',
     fontSize: 26,
-    color: '#474747',
+    color: '#333',
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
     flexDirection: 'row',
     textAlign: 'center',
-    fontWeight: '200',
     fontSize: 10,
-    color: 'black',
+    color: '#333',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  titlekwh: {
-    textAlign: 'center',
-    fontWeight: '400',
-    fontSize: 10,
-    color: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 5,
-  },
-  slider: {
-    width: '80%',
-    alignSelf: 'center',
-    marginTop: 1,
-    marginBottom: 3,
-  },
-  context: {
-    fontSize: 10,
-    fontWeight: '200',
-    color: 'black',
-    paddingRight: 5,
-    paddingLeft: 5,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignSelf: 'center',
-  },
-  stepper: {
-    alignSelf: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    paddingBottom: 15,
-  },
-  bar: {
-    width: '70%',
-    backgroundColor: '#f0f0f0',
-    color: '#00e1ff',
-    margin: 10,
   },
 });
 
@@ -313,4 +381,5 @@ export default connect(({ dpState }) => ({
   SetTemperature: dpState[SetTemperatureCode],
   ModeChannel: dpState[ModeChannelCode],
   ReportProgTemp: dpState[ReportProgTempCode],
+  FaultAlarm: dpState[FaultAlarmCode],
 }))(ClimateM);

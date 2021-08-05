@@ -21,7 +21,6 @@ class ClimateController extends PureComponent {
     super(props);
     // eslint-disable-next-line react/no-unused-state
     this.state = { 
-      listValue: this.modeI + this.modeCli,
       power: this.props.Zone.substring(4, 6),
     };
   }
@@ -78,7 +77,7 @@ class ClimateController extends PureComponent {
         // eslint-disable-next-line react/no-unused-state
         this.setState({ listValue: value });
         this.forceUpdate();
-        // close();
+        close();
       },
     });
   };
@@ -126,7 +125,7 @@ class ClimateController extends PureComponent {
           <TouchableOpacity onPress={this.changePowerZone} style={styles.touch}>
             <FontAwesomeIcon
               icon={faPowerOff}
-              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              color={C === '01' ? '#90EE90' : '#d6d6d6'}
               size={30}
               margin={10}
             />
@@ -138,7 +137,7 @@ class ClimateController extends PureComponent {
           >
             <FontAwesomeIcon
               icon={faChartBar}
-              color={C === '01' && modeCli === '01' ? '#ff7300' : '#d6d6d6'}
+              color={C === '01' && modeCli === '01' ? '#90EE90' : '#d6d6d6'}
               size={30}
               margin={10}
             />
@@ -147,14 +146,14 @@ class ClimateController extends PureComponent {
           <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
             <FontAwesomeIcon
               icon={faTasks}
-              color={C === '01' ? '#ff7300' : '#d6d6d6'}
+              color={C === '01' ? '#90EE90' : '#d6d6d6'}
               size={30}
               margin={10}
             />
             <TYText style={styles.title}>{Strings.getLang('mode')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
-            <FontAwesomeIcon icon={faCog} color="#ff7300" size={30} margin={10} />
+            <FontAwesomeIcon icon={faCog} color="#90EE90" size={30} margin={10} />
             <TYText style={styles.title}>{Strings.getLang('settings')}</TYText>
           </TouchableOpacity>
         </View>
@@ -170,7 +169,7 @@ ClimateController.propTypes = {
 
 ClimateController.defaultProps = {
   Zone: '010101',
-  ModeChannel: '000000',
+  ModeChannel: '90EE9090EE90',
 };
 
 const styles = StyleSheet.create({
@@ -199,9 +198,7 @@ const styles = StyleSheet.create({
   title: {
     flexDirection: 'row',
     textAlign: 'center',
-    fontWeight: '200',
-    fontSize: 10,
-    color: 'black',
+    color: '#949494',
     justifyContent: 'center',
     alignItems: 'center',
   },

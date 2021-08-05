@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import CounterChartsList from './counter-list-char-view';
+import ChartView from './chart';
 
 const CounterChartsScene = () => (
   <View style={styles.container}>
-    <CounterChartsList />
+    <ChartView />
   </View>
 );
 

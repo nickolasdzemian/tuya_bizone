@@ -34,15 +34,8 @@ class ClimateReport extends React.PureComponent {
   }
 
   render() {
-    const {
-      chSelector,
-      Relay1flag,
-      Relay2flag,
-      RelayPower1,
-      RelayPower2,
-      FaultAlarm,
-      SensorSet3,
-    } = this.props;
+    const { chSelector, Relay1flag, Relay2flag, RelayPower1, RelayPower2, FaultAlarm, SensorSet3 } =
+      this.props;
 
     const t = this.props.ReportTemperature;
     const t1 = t.substring(0, 2);
@@ -75,76 +68,76 @@ class ClimateReport extends React.PureComponent {
 
     return (
       <View>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.areaAir}>
-            <TYText style={styles.titlekwh}>{Strings.getLang('climateTemp')}</TYText>
-            <View style={styles.air}>
-              <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
+        {FaultAlarm !== 0 ? null : (
+          <SafeAreaView style={styles.container}>
+            <View style={styles.areaAir}>
+              <TYText style={[styles.titlekwh, {fontSize: 20}]}>{Strings.getLang('climateTemp')}</TYText>
+              <View style={styles.air}>
+                <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
+                <TYText style={[styles.num, { fontSize: 26 }]}>
+                  {FaultAlarm === 0 ? Math.round(tC) : '--'}
+                  °C
+                </TYText>
+              </View>
+            </View>
+          </SafeAreaView>
+        )}
+        {FaultAlarm !== 0 ? null : (
+          <SafeAreaView style={styles.container}>
+            <View style={styles.areaPWR}>
+              {chSelector === false ? (
+                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} marginTop={8} />
+              ) : (
+                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} marginTop={8} />
+              )}
               <TYText style={styles.num}>
-                {FaultAlarm === 0 ? Math.round(tC) : '--'}
-                °C
+                {Relay1flag === true ? Strings.getLang(chSelector === false ? 'oncool' : 'on') : Strings.getLang('off')}
               </TYText>
-            </View>
-          </View>
-        </SafeAreaView>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.areaPWR}>
-            {chSelector === false ? (
-              <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} margin={10} />
-            ) : (
-              <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
-            )}
-            {/* <TYText style={styles.titlekwh}>{Strings.getLang('status')}</TYText> */}
-            <TYText style={styles.num}>
-              {Relay1flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-            </TYText>
-            <View>
-              <TYText style={styles.titlekwh}>
-                {RelayPower1} 
-                {Strings.getLang('kwh')}
-              </TYText>
-            </View>
-          </View>
-          <View style={styles.areaPWR}>
-            {chSelector === true ? (
-              <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} margin={10} />
-            ) : (
-              <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} margin={10} />
-            )}
-            {/* <TYText style={styles.titlekwh}>{Strings.getLang('status')}</TYText> */}
-            <TYText style={styles.num}>
-              {Relay2flag === true ? Strings.getLang('on') : Strings.getLang('off')}
-            </TYText>
-            <View>
-              <TYText style={styles.titlekwh}>
-                {RelayPower2} 
-                {Strings.getLang('kwh')}
-              </TYText>
-            </View>
-          </View>
-          {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
-            <View style={styles.areaPWR}>
-              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-              <TYText style={styles.num}>{Strings.getLang('alarma')}</TYText>
-              {/* <Text style={styles.num}>E{FaultAlarm}</Text> */}
               <View>
-                <TYText style={styles.title}>{Strings.getLang('sen_err')}</TYText>
-                <TYText style={styles.titleE}>{Strings.getLang('zone1')}</TYText>
+                <TYText style={styles.titlekwh}>
+                  {RelayPower1 / 1000} 
+                  {' '}
+                  {Strings.getLang('kwh')}
+                </TYText>
               </View>
             </View>
-          )}
-          {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
             <View style={styles.areaPWR}>
-              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={25} margin={10} />
-              <TYText style={styles.num}>{Strings.getLang('alarma')}</TYText>
-              {/* <TYText style={styles.num}>E{FaultAlarm}</TYText> */}
+              {chSelector === true ? (
+                <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} marginTop={8} />
+              ) : (
+                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} marginTop={8} />
+              )}
+              <TYText style={styles.num}>
+                {Relay2flag === true ? Strings.getLang(chSelector === true ? 'oncool' : 'on') : Strings.getLang('off')}
+              </TYText>
               <View>
-                <TYText style={styles.title}>{Strings.getLang('sen_err')}</TYText>
-                <TYText style={styles.titleE}>{Strings.getLang('zone2')}</TYText>
+                <TYText style={styles.titlekwh}>
+                  {RelayPower2 / 1000} 
+                  {' '}
+                  {Strings.getLang('kwh')}
+                </TYText>
               </View>
             </View>
-          )}
-        </SafeAreaView>
+          </SafeAreaView>
+        )}
+        {FaultAlarm === 0 ? null : FaultAlarm === 4 ? null : FaultAlarm === 8 ? null : (
+          <SafeAreaView style={styles.container}>
+            <View style={styles.areaPWRA}>
+              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={35} marginTop={8} />
+              <TYText style={styles.num}>{Strings.getLang('alarma')}</TYText>
+              <TYText style={styles.num}>{`${Strings.getLang('sen_err')} ${Strings.getLang('zone1')}`}</TYText>
+            </View>
+          </SafeAreaView>
+        )}
+        {FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : (
+          <SafeAreaView style={styles.container}>
+            <View style={styles.areaPWRA}>
+              <FontAwesomeIcon icon={faExclamationTriangle} color="#ff3b00" size={35} marginTop={8} />
+              <TYText style={styles.num}>{Strings.getLang('alarma')}</TYText>
+              <TYText style={styles.num}>{`${Strings.getLang('sen_err')} ${Strings.getLang('zone2')}`}</TYText>
+            </View>
+          </SafeAreaView>
+        )}
       </View>
     );
   }
@@ -174,22 +167,11 @@ ClimateReport.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
     alignContent: 'center',
   },
-  // area: {
-  //   alignItems: 'center',
-  //   alignContent: 'center',
-  //   justifyContent: 'space-between',
-  //   backgroundColor: '#fff',
-  //   borderRadius: 12,
-  //   margin: 5,
-  //   width: 80,
-  //   height: 130,
-  // },
   areaAir: {
     alignItems: 'center',
     alignContent: 'center',
@@ -197,8 +179,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 5,
-    width: '95%',
-    height: 60,
+    width: '90%',
+    padding: 8,
   },
   areaPWR: {
     alignItems: 'center',
@@ -207,29 +189,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 5,
-    width: '45%',
-    height: 110,
+    width: '44%',
+    height: 90,
+  },
+  areaPWRA: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    margin: 5,
+    width: '44%',
+    height: 130,
   },
   num: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 26,
-    color: '#474747',
-    justifyContent: 'center',
-  },
-  title: {
-    textAlign: 'center',
-    fontWeight: '200',
-    fontSize: 10,
-    color: 'black',
+    fontSize: 20,
+    color: '#333',
     justifyContent: 'center',
     alignItems: 'center',
   },
   air: {
     flexDirection: 'row',
     textAlign: 'center',
-    fontWeight: '200',
-    fontSize: 10,
     color: 'black',
     justifyContent: 'center',
     alignItems: 'center',
@@ -237,28 +219,10 @@ const styles = StyleSheet.create({
   },
   titlekwh: {
     textAlign: 'center',
-    fontWeight: '500',
-    fontSize: 10,
-    color: 'black',
+    color: '#949494',
     justifyContent: 'center',
     marginBottom: 5,
   },
-  titleE: {
-    textAlign: 'center',
-    fontWeight: '200',
-    fontSize: 10,
-    color: 'black',
-    justifyContent: 'center',
-    marginBottom: 5,
-  },
-  // titleE2: {
-  //   textAlign: 'center',
-  //   fontWeight: '200',
-  //   fontSize: 8,
-  //   color: 'black',
-  //   justifyContent: 'center',
-  //   marginBottom: 5,
-  // },
 });
 
 export default connect(({ dpState }) => ({

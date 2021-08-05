@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
-import { Slider, Stepper, Popup, TYSdk, TYText } from 'tuya-panel-kit';
+import { TYSdk, Slider, Collapsible, Popup, TYText, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-  faHandPointUp,
+  faThermometerQuarter,
+  faSlidersH,
   faChartBar,
   faTasks,
-  faCog,
+  faAngleUp,
   faPowerOff,
   faStopwatch20,
   faStopwatch,
-  faWaveSquare,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -26,6 +27,12 @@ const {
   ModeChannel: ModeChannelCode,
   TimerSettings: TimerSettingsCode,
   ReportProgTemp: ReportProgTempCode,
+  Relay2flag: Relay2flagCode,
+  OpenWindowStatus: OpenWindowStatusCode,
+  FaultAlarm: FaultAlarmCode,
+  ReportTemperature: ReportTemperatureCode,
+  SensorSet2: SensorSet2Code,
+  OpenWndW: OpenWndWCode,
 } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
@@ -42,15 +49,16 @@ class Zone2 extends PureComponent {
     const T = this.props.SetTemperature.substring(6, 8);
     const V = parseInt(T, 16);
     this.state = {
-      valueZ2: V > 100 ? V - 256 : V,
+      valueZ1: V > 100 ? V - 256 : V,
       power: this.props.Zone.substring(2, 4),
+      bar: true,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.SetTemperature !== nextProps.SetTemperature) {
       const V = parseInt(nextProps.SetTemperature.substring(6, 8), 16);
-      this.setState({ valueZ2: V > 100 ? V - 256 : V });
+      this.setState({ valueZ1: V > 100 ? V - 256 : V });
     }
 
     if (this.props.Zone !== nextProps.Zone) {
@@ -59,7 +67,7 @@ class Zone2 extends PureComponent {
 
     if (nextProps.SetTemperature) {
       const V = parseInt(nextProps.SetTemperature.substring(6, 8), 16);
-      this.setState({ valueZ2: V > 100 ? V - 256 : V });
+      this.setState({ valueZ1: V > 100 ? V - 256 : V });
     }
 
     if (nextProps.Zone) {
@@ -101,7 +109,6 @@ class Zone2 extends PureComponent {
       confirmText,
       showBack: false,
       onBack: ({ close }) => {
-        console.log('Select climate --none');
         close();
       },
       value: String(modeII + modeZ + modeI),
@@ -117,7 +124,7 @@ class Zone2 extends PureComponent {
         // eslint-disable-next-line react/no-unused-state
         this.setState({ listValue: value });
         this.forceUpdate();
-        // close();
+        close();
       },
     });
   };
@@ -131,14 +138,15 @@ class Zone2 extends PureComponent {
   }
 
   convertMinsToTime = mins => {
-    const hours = Math.floor(mins / 60);
+    let hours = Math.floor(mins / 60);
     let minutes = mins % 60;
+    hours = hours < 10 ? `0${hours}` : hours;
     minutes = minutes < 10 ? `0${minutes}` : minutes;
-    return `${hours}${hrss}:${minutes}${minss}`;
+    return `${hours}:${minutes}`;
   };
 
   _changeDataTemp = valueZ2 => {
-    this.setState({ valueZ2: Math.round(valueZ2) });
+    this.setState({ valueZ1: Math.round(valueZ2) });
     const { SetTemperature } = this.props;
     const I = SetTemperature.substring(0, 6);
     const II = SetTemperature.substring(8, 10);
@@ -238,7 +246,6 @@ class Zone2 extends PureComponent {
       {
         onShow: () => this.forceUpdate(),
         onHide: () => this.forceUpdate(this.render),
-        onDismiss: () => console.log('dismiss'),
       }
     );
   };
@@ -258,141 +265,300 @@ class Zone2 extends PureComponent {
   };
 
   render() {
+    const { Relay2flag, OpenWindowStatus, FaultAlarm, SensorSet2, OpenWndW } = this.props;
+
+    const OpenWndW1 = OpenWndW.substring(2, 4);
+    const win = OpenWindowStatus > 0 && OpenWndW1 === '01';
+    const alarm =
+      FaultAlarm === 0 ? null : FaultAlarm === 1 ? null : FaultAlarm === 2 ? null : true;
+
+    const t = this.props.ReportTemperature;
+    const t1 = t.substring(2, 4);
+    const t10 = parseInt(t1, 16);
+    const t11 = SensorSet2 === 'air' ? '--' : t10 > 100 ? -(256 - t10) : t10;
+    const t3 = t.substring(4, 6);
+    const t30 = parseInt(t3, 16);
+    const t33 = t30 > 100 ? -(256 - t30) : t30;
+
     const C = this.state.power;
     const modeZ = this.props.ModeChannel.substring(2, 4);
+    const displayMode =
+      C === '00'
+        ? 'pwrOFF'
+        : modeZ === '00'
+          ? 'manualmode'
+          : modeZ === '01'
+            ? 'programmmode'
+            : 'programmtimermode';
     const TimerOn = this.props.TimerSettings.substring(14, 16);
     const ProgTempI = parseInt(this.props.ReportProgTemp.substring(2, 4), 16);
     const ProgTemp = ProgTempI > 100 ? -(256 - ProgTempI) : ProgTempI;
+    const hidden = this.state.bar;
     return (
       <SafeAreaView style={styles.container}>
-        {C === '01' ? (
-          <View style={modeZ === '00' ? styles.area : styles.areaAir}>
-            {modeZ === '00' ? (
-              <View style={styles.area}>
-                <View style={styles.sel}>
-                  <FontAwesomeIcon icon={faHandPointUp} color="#ff7300" size={16} marginRight={5} />
-                  <TYText style={styles.titlekwh}>
-                    {Strings.getLang('manualtemp')}
-                    {': '}
-                  </TYText>
-                  <TYText style={styles.num}>
-                    {this.state.valueZ2}
-                    °C
-                  </TYText>
-                </View>
-                <View style={styles.title}>
-                  <TYText style={styles.context}>-15</TYText>
-                  <Slider.Horizontal
-                    style={styles.slider}
-                    canTouchTrack={true}
-                    maximumValue={80}
-                    stepValue={1}
-                    minimumValue={-15}
-                    value={this.getDataTemp()}
-                    maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-                    minimumTrackTintColor="#ff7300"
-                    onValueChange={valueZ2 => this.setState({ valueZ2: Math.round(valueZ2) })}
-                    onSlidingComplete={this._changeDataTemp}
-                  />
-                  <TYText style={styles.context}>+80</TYText>
-                </View>
-                <Stepper
-                  buttonType="ellipse"
-                  buttonStyle={{ size: 'small' }}
-                  ellipseIconColor="#ff7300"
-                  style={styles.stepper}
-                  inputStyle={{ color: 'transparent' }}
-                  editable={false}
-                  onValueChange={this._changeDataTemp}
-                  max={80}
-                  stepValue={1}
-                  min={-15}
-                  value={this.getDataTemp()}
-                />
-              </View>
-            ) : modeZ === '01' ? (
-              <View style={styles.areaAir}>
-                <TYText style={styles.titlekwh}>{Strings.getLang('manualtemp')}</TYText>
-                <View style={styles.title}>
-                  <FontAwesomeIcon icon={faWaveSquare} color="#ff7300" size={25} marginRight={10} />
-                  <TYText style={styles.num}>
-                    {this.props.ReportProgTemp.substring(2, 4) === '81' ? '--' : ProgTemp}
-                    °C
-                  </TYText>
-                </View>
-              </View>
-            ) : (
-              <View style={styles.areaAir}>
-                <TYText style={styles.titlekwh}>{Strings.getLang('programmtimermode')}</TYText>
-                <View style={styles.title}>
-                  <FontAwesomeIcon icon={faWaveSquare} color="#ff7300" size={25} marginRight={10} />
-                </View>
-              </View>)}
-          </View>
-        ) : null}
-        <View style={styles.areaContols}>
-          <TouchableOpacity onPress={this.changePowerZone2} style={styles.touch}>
-            <FontAwesomeIcon
-              icon={faPowerOff}
-              color={C === '01' ? '#ff7300' : '#d6d6d6'}
-              size={30}
-              margin={5}
-            />
-            <TYText style={styles.title}>{Strings.getLang('pwr')}</TYText>
-          </TouchableOpacity>
+        <View>
           <TouchableOpacity
-            onPress={C === '01' && modeZ !== '02' ? this.timer1 : null}
-            style={styles.touch}
+            style={styles.top}
+            activeOpacity={0.9}
+            onPress={() => {
+              this.setState({ bar: !hidden });
+              setTimeout(() => {
+                this.setState({ bar: true });
+              }, 14000);
+            }}
           >
-            <FontAwesomeIcon
-              icon={TimerOn === '01' ? faStopwatch20 : faStopwatch}
-              color={C === '01' && modeZ !== '02' ? '#ff7300' : '#d6d6d6'}
-              size={30}
-              margin={5}
-            />
-            <TYText style={styles.title}>
-              {TimerOn === '00'
-                ? Strings.getLang('ttimer')
-                : this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(4, 8), 16))}
+            <TYText
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#ff7300',
+                alignSelf: 'flex-start',
+                marginLeft: 8,
+              }}
+            >
+              2
             </TYText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={
-              C === '01' && modeZ === '01'
-                ? this.goToZoneChart
-                : C === '01' && modeZ === '02'
-                  ? this.goToZoneChart
-                  : null
-            }
-            style={styles.touch}
-          >
+            <TYText style={{ fontSize: 20, color: 'black' }}>{Strings.getLang('Nz2')}</TYText>
             <FontAwesomeIcon
-              icon={faChartBar}
-              color={
-                C === '01' && modeZ === '01'
-                  ? '#ff7300'
-                  : C === '01' && modeZ === '02'
-                    ? '#ff7300'
-                    : '#d6d6d6'
-              }
-              size={30}
-              margin={5}
+              icon={hidden === true ? faSlidersH : faAngleUp}
+              color="#ff7300"
+              size={22}
+              marginRight={8}
             />
-            <TYText style={styles.title}>{Strings.getLang('prog')}</TYText>
           </TouchableOpacity>
-          <TouchableOpacity onPress={C === '01' ? this.onPressMode : null} style={styles.touch}>
-            <FontAwesomeIcon
-              icon={faTasks}
-              color={C === '01' ? '#ff7300' : '#d6d6d6'}
-              size={30}
-              margin={5}
-            />
-            <TYText style={styles.title}>{Strings.getLang('mode')}</TYText>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
-            <FontAwesomeIcon icon={faCog} color="#ff7300" size={30} margin={5} />
-            <TYText style={styles.title}>{Strings.getLang('settings')}</TYText>
-          </TouchableOpacity>
+          <View style={styles.area}>
+            <Collapsible
+              collapsed={hidden}
+              onChange={() => {}}
+              align="center"
+              style={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <View style={styles.areaContols}>
+                <TouchableOpacity onPress={this.changePowerZone2} style={styles.touch}>
+                  <TYText style={styles.title}>{Strings.getLang('pwr')}</TYText>
+                  <FontAwesomeIcon
+                    icon={faPowerOff}
+                    color={C === '01' ? '#ff7300' : '#d6d6d6'}
+                    size={30}
+                    margin={5}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={C === '01' && modeZ !== '02' ? this.timer1 : null}
+                  style={styles.touch}
+                >
+                  <TYText style={styles.title}>
+                    {TimerOn === '00'
+                      ? Strings.getLang('ttimer')
+                      : this.convertMinsToTime(
+                        parseInt(this.props.TimerSettings.substring(4, 8), 16)
+                      )}
+                  </TYText>
+                  <FontAwesomeIcon
+                    icon={TimerOn === '01' ? faStopwatch20 : faStopwatch}
+                    color={C === '01' && modeZ !== '02' ? '#ff7300' : '#d6d6d6'}
+                    size={30}
+                    margin={5}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={
+                    C === '01' && modeZ === '01'
+                      ? this.goToZoneChart
+                      : C === '01' && modeZ === '02'
+                        ? this.goToZoneChart
+                        : null
+                  }
+                  style={styles.touch}
+                >
+                  <TYText style={styles.title}>{Strings.getLang('prog')}</TYText>
+                  <FontAwesomeIcon
+                    icon={faChartBar}
+                    color={
+                      C === '01' && modeZ === '01'
+                        ? '#ff7300'
+                        : C === '01' && modeZ === '02'
+                          ? '#ff7300'
+                          : '#d6d6d6'
+                    }
+                    size={30}
+                    margin={5}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={C === '01' ? this.onPressMode : null}
+                  style={styles.touch}
+                >
+                  <TYText style={styles.title}>{Strings.getLang('mode')}</TYText>
+                  <FontAwesomeIcon
+                    icon={faTasks}
+                    color={C === '01' ? '#ff7300' : '#d6d6d6'}
+                    size={30}
+                    margin={5}
+                  />
+                </TouchableOpacity>
+              </View>
+            </Collapsible>
+            {hidden && <Divider color={win === true ? '#00d0ff' : alarm === true ? 'red' : null} />}
+            <View style={[styles.report, { marginTop: 8 }]}>
+              <View style={styles.inf}>
+                <TYText style={win === true ? styles.w1 : [styles.r1, { color: '#949494' }]}>
+                  {win === true ? Strings.getLang('wintitle') : Strings.getLang('relaySS')}
+                </TYText>
+                <TYText
+                  style={
+                    win === true ? [styles.w1, { fontSize: 20 }] : [styles.r1, { fontSize: 20 }]
+                  }
+                >
+                  {Relay2flag === true
+                    ? Strings.getLang('on')
+                    : win === true
+                      ? `${OpenWindowStatus} ${Strings.getLang('minss')}`
+                      : Strings.getLang('off')}
+                </TYText>
+              </View>
+              {TimerOn === '00' ? null : (
+                <View style={styles.inf}>
+                  <TYText style={[styles.r1, { color: '#949494' }]}>
+                    {Strings.getLang('ttimer')}
+                  </TYText>
+                  <TYText style={[styles.r1, { fontSize: 20 }]}>
+                    {this.convertMinsToTime(parseInt(this.props.TimerSettings.substring(4, 8), 16))}
+                  </TYText>
+                </View>
+              )}
+              <View style={styles.inf}>
+                <TYText
+                  style={
+                    alarm === true
+                      ? [styles.a1, { fontWeight: 'bold' }]
+                      : [styles.r1, { color: '#949494' }]
+                  }
+                >
+                  {`${Strings.getLang(
+                    `${
+                      alarm === true ? 'alarma' : SensorSet2 !== 'air' ? 'now_temp' : 'now_temp_air'
+                    }`
+                  )}`}
+                </TYText>
+                <TYText
+                  style={
+                    alarm === true ? [styles.a1, { fontSize: 20 }] : [styles.r1, { fontSize: 20 }]
+                  }
+                >
+                  {`${
+                    alarm === true
+                      ? Strings.getLang('sen_err')
+                      : SensorSet2 === 'air'
+                        ? `${t33}°C`
+                        : `${t11}°C`
+                  }`}
+                </TYText>
+              </View>
+            </View>
+            <View style={[styles.sel, { flexDirection: 'column', marginTop: 18 }]}>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+                activeOpacity={0.9}
+                onPress={modeZ === '01' || modeZ === '02' ? this.goToZoneChart : null}
+              >
+                <TYText style={[styles.num, { fontSize: 20, color: '#949494' }]}>
+                  {Strings.getLang(displayMode)}
+                </TYText>
+                {(modeZ === '01' || modeZ === '02') && C === '01' ? (
+                  <FontAwesomeIcon icon={faChevronRight} color="#ff7300" size={22} marginLeft={8} />
+                ) : null}
+              </TouchableOpacity>
+              <View style={[styles.sel, { flexDirection: 'row' }]}>
+                {modeZ === '02' ? null : (
+                  <FontAwesomeIcon
+                    icon={faThermometerQuarter}
+                    color={C === '01' ? '#ff7300' : '#d6d6d6'}
+                    size={30}
+                    marginRight={5}
+                  />
+                )}
+                <TYText style={[styles.num, { fontSize: 30 }]}>
+                  {C === '00'
+                    ? '--'
+                    : modeZ === '00'
+                      ? this.state.valueZ1
+                      : modeZ === '01'
+                        ? this.props.ReportProgTemp.substring(2, 4) === '81'
+                          ? '--'
+                          : ProgTemp
+                        : '⏱'}
+                  {modeZ === '02' ? null : '°C'}
+                </TYText>
+              </View>
+            </View>
+            <View style={styles.title}>
+              <Slider.Horizontal
+                animationType="timing"
+                disabled={modeZ !== '00' || C === '00' || alarm}
+                theme={{
+                  width: 300,
+                  height: 46,
+                  trackRadius: 16,
+                  trackHeight: 46,
+                  thumbSize: 20,
+                  thumbRadius: 20,
+                  thumbTintColor: modeZ !== '00' || C === '00' || alarm ? '#E3E9EE' : '#ff7300',
+                  minimumTrackTintColor: '#E3E9EE',
+                  maximumTrackTintColor: '#E3E9EE',
+                }}
+                thumbTouchSize={{ width: 46, height: 46 }}
+                thumbStyle={{
+                  shadowOffset: {
+                    width: 0,
+                    height: 0,
+                  },
+                  shadowOpacity: 0,
+                  shadowRadius: 0,
+                  elevation: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                type="parcel"
+                renderMinimumTrack={() => (
+                  <View
+                    style={{
+                      height: 38,
+                      borderRadius: 14,
+                      backgroundColor:
+                        modeZ !== '00' || C === '00' || alarm ? '#E3E9EE' : '#ff7300',
+                      marginHorizontal: 4,
+                    }}
+                  />
+                )}
+                renderThumb={() => (
+                  <View
+                    style={{
+                      height: 20,
+                      borderRadius: 5.5,
+                      width: 5,
+                      backgroundColor: alarm ? 'red' : '#FFF',
+                    }}
+                  />
+                )}
+                style={styles.slider}
+                canTouchTrack={true}
+                maximumValue={50}
+                stepValue={1}
+                minimumValue={-15}
+                value={modeZ === '00' ? this.getDataTemp() : modeZ === '01' ? ProgTemp : 33}
+                onValueChange={valueZ1 => this.setState({ valueZ1: Math.round(valueZ1) })}
+                onSlidingComplete={this._changeDataTemp}
+              />
+            </View>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -405,6 +571,12 @@ Zone2.propTypes = {
   ModeChannel: PropTypes.string,
   ReportProgTemp: PropTypes.string,
   TimerSettings: PropTypes.string,
+  Relay2flag: PropTypes.bool,
+  OpenWindowStatus: PropTypes.number,
+  FaultAlarm: PropTypes.number,
+  ReportTemperature: PropTypes.string,
+  SensorSet2: PropTypes.string,
+  OpenWndW: PropTypes.string,
 };
 
 Zone2.defaultProps = {
@@ -413,12 +585,48 @@ Zone2.defaultProps = {
   ModeChannel: '000000',
   ReportProgTemp: '001515',
   TimerSettings: '000000000000000000',
+  Relay2flag: false,
+  OpenWindowStatus: 0,
+  FaultAlarm: 0,
+  ReportTemperature: '112233',
+  SensorSet2: 'air_flour',
+  OpenWndW: '0000',
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    margin: 8,
+  },
+  top: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: 5,
+    padding: 5,
+  },
+  report: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '75%',
+  },
+  inf: {
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  r1: {
+    color: '#666',
+    alignSelf: 'center',
+  },
+  w1: {
+    color: '#00d0ff',
+    alignSelf: 'center',
+  },
+  a1: {
+    color: 'red',
+    alignSelf: 'center',
   },
   area: {
     alignItems: 'center',
@@ -427,44 +635,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 5,
-    width: '90%',
-    height: 160,
+    // height: 250,
   },
   areaContols: {
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'space-around',
-    backgroundColor: '#fff',
+    backgroundColor: '#E3E9EE',
     borderRadius: 12,
-    margin: 5,
-    width: '90%',
-    height: 70,
-  },
-  areaAir: {
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    margin: 5,
-    width: '90%',
-    height: 60,
+    padding: 5,
+    width: '95%',
   },
   num: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: '#474747',
-    justifyContent: 'center',
-    alignItems: 'center',
+    color: '#666',
   },
   title: {
     flexDirection: 'row',
     textAlign: 'center',
-    fontWeight: '200',
-    fontSize: 10,
-    color: 'black',
+    color: '#949494',
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
@@ -476,45 +666,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sel: {
-    flexDirection: 'row',
-    textAlign: 'center',
     fontWeight: '200',
     fontSize: 10,
-    color: 'black',
+    color: '#666',
+    margin: 5,
     justifyContent: 'center',
     alignContent: 'center',
-    alignItems: 'center',
-    margin: 5,
-  },
-  titlekwh: {
-    textAlign: 'center',
-    fontWeight: '400',
-    fontSize: 14,
-    color: 'black',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   slider: {
     width: '80%',
     alignSelf: 'center',
-    marginTop: 1,
     marginBottom: 3,
-  },
-  context: {
-    fontSize: 10,
-    fontWeight: '200',
-    color: 'black',
-    paddingRight: 5,
-    paddingLeft: 5,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignSelf: 'center',
-  },
-  stepper: {
-    alignSelf: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    paddingBottom: 15,
   },
 });
 
@@ -524,4 +687,10 @@ export default connect(({ dpState }) => ({
   ModeChannel: dpState[ModeChannelCode],
   TimerSettings: dpState[TimerSettingsCode],
   ReportProgTemp: dpState[ReportProgTempCode],
+  Relay2flag: dpState[Relay2flagCode],
+  OpenWindowStatus: dpState[OpenWindowStatusCode],
+  FaultAlarm: dpState[FaultAlarmCode],
+  ReportTemperature: dpState[ReportTemperatureCode],
+  SensorSet2: dpState[SensorSet2Code],
+  OpenWndW: dpState[OpenWndWCode],
 }))(Zone2);

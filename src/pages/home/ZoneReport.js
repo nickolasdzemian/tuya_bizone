@@ -100,7 +100,8 @@ class ZoneReport extends React.PureComponent {
             </TYText>
             <View>
               <TYText style={styles.titleE}>
-                {RelayPower1} 
+                {RelayPower1 / 1000} 
+                {' '}
                 {Strings.getLang('kwh')}
               </TYText>
             </View>
@@ -126,7 +127,8 @@ class ZoneReport extends React.PureComponent {
             </TYText>
             <View>
               <TYText style={styles.titleE}>
-                {RelayPower2} 
+                {RelayPower2 / 1000} 
+                {' '}
                 {Strings.getLang('kwh')}
               </TYText>
             </View>

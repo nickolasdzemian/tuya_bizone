@@ -1,6 +1,10 @@
 /* eslint-disable max-len */
 export default {
   en: {
+
+    // Statistics
+    strUnits: 'kW*h',
+
     apl: 'Wait for applying..',
     apl2: 'Downloading..',
 
@@ -9,24 +13,32 @@ export default {
     programmW: 'Week programm',
 
     // HomeScreen
-    now_temp: 'curr. temp',
+
+    Nz1: 'First zone',
+    Nz2: 'Second zone',
+    relaySS: 'Relay status',
+    pwrOFF: 'Power is off now',
+
+    now_temp: 'Сurrent temp.',
+    now_temp_air: 'Air temp.',
     airtemp: 'Current air temperature',
     wintime: 'MIN left',
     wintitle: 'Opn window',
-    sen_err: 'SENSOR FAULT',
+    sen_err: 'Sensor',
     pwr: 'Power',
     status: 'State',
     kwh: 'kW⋅h',
-    on: 'ON',
-    off: 'OFF',
+    on: 'Heating',
+    oncool: 'Cooling',
+    off: 'Stand by',
     alarma: 'Warning!',
     manualtemp: 'Selected manual temperature',
-    fantitle: 'Selected speed for the fan',
-    FAN_OFF: 'OFF',
-    FAN_LOW: 'Low',
-    FAN_MID: 'Mid',
-    FAN_HIGH: 'High',
-    FAN_AUTO: 'AUTO',
+    fantitle: 'Selected speed',
+    0: 'OFF',
+    1: 'Low',
+    2: 'Mid',
+    3: 'High',
+    4: 'AUTO',
     settings: 'Settings',
     mode: 'Mode',
     manualmode: 'Manual mode',
@@ -81,6 +93,8 @@ export default {
     loadcapacity1: 'Setup load capacity for power consumption statistics',
     loadcapacity10: 'Power of I zone (watts):',
     loadcapacity20: 'Power of II zone (watts):',
+
+    faq: 'F.A.Q. and info',
 
     // Settings Climate
     climateSw: 'Climate control mode',
@@ -186,24 +200,32 @@ export default {
     programmW: 'Недельное программирование',
 
     // HomeScreen
-    now_temp: 'Текущ. темп.',
+
+    Nz1: 'Первая зона',
+    Nz2: 'Вторая зона',
+    relaySS: 'Статус реле',
+    pwrOFF: 'Питание выключено',
+
+    now_temp: 'Текущая темп.',
+    now_temp_air: 'Темп. воздуха',
     airtemp: 'Текущая температура воздуха',
     wintime: 'МИН осталось',
     wintitle: 'Окно открыто',
-    sen_err: 'датчика',
+    sen_err: 'Датчик',
     pwr: 'Питание',
     status: 'Состояние',
     kwh: 'кВт⋅ч',
-    on: 'ON',
-    off: 'OFF',
+    on: 'Нагрев',
+    oncool: 'Охлаждение',
+    off: 'Ожидание',
     alarma: 'Ошибка!',
     manualtemp: 'Температура поддержания',
-    fantitle: 'Выбор скорости вентилятора',
-    FAN_OFF: 'ВЫКЛ',
-    FAN_LOW: 'Медл',
-    FAN_MID: 'Средн',
-    FAN_HIGH: 'Макс',
-    FAN_AUTO: 'АВТО',
+    fantitle: 'Cкорость вентилятора',
+    0: 'ВЫКЛ',
+    1: 'Медл',
+    2: 'Средн',
+    3: 'Макс',
+    4: 'АВТО',
     settings: 'Настройки',
     mode: 'Режим',
     manualmode: 'Постоянное поддержание',
@@ -258,6 +280,8 @@ export default {
     loadcapacity1: 'Настройка мощности для учёта статистики',
     loadcapacity10: 'Мощность I зоны (ватт):',
     loadcapacity20: 'Мощность II зоны (ватт):',
+
+    faq: 'F.A.Q. и инфо',
 
     // Settings Climate
     climateSw: 'Режим климат-контроля',
@@ -363,24 +387,32 @@ export default {
     programmW: 'Недельное программирование',
 
     // HomeScreen
-    now_temp: 'Текущ. темп.',
+
+    Nz1: 'Первая зона',
+    Nz2: 'Вторая зона',
+    relaySS: 'Статус реле',
+    pwrOFF: 'Питание выключено',
+
+    now_temp: 'Текущая темп.',
+    now_temp_air: 'Темп. воздуха',
     airtemp: 'Текущая температура воздуха',
     wintime: 'МИН осталось',
     wintitle: 'Окно открыто',
-    sen_err: 'датчика',
+    sen_err: 'Датчик',
     pwr: 'Питание',
     status: 'Состояние',
     kwh: 'кВт⋅ч',
-    on: 'ON',
-    off: 'OFF',
+    on: 'Нагрев',
+    oncool: 'Охлаждение',
+    off: 'Ожидание',
     alarma: 'Ошибка!',
     manualtemp: 'Температура поддержания',
-    fantitle: 'Выбор скорости вентилятора',
-    FAN_OFF: 'ВЫКЛ',
-    FAN_LOW: 'Медл',
-    FAN_MID: 'Средн',
-    FAN_HIGH: 'Макс',
-    FAN_AUTO: 'АВТО',
+    fantitle: 'Скорость вентилятора',
+    0: 'ВЫКЛ',
+    1: 'Медл',
+    2: 'Средн',
+    3: 'Макс',
+    4: 'АВТО',
     settings: 'Настройки',
     mode: 'Режим',
     manualmode: 'Постоянное поддержание',
@@ -435,6 +467,8 @@ export default {
     loadcapacity1: 'Настройка мощности для учёта статистики',
     loadcapacity10: 'Мощность I зоны (ватт):',
     loadcapacity20: 'Мощность II зоны (ватт):',
+
+    faq: 'F.A.Q. и инфо',
 
     // Settings Climate
     climateSw: 'Режим климат-контроля',

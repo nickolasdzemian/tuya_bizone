@@ -1,24 +1,22 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { Tabs, TYSdk, TYText, Utils } from 'tuya-panel-kit';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Tabs, TYSdk, TYText, Utils, Notification } from 'tuya-panel-kit';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { version } from '../../../package.json';
 import Strings from '../../i18n/index.ts';
 import dpCodes from '../../config/dpCodes.ts';
 import Common from './common/index';
 import ClimateScene from './climate/climate';
 import ZonesScene from './zones/index';
+import ChartView from '../stat/chart';
 
 const TYDevice = TYSdk.device;
 const { isIos } = Utils.RatioUtils;
 const { Christ: ChristCode } = dpCodes;
 const Christ = this.props;
-
-const Christmass = () =>
-  TYDevice.putDeviceData({
-    [ChristCode]: !Christ,
-  });
 
 export default class WithContentTabsSSettings extends React.PureComponent {
   constructor(props) {
@@ -26,6 +24,7 @@ export default class WithContentTabsSSettings extends React.PureComponent {
     this.state = {
       activeKey1: '1',
       d1: [
+        { value: '0', label: 'ПопаЖопа'},
         { value: '1', label: Strings.getLang('common_set') },
         { value: '2', label: Strings.getLang('climate_set') },
         { value: '3', label: Strings.getLang('zones') },
@@ -37,43 +36,61 @@ export default class WithContentTabsSSettings extends React.PureComponent {
     this.setState({ activeKey1: tab.value });
   };
 
+  diablo() {
+    TYDevice.putDeviceData({
+      [ChristCode]: !Christ,
+    });
+    Notification.show({
+      message: 'Под музыку Рождественского чуда ты инициировал вызов Сатаны. Да пребудет с тобой Его сила!',
+      onClose: () => {
+        Notification.hide();
+      },
+      theme: {
+        successIcon: 'red',
+        errorIcon: 'yellow',
+        warningIcon: 'black',
+      },
+    }); 
+  } 
+
   render() {
     return (
       <View style={{ flex: 1 }}>
         <Tabs
           style={{ paddingBottom: 10, marginVertical: 5 }}
-          maxItem={3}
+          maxItem={4}
           activeKey={this.state.activeKey1}
           dataSource={this.state.d1}
-          swipeable={isIos}
+          // swipeable={isIos}
+          swipeable={false}
           velocityThreshold={0.65}
           onChange={this._handleD1Change}
           preload={false}
           activeColor="#474747"
-          tabActiveTextStyle={{ fontWeight: 'bold', fontSize: 20 }}
-          tabStyle={{ width: 80 }}
+          tabActiveTextStyle={{ fontWeight: 'bold', fontSize: 18 }}
+          tabStyle={{ width: 90 }}
           tabActiveStyle={{ backgroundColor: '#fff' }}
           underlineStyle={{ backgroundColor: '#fff' }}
         >
           <Tabs.TabPanel>
             <ScrollView>
+              <ChartView />
+            </ScrollView>
+          </Tabs.TabPanel>
+          <Tabs.TabPanel>
+            <ScrollView>
               <Common />
-              {/* <SafeAreaView style={styles.tinyLogo}>
-                <Image style={styles.tinyLogo} source={require('../../../res/ATL.png')} />
-              </SafeAreaView> */}
-              <TouchableOpacity style={styles.ver} onLongPress={Christmass}>
-                <TYText style={styles.ver}>
-                  v
-                  {version}
-                  {' '}
-                  with Tuya cloud support
-                  {'\n'}
-                  by nickolashka
-                  {'\n'}
-                  for development purposes only
-                  {'\n'}
-                  n.pozdnyakov@sst.ru
-                </TYText>
+              <ClimateScene />
+              <ZonesScene />
+              <TouchableOpacity 
+                style={styles.ver} 
+                onPress={() => TYSdk.mobile.jumpTo('https://sstcloud.ru/tuya/bizone')}
+                alignSelf="center"
+                onLongPress={() => this.diablo()}
+              >
+                <FontAwesomeIcon icon={faInfoCircle} color="#666" size={30} marginBottom={5} />
+                <TYText style={{ color: '#333' }}>{Strings.getLang('faq')}</TYText>
+                <TYText style={{ color: '#333' }}>{`v ${version}`}</TYText>
               </TouchableOpacity>
             </ScrollView>
           </Tabs.TabPanel>
@@ -95,13 +112,8 @@ export default class WithContentTabsSSettings extends React.PureComponent {
 
 const styles = StyleSheet.create({
   ver: {
-    textAlign: 'center',
-    color: 'red',
-    fontWeight: '100',
-    fontSize: 10,
-    flexWrap: 'wrap',
-    letterSpacing: 2,
-    marginTop: 120,
+    alignContent: 'center',
+    alignItems: 'center',
   },
   // tinyLogo: {
   //   alignItems: 'center',
