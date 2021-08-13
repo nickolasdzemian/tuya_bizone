@@ -264,6 +264,12 @@ class Zone2 extends PureComponent {
     this.setState({ power: C === '01' ? '00' : '01' });
   };
 
+  async closeCollapse() {
+    setTimeout(() => {
+      this.setState({ bar: true });
+    }, 14000);
+  };
+
   render() {
     const { Relay2flag, OpenWindowStatus, FaultAlarm, SensorSet2, OpenWndW } = this.props;
 
@@ -302,9 +308,7 @@ class Zone2 extends PureComponent {
             activeOpacity={0.9}
             onPress={() => {
               this.setState({ bar: !hidden });
-              setTimeout(() => {
-                this.setState({ bar: true });
-              }, 14000);
+              // this.closeCollapse();
             }}
           >
             <TYText

@@ -16,6 +16,8 @@ import Setting from './pages/setting/index';
 import Zone1 from './pages/charts/zone1/index';
 import Zone2 from './pages/charts/zone2/index';
 import Climate from './pages/charts/climate/index';
+import ZonesScene from './pages/setting/zones/index';
+import CounterChartsScene from './pages/stat/index';
 
 console.disableYellowBox = true;
 
@@ -46,6 +48,22 @@ class MainLayout extends NavigatorLayout<Props> {
         break;
       case 'SettingScene':
         routeProps.title = Strings.getLang('mainSettings');
+        routeProps.topbarTextStyle = { color: '#474747', fontWeight: 'bold', fontSize: 20 };
+        routeProps.background = {
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
+        };
+        break;
+      case 'ZonesScene':
+        routeProps.title = Strings.getLang('ZonesScene');
+        routeProps.topbarTextStyle = { color: '#474747', fontWeight: 'bold', fontSize: 20 };
+        routeProps.background = {
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
+        };
+        break;
+      case 'CounterChartsScene':
+        routeProps.title = Strings.getLang('CounterChartsScene');
         routeProps.topbarTextStyle = { color: '#474747', fontWeight: 'bold', fontSize: 20 };
         routeProps.background = {
           '3%': '#FFFFFF',
@@ -103,6 +121,12 @@ class MainLayout extends NavigatorLayout<Props> {
         break;
       case 'SettingScene':
         component = <Setting />;
+        break;
+      case 'ZonesScene':
+        component = <ZonesScene />;
+        break;
+      case 'CounterChartsScene':
+        component = <CounterChartsScene />;
         break;
       case 'ChartClimateScene':
         component = <Climate />;

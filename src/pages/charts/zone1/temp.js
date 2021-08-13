@@ -431,25 +431,28 @@ class ChartTemp1 extends PureComponent {
       let part1 = DATA2.slice(0, 84);
       part1 = part1.map(a => (Object.values(a)).join('')).join('');
       part1 = JSON.parse(JSON.stringify(part1));
-      TYDevice.putDeviceData({
-        [chart_1_part_1Code]: part1.length === 0 ? String(`${L}00`) : String(L + part1),
-      });
+      // TYDevice.putDeviceData({
+      //   [chart_1_part_1Code]: part1.length === 0 ? String(`${L}00`) : String(L + part1),
+      // });
       let part2 = DATA2.slice(84, 168);
       part2 = part2.map(a => (Object.values(a)).join('')).join('');
       part2 = JSON.parse(JSON.stringify(part2));
-      TYDevice.putDeviceData({
-        [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
-      });
+      // TYDevice.putDeviceData({
+      //   [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
+      // });
       let part3 = DATA2.slice(168, 252);
       part3 = part3.map(a => (Object.values(a)).join('')).join('');
       part3 = JSON.parse(JSON.stringify(part3));
-      TYDevice.putDeviceData({
-        [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
-      });
+      // TYDevice.putDeviceData({
+      //   [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
+      // });
       let part4 = DATA2.slice(252, 336); 
       part4 = part4.map(a => (Object.values(a)).join('')).join('');
       part4 = JSON.parse(JSON.stringify(part4));
       TYDevice.putDeviceData({
+        [chart_1_part_1Code]: part1.length === 0 ? String(`${L}00`) : String(L + part1),
+        [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
+        [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
         [chart_1_part_4Code]: part4.length === 0 ? String(`${L}00`) : String(L + part4),
       });
     }
@@ -480,6 +483,7 @@ class ChartTemp1 extends PureComponent {
         />
         <Picker
           style={styles.tempPicker}
+          theme={{ fontSize: 20 }}
           // loop={true} - not working with iOS 14 and above
           itemStyle={styles.tempPicker}
           selectedValue={temp}
@@ -489,6 +493,7 @@ class ChartTemp1 extends PureComponent {
           {this.state.dutemps.map(stepperValue => (
             <Picker.Item
               style={styles.tempPicker}
+              theme={{ fontSize: 20 }}
               key={stepperValue}
               value={stepperValue}
               label={String(`${stepperValue} °C`)}
@@ -507,6 +512,7 @@ class ChartTemp1 extends PureComponent {
         <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
         <TimerPicker
           style={styles.timerPicker}
+          theme={{ fontSize: 20 }}
           startTime={time}
           is12Hours={false}
           singlePicker={true}

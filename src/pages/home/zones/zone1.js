@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { TYSdk, Slider, Collapsible, Popup, TYText, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -258,6 +258,12 @@ class Zone1 extends PureComponent {
     this.setState({ power: C === '01' ? '00' : '01' });
   };
 
+  closeCollapse() {
+    setTimeout(() => {
+      this.setState({ bar: true });
+    }, 14000);
+  };
+
   render() {
     const { Relay1flag, OpenWindowStatus, FaultAlarm, SensorSet1, OpenWndW } = this.props;
 
@@ -296,9 +302,7 @@ class Zone1 extends PureComponent {
             activeOpacity={0.9}
             onPress={() => {
               this.setState({ bar: !hidden });
-              setTimeout(() => {
-                this.setState({ bar: true });
-              }, 14000);
+              // this.closeCollapse();
             }}
           >
             <TYText

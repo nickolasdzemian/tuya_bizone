@@ -20,7 +20,7 @@ import Strings from '../../i18n';
 // import 'babel-polyfill';
 // import { ScrollView } from 'react-native-gesture-handler';
 
-const { RelayPower1: RelayPower1Code, RelayPower2: RelayPower2Code } = dpCodes;
+const { RelayPower1: RelayPower1Code, RelayPower2: RelayPower2Code, ClimateSelector: ClimateSelectorCode, chSelector: chSelectorCode } = dpCodes;
 const { convertY: cy } = Utils.RatioUtils;
 const TYNative = TYSdk.native;
 
@@ -28,6 +28,8 @@ class ChartView extends Component {
   static propTypes = {
     idCount: PropTypes.number,
     settingsCounter: PropTypes.string,
+    ClimateSelector: PropTypes.bool,
+    chSelector: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -35,6 +37,8 @@ class ChartView extends Component {
     settingsCounter:
       // eslint-disable-next-line max-len
       '01001100010a000001000000020a000001000000030a000001000000040a000001000000050a000001000000060a000001000000070a000001000000080a0000',
+    ClimateSelector: false,
+    chSelector: false,
   };
 
   constructor(props) {
@@ -362,15 +366,16 @@ class ChartView extends Component {
 
   render() {
     const I = this.periodSelect;
+    const { ClimateSelector, chSelector } = this.props;
 
     const Item = ({ id, x, y }) => (
       <View style={{ flexDirection: 'row', backgroundColor: '#fff', padding: 10, borderRadius: 7, marginBottom: 5, marginHorizontal: 20, justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
-          <FontAwesomeIcon icon={faCalendarAlt} color="#2f90d4" size={20} marginRight={8} />
+          <FontAwesomeIcon icon={faCalendarAlt} color={ClimateSelector === true ? '#90EE90' : '#ff7300'} size={20} marginRight={8} />
           <TYText>{this.periodSelect === 0 ? `${x < 10 ? `0${x}:00` : `${x}:00`}` : x}</TYText>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
-          <FontAwesomeIcon icon={faWeight} color="#2f90d4" size={20} marginRight={8} />
+          <FontAwesomeIcon icon={faWeight} color={ClimateSelector === true ? '#90EE90' : '#ff7300'} size={20} marginRight={8} />
           <TYText>{`${y === this.state.яблоко ? '0' : y} m\u00B3`}</TYText>
         </View>
       </View>
@@ -383,7 +388,7 @@ class ChartView extends Component {
       <SafeAreaView style={[{ backgroundColor: '#f0f0f0', marginBottom: 5, flex: 1 }]}>
         <View style={[styles.container, { backgroundColor: '#FFF', borderBottomStartRadius: 20, borderBottomEndRadius: 20, marginBottom: 10 }]}>
           <TouchableOpacity
-            style={{ flexDirection: 'row', justifyContent: 'space-between', height: cy(38), borderColor: '#2f90d4', borderRadius: 16, borderWidth: 0.7 }}
+            style={{ flexDirection: 'row', justifyContent: 'space-between', height: cy(38), borderColor: ClimateSelector === true ? '#90EE90' : '#ff7300', borderRadius: 16, borderWidth: 0.7 }}
             activeOpacity={0.7}
             onPress={() => {
               this.setState({ ini: false });
@@ -401,7 +406,7 @@ class ChartView extends Component {
                       defaultDate={this.state.dateStart}
                       onDateChange={date => this.setState({ dateStart: new Date(date) })}
                       style={styles.datePickerStyle}
-                      pickerFontColor="#2f90d4"
+                      pickerFontColor={ClimateSelector === true ? '#90EE90' : '#ff7300'}
                       dateSortKeys={['day', 'month', 'year']}
                       // mode={this.periodSelect === 1 ? 'date' : 'year'}
                       mode="date"
@@ -411,7 +416,7 @@ class ChartView extends Component {
                       defaultDate={this.state.dateEnd}
                       onDateChange={date => this.setState({ dateEnd: new Date(date) })}
                       style={styles.datePickerStyle}
-                      pickerFontColor="#2f90d4"
+                      pickerFontColor={ClimateSelector === true ? '#90EE90' : '#ff7300'}
                       dateSortKeys={['day', 'month', 'year']}
                       // mode={this.periodSelect === 1 ? 'date' : 'year'}
                       mode="date"
@@ -444,7 +449,7 @@ class ChartView extends Component {
               });
             }}
           >
-            <FontAwesomeIcon icon={faExchangeAlt} color="#2f90d4" size={22} marginLeft={12} marginRight={8} alignSelf="center" />
+            <FontAwesomeIcon icon={faExchangeAlt} color={ClimateSelector === true ? '#90EE90' : '#ff7300'} size={22} marginLeft={12} marginRight={8} alignSelf="center" />
             <TYText style={[styles.textButtonStep, { alignSelf: 'center'}]}>{this.intervalText}</TYText>
             <FontAwesomeIcon icon={faPen} color="#999" size={19} marginLeft={8} marginRight={12} alignSelf="center" />
           </TouchableOpacity>
@@ -469,10 +474,10 @@ class ChartView extends Component {
               <View
                 style={[
                   styles.buttonView1,
-                  { backgroundColor: this.state.isChart ? '#ddd' : '#2f90d4' },
+                  { backgroundColor: this.state.isChart ? '#ddd' : (ClimateSelector === true ? '#90EE90' : '#ff7300') },
                 ]}
               >
-                <TYText style={[styles.textButton]}>{Strings.getLang('пыщь1')}</TYText>
+                <TYText style={[styles.textButton]}>{Strings.getLang(ClimateSelector === true && chSelector === false ? 'пыщь1кли' : ClimateSelector === true && chSelector === true ? 'пыщь2кли' : 'пыщь1')}</TYText>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
@@ -494,17 +499,17 @@ class ChartView extends Component {
               <View
                 style={[
                   styles.buttonView3,
-                  { backgroundColor: this.state.isChart ? '#2f90d4' : '#ddd' },
+                  { backgroundColor: this.state.isChart ? (ClimateSelector === true ? '#90EE90' : '#ff7300') : '#ddd' },
                 ]}
               >
-                <TYText style={[styles.textButton]}>{Strings.getLang('пыщь2')}</TYText>
+                <TYText style={[styles.textButton]}>{Strings.getLang(ClimateSelector === true && chSelector === false ? 'пыщь2кли' : ClimateSelector === true && chSelector === true ? 'пыщь1кли' : 'пыщь2')}</TYText>
               </View>
             </TouchableOpacity>
           </View>
         </View>
         {this.state.dataVictory === null || this.state.dataVictory.length < 1 ? (
           <View style={{ height: cy(550), alignSelf: 'center', alignContent: 'center', justifyContent: 'center'}}>
-            <FontAwesomeIcon icon={faCalendarTimes} color="#2f90d4" size={65} alignSelf="center" marginBottom={35} />
+            <FontAwesomeIcon icon={faCalendarTimes} color={ClimateSelector === true ? '#90EE90' : '#ff7300'} size={65} alignSelf="center" marginBottom={35} />
             <TYText style={[styles.textButton]}>{Strings.getLang('пыщьпыщь')}</TYText>
           </View>
         ) : 
@@ -530,11 +535,11 @@ class ChartView extends Component {
                   backgroundGradientTo: '#fff',
                   decimalPlaces: 0, // optional, defaults to 2dp
                   barPercentage: this.state.dataVictory.length < 20 ? 0.5 : 0.1,
-                  color: (opacity = 1) => `rgba(47, 144, 212, ${opacity})`,
+                  color: (opacity = 1) => {ClimateSelector === true ? `rgba(144, 238, 144, ${opacity})` : `rgba(255, 115, 0, ${opacity})`;},
                   labelColor: (opacity = 1) => `rgba(102, 102, 102, ${opacity})`,
                   propsForDots: {
                     r: '4',
-                    stroke: '#2f90d4'
+                    stroke: ClimateSelector === true ? '#90EE90' : '#ff7300'
                   }
                 }}
                 withVerticalLines={false}
@@ -572,11 +577,11 @@ class ChartView extends Component {
                   backgroundGradientTo: '#fff',
                   decimalPlaces: 0, // optional, defaults to 2dp
                   barPercentage: this.state.dataVictory.length < 20 ? 0.5 : 0.1,
-                  color: (opacity = 1) => `rgba(47, 144, 212, ${opacity})`,
-                  labelColor: (opacity = 1) => `rgba(102, 102, 102, ${opacity})`,
+                  color: (opacity = 1) => {ClimateSelector === true ? `rgba(144, 238, 144, ${opacity})` : `rgba(255, 115, 0, ${opacity})`;},
+                  labelColor: (opacity = 1) => {ClimateSelector === true ? `rgba(144, 238, 144, ${opacity})` : `rgba(255, 115, 0, ${opacity})`;},
                   propsForDots: {
                     r: '4',
-                    stroke: '#2f90d4'
+                    stroke: ClimateSelector === true ? '#90EE90' : '#ff7300'
                   }
                 }}
                 withVerticalLines={false}
@@ -651,4 +656,6 @@ const styles = StyleSheet.create({
 export default connect(({ dpState }) => ({
   RelayPower1: dpState[RelayPower1Code],
   RelayPower2: dpState[RelayPower2Code],
+  ClimateSelector: dpState[ClimateSelectorCode],
+  chSelector: dpState[chSelectorCode],
 }))(ChartView);

@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TYFlatList, Popup, TYSdk } from 'tuya-panel-kit';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faWind } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 
@@ -64,9 +67,60 @@ class AirCorrScene extends Component {
   }
 
   render() {
-    return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
+    return (
+      <TouchableOpacity
+        style={styles.area}
+        activeOpacity={0.8}
+        onPress={() =>
+          Popup.numberSelector({
+            title: aircorr,
+            cancelText,
+            confirmText,
+            type: 'slider',
+            value: this.getDataCorr(),
+            maximumTrackTintColor: 'rgba(47, 47, 47, 0.5)',
+            minimumTrackTintColor: '#FF7300',
+            min: -9,
+            max: 9,
+            onMaskPress: ({ close }) => {
+              close();
+            },
+            onConfirm: (value, { close }) => {
+              TYDevice.putDeviceData({
+                [TemperatureCorrCode]: value,
+              });
+              if (value < 11) {
+                close();
+              } else {
+                return false;
+              }
+            },
+          })}
+      >
+        <FontAwesomeIcon icon={faWind} color="#FF7300" size={18} />
+        <TYText style={styles.items}>{aircorr}</TYText>
+      </TouchableOpacity>
+    );
   }
 }
+
+const styles = StyleSheet.create({
+  area: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+  },
+  items: {
+    marginLeft: 10,
+    color: '#333',
+    fontSize: 16,
+  },
+});
 
 export default connect(({ dpState }) => ({
   TemperatureCorr: dpState[TemperatureCorrCode],

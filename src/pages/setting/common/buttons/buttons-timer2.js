@@ -2,10 +2,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, StyleSheet, ScrollView, View } from 'react-native';
+import { Text, StyleSheet, ScrollView, View, AsyncStorage } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { Cache } from 'react-native-cache';
 import Strings from '../../../../i18n/index.ts';
 import dpCodes from '../../../../config/dpCodes.ts';
 
@@ -32,6 +33,14 @@ const convertMinsToTimeM = mins => {
   minutes = minutes < 10 ? `0${minutes}` : minutes;
   return `${hours}:${minutes}`;
 };
+
+const cache = new Cache({
+  namespace: 'BtnsConfig',
+  policy: {
+    maxEntries: 50000
+  },
+  backend: AsyncStorage
+});
 
 class ButtonsTimer2S extends Component {
   constructor(props) {

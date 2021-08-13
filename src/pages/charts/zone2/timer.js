@@ -476,6 +476,7 @@ class ChartTime2 extends PureComponent {
         />
         <Picker
           style={styles.tempPicker}
+          theme={{ fontSize: 20 }}
           // loop={true} - not working with iOS 14 and above
           itemStyle={styles.tempPicker}
           selectedValue={temp}
@@ -485,6 +486,7 @@ class ChartTime2 extends PureComponent {
           {this.state.dutemps.map(stepperValue => (
             <Picker.Item
               style={styles.tempPicker}
+              theme={{ fontSize: 20 }}
               key={stepperValue}
               value={stepperValue}
               label={String(`${Strings.getLang(stepperValue)}`)}
@@ -503,6 +505,7 @@ class ChartTime2 extends PureComponent {
         <FontAwesomeIcon icon={faBusinessTime} color="#474747" size={25} />
         <TimerPicker
           style={styles.timerPicker}
+          theme={{ fontSize: 20 }}
           startTime={time}
           is12Hours={false}
           singlePicker={true}

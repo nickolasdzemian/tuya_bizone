@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TYFlatList, Popup, TYSdk } from 'tuya-panel-kit';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 
@@ -26,23 +29,18 @@ class BrightnessScene extends Component {
     this.state = {};
   }
 
-  getDataLight() {
-    const { Backlight } = this.props;
-    return Backlight;
-  }
-
-  get data() {
-    return [
-      {
-        key: BacklightCode,
-        title: brightnessText,
-        onPress: () => {
+  render() {
+    return (
+      <TouchableOpacity
+        style={styles.area}
+        activeOpacity={0.8}
+        onPress={() =>
           Popup.numberSelector({
             title: brightnessText,
             cancelText,
             confirmText,
             type: 'slider',
-            value: this.getDataLight(),
+            value: this.props.Backlight,
             maximumTrackTintColor: 'rgba(47, 47, 47, 0.5)',
             minimumTrackTintColor: '#FF7300',
             min: 0,
@@ -60,16 +58,32 @@ class BrightnessScene extends Component {
                 return false;
               }
             },
-          });
-        },
-      },
-    ];
-  }
-
-  render() {
-    return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
+          })}
+      >
+        <FontAwesomeIcon icon={faSpinner} color="#FF7300" size={18} />
+        <TYText style={styles.items}>{brightnessText}</TYText>
+      </TouchableOpacity>
+    );
   }
 }
+
+const styles = StyleSheet.create({
+  area: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+  },
+  items: {
+    marginLeft: 10,
+    color: '#333',
+    fontSize: 16,
+  },
+});
 
 export default connect(({ dpState }) => ({
   Backlight: dpState[BacklightCode],

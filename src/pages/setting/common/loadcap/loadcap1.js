@@ -1,75 +1,129 @@
-// мощность нагрузки для 1 зоны
+// отрисовка окна для выбора мощности нагрузки
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
-import { Slider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
+import { View, ScrollView, StyleSheet, AsyncStorage } from 'react-native';
+import { Divider, Slider, Stepper, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import { Cache } from 'react-native-cache';
 import Strings from '../../../../i18n';
 import dpCodes from '../../../../config/dpCodes';
 
-const TYDevice = TYSdk.device;
-const { PowerRate1: PowerRate1Code } = dpCodes;
+const { PowerRate1: PowerRate1Code, PowerRate2: PowerRate2Code } = dpCodes;
 
-class LoadCapacity1 extends Component {
-  static propTypes = {
-    PowerRate1: PropTypes.number,
-  };
-  static defaultProps = {
-    PowerRate1: 1000,
-  };
-  state = {
-    value: this.props.PowerRate1,
-  };
+const cache = new Cache({
+  namespace: 'Capacity',
+  policy: {
+    maxEntries: 50000
+  },
+  backend: AsyncStorage
+});
 
-  // функция выбора мощности (с округлением до целого числа)
-  _handleComplete = value => {
-    this.setState({ value: Math.round(value) });
-    TYDevice.putDeviceData({
-      [PowerRate1Code]: value,
-    });
-  };
+class LoadCapacity0 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value1: this.props.PowerRate1,
+      value2: this.props.PowerRate2,
+    };
+  }
 
-  render = () => {
+  _handleComplete(value) {
+    this.setState({ value1: Math.round(value) });
+    cache.set('value1', value);
+  }
+
+  _handleComplete2(value) {
+    this.setState({ value2: Math.round(value) });
+    cache.set('value2', value);
+  }
+
+  render() {
     return (
-      <View style={styles.pickerContainer}>
-        <View style={styles.title}>
-          <FontAwesomeIcon icon={faBolt} color="#ffb700" size={25} />
-          <TYText style={styles.title}>{Strings.getLang('loadcapacity10')}</TYText>
+      <ScrollView style={styles.main}>
+        <View style={styles.pickerContainer}>
+          <View style={styles.title}>
+            <FontAwesomeIcon icon={faBolt} color="#ffb700" size={25} />
+            <TYText style={styles.title}>{Strings.getLang('loadcapacity10')}</TYText>
+          </View>
+          <TYText style={styles.buttontext}>{this.state.value1} W</TYText>
+          <Slider.Horizontal
+            style={{ width: '90%' }}
+            canTouchTrack={true}
+            maximumValue={3500}
+            stepValue={1}
+            minimumValue={1}
+            value={this.state.value1}
+            maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
+            minimumTrackTintColor="#ffb700"
+            onValueChange={value => this.setState({ value1: Math.round(value) })}
+            onSlidingComplete={value => this._handleComplete(value)}
+            marginBottom={20}
+          />
+          <Stepper
+            buttonType="ellipse"
+            ellipseIconColor="#ffb700"
+            inputStyle={{ color: 'transparent' }}
+            style={{ paddingTop: 15, backgroundColor: '#fff' }}
+            editable={false}
+            onValueChange={value => this._handleComplete(value)}
+            max={3500}
+            stepValue={1}
+            min={1}
+            value={this.state.value1}
+          />
         </View>
-        <TYText style={styles.buttontext}>{this.state.value} W</TYText>
-        <Slider.Horizontal
-          style={{ width: '90%' }}
-          canTouchTrack={true}
-          maximumValue={3500}
-          stepValue={1}
-          minimumValue={1}
-          value={this.state.value}
-          maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-          minimumTrackTintColor="#ffb700"
-          onValueChange={value => this.setState({ value: Math.round(value) })}
-          onSlidingComplete={this._handleComplete}
-          marginBottom={20}
-        />
-        <Stepper
-          buttonType="ellipse"
-          ellipseIconColor="#ffb700"
-          inputStyle={{ color: 'transparent' }}
-          style={{ paddingTop: 15, backgroundColor: '#fff' }}
-          editable={false}
-          onValueChange={this._handleComplete}
-          max={3500}
-          stepValue={1}
-          min={1}
-          value={this.state.value}
-        />
-      </View>
+        <Divider height={3} />
+        <View style={styles.pickerContainer}>
+          <View style={styles.title}>
+            <FontAwesomeIcon icon={faBolt} color="#FF7300" size={22} />
+            <TYText style={styles.title}>{Strings.getLang('loadcapacity20')}</TYText>
+          </View>
+          <TYText style={styles.buttontext}>{this.state.value2} W</TYText>
+          <Slider.Horizontal
+            style={{ width: '90%' }}
+            canTouchTrack={true}
+            maximumValue={3500}
+            stepValue={1}
+            minimumValue={1}
+            value={this.state.value2}
+            maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
+            minimumTrackTintColor="#FF7300"
+            onValueChange={value => this.setState({ value2: Math.round(value) })}
+            onSlidingComplete={value => this._handleComplete2(value)}
+          />
+          <Stepper
+            buttonType="ellipse"
+            ellipseIconColor="#FF7300"
+            inputStyle={{ color: 'transparent' }}
+            style={{ paddingTop: 15, backgroundColor: '#fff' }}
+            editable={false}
+            onValueChange={value => this._handleComplete2(value)}
+            max={3500}
+            stepValue={1}
+            min={1}
+            value={this.state.value2}
+          />
+        </View>
+      </ScrollView>
     );
-  };
+  }
 }
 
+LoadCapacity0.propTypes = {
+  PowerRate1: PropTypes.number,
+  PowerRate2: PropTypes.number,
+};
+LoadCapacity0.defaultProps = {
+  PowerRate1: 1000,
+  PowerRate2: 1000,
+};
+
 const styles = StyleSheet.create({
+  main: {
+    backgroundColor: '#fff',
+  },
   pickerContainer: {
     // height: 188,
     flex: 1,
@@ -101,4 +155,5 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   PowerRate1: dpState[PowerRate1Code],
-}))(LoadCapacity1);
+  PowerRate2: dpState[PowerRate2Code],
+}))(LoadCapacity0);

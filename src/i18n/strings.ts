@@ -97,13 +97,18 @@ export default {
     faq: 'F.A.Q. and info',
 
     // Settings Climate
-    climateSw: 'Climate control mode',
+    globalMode: 'Device mode',
+    climateSw: 'Select thermostat mode:',
+    climateTON: 'Climate control',
+    climateTOFF: 'Heating two zones',
+    climateON: 'Selected: climate control',
+    climateOFF: 'Selected: heating two zones',
     climatemodet: 'Mode settings',
     climatemode: 'Select controlling sensors',
     climateinfot: 'Info',
     climateinfo:
       // eslint-disable-next-line max-len
-      'When climate control mode is on, operating in Zone I and Zone II settings will not take any effect or may be switched off. Be sure what are you doing.',
+      'Be carefull with changing mode!\nPay attention to selected mode!',
     air: 'Air sensor',
     flour_1: 'External sensor 1',
     flour_2: 'External sensor 2',
@@ -111,9 +116,12 @@ export default {
     air_flour_2: 'Air + External sensor 2',
     flour_12: 'External sensors 1 + 2',
     air_flour_12: 'All sensors',
-    chSelector: 'Channel',
+    chSelector: 'Channel selection',
+    chfalse: 'I zone set to cooling, II set to heating',
+    chtrue: 'I zone set to heating, II set to cooling',
 
     // Settings Zones
+    ZonesScene: 'Zones settings',
     windowSw: 'Look up for open window',
     selflearnSw: 'Self-learning or preheat',
     zoneSens: 'Select controlling sensors',
@@ -190,6 +198,17 @@ export default {
     history: 'History',
     unBindUserTip: 'Unbound user',
     unBindUnlock: 'unlock',
+
+    // Stat
+    CounterChartsScene: 'Statistics',
+    пыщь1: 'I zone',
+    пыщь2: 'II zone',
+    пыщь1кли: 'Cooler',
+    пыщь2кли: 'Heater',
+    chartLegend: 'Detailed legend appears at a smaller interval (<20 days).\nData is rounded to the nearest integer.',
+    load: 'Loading',
+    пыщьпыщь: 'There is no data to display',
+
   },
   ru_RU: {
     apl: 'Ждите применения..',
@@ -284,13 +303,18 @@ export default {
     faq: 'F.A.Q. и инфо',
 
     // Settings Climate
-    climateSw: 'Режим климат-контроля',
+    globalMode: 'Режим работы',
+    climateSw: 'Выберите режим терморегулятора:',
+    climateTON: 'Климат контроль',
+    climateTOFF: 'Двухзонный обогрев',
+    climateON: 'Выбран: климат-контроль',
+    climateOFF: 'Выбран: двухзонный обогрев',
     climatemodet: 'Конфигурация режима',
     climatemode: 'Выбор управляющих датчиков',
     climateinfot: 'Информация',
     climateinfo:
       // eslint-disable-next-line max-len
-      'Когда режим климат-контроля включен, конфигурирование Зоны 1 и Зоны 2 не будет иметь эффекта. Настройки для зон не будут сохранены. Будьте внимательны при переключении режима управления!',
+      'Будьте внимательны при переключении режимы работы!\nПереключение режима кардинально изменит вашу жизнь!',
     air: 'Датчик воздуха',
     flour_1: 'Внешний датчик 1',
     flour_2: 'Внешний датчик 2',
@@ -298,9 +322,12 @@ export default {
     air_flour_2: 'Датчик воздуха + Внешний №2',
     flour_12: 'Внешние датчики 1 + 2',
     air_flour_12: 'Все доступные',
-    chSelector: 'Канал',
+    chSelector: 'Настройка каналов',
+    chfalse: 'I зона - охлажение, II - нагрев',
+    chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
+    ZonesScene: 'Настройка по зонам',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
@@ -377,6 +404,16 @@ export default {
     history: 'History',
     unBindUserTip: 'Unbound user',
     unBindUnlock: 'unlock',
+
+    // Stat
+    CounterChartsScene: 'Статистика энергопотребления',
+    пыщь1: 'I зона',
+    пыщь2: 'II зона',
+    пыщь1кли: 'Охлаждение',
+    пыщь2кли: 'Нагрев',
+    chartLegend: 'Детальная легенда отображается при интервале <20 дней.\nДанные округлены до ближайшего целого значения.',
+    load: 'Загрузка',
+    пыщьпыщь: 'Нет данных для отображения',
   },
   ru: {
     apl: 'Ждите применения..',
@@ -471,13 +508,18 @@ export default {
     faq: 'F.A.Q. и инфо',
 
     // Settings Climate
-    climateSw: 'Режим климат-контроля',
+    globalMode: 'Режим работы',
+    climateSw: 'Выберите режим терморегулятора:',
+    climateTON: 'Климат контроль',
+    climateTOFF: 'Двухзонный обогрев',
+    climateON: 'Выбран: климат-контроль',
+    climateOFF: 'Выбран: двухзонный обогрев',
     climatemodet: 'Конфигурация режима',
     climatemode: 'Выбор управляющих датчиков',
     climateinfot: 'Информация',
     climateinfo:
       // eslint-disable-next-line max-len
-      'Когда режим климат-контроля включен, конфигурирование Зоны 1 и Зоны 2 не будет иметь эффекта. Настройки для зон не будут сохранены. Будьте внимательны при переключении режима управления!',
+      'Будьте внимательны при переключении режимы работы!\nПереключение режима кардинально изменит вашу жизнь!',
     air: 'Датчик воздуха',
     flour_1: 'Внешний датчик 1',
     flour_2: 'Внешний датчик 2',
@@ -485,9 +527,12 @@ export default {
     air_flour_2: 'Датчик воздуха + Внешний №2',
     flour_12: 'Внешние датчики 1 + 2',
     air_flour_12: 'Все доступные',
-    chSelector: 'Канал',
+    chSelector: 'Настройка каналов',
+    chfalse: 'I зона - охлажение, II - нагрев',
+    chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
+    ZonesScene: 'Настройка по зонам',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
@@ -564,5 +609,15 @@ export default {
     history: 'History',
     unBindUserTip: 'Unbound user',
     unBindUnlock: 'unlock',
+
+    // Stat
+    CounterChartsScene: 'Статистика энергопотребления',
+    пыщь1: 'I зона',
+    пыщь2: 'II зона',
+    пыщь1кли: 'Охлаждение',
+    пыщь2кли: 'Нагрев',
+    chartLegend: 'Детальная легенда отображается при интервале <20 дней.\nДанные округлены до ближайшего целого значения.',
+    load: 'Загрузка',
+    пыщьпыщь: 'Нет данных для отображения',
   },
 };

@@ -18,7 +18,7 @@ class Button1 extends React.PureComponent {
     super(props);
     this.state = {
       activeKey1: this.props.ButtonSettings.substring(0, 2) === '01' ? '2' : '1',
-      d1: [
+      d1: this.props.ClimateSelector === true ? [{ value: '1', label: Strings.getLang('buttonsmodenametemp') }] : [
         { value: '1', label: Strings.getLang('buttonsmodenametemp') },
         { value: '2', label: Strings.getLang('buttonsmodenametimer') },
       ],

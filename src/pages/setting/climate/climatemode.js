@@ -1,8 +1,11 @@
 // выбор датчиков для климат-режима
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { TYFlatList, Popup, TYSdk } from 'tuya-panel-kit';
+import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faListOl } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
@@ -13,7 +16,6 @@ const { SensorSet3: SensorSet3Code } = dpCodes;
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
 
-const climatemodet = Strings.getLang('climatemodet');
 const climatemode = Strings.getLang('climatemode');
 
 // определение массива с режимами
@@ -61,45 +63,42 @@ class ClimateMode extends Component {
     return SensorSet3;
   }
 
-  get data() {
-    return [
-      {
-        key: this.getDataSensors(),
-        title: climatemodet,
-        onPress: () => {
-          Popup.list({
-            type: 'radio',
-            maxItemNum: 7,
-            dataSource: set,
-            iconTintColor: '#90EE90',
-            title: [climatemode],
-            cancelText,
-            confirmText,
-            showBack: false,
-            onBack: ({ close }) => {
-              console.log('Select climate --none');
-              close();
-            },
-            value: this.getDataSensors(),
-            footerType: 'singleCancel',
-            onMaskPress: ({ close }) => {
-              close();
-            },
-            // выбор режима по нажатию на него
-            onSelect: (value, { close }) => {
-              TYDevice.putDeviceData({
-                [SensorSet3Code]: value,
-              });
-              // close();
-            },
-          });
-        },
+  climatemode() {
+    Popup.list({
+      type: 'radio',
+      maxItemNum: 7,
+      dataSource: set,
+      iconTintColor: '#90EE90',
+      title: [climatemode],
+      cancelText,
+      confirmText,
+      showBack: false,
+      onBack: ({ close }) => {
+        console.log('Select climate --none');
+        close();
       },
-    ];
+      value: this.getDataSensors(),
+      footerType: 'singleCancel',
+      onMaskPress: ({ close }) => {
+        close();
+      },
+      // выбор режима по нажатию на него
+      onSelect: (value, { close }) => {
+        TYDevice.putDeviceData({
+          [SensorSet3Code]: value,
+        });
+        close();
+      },
+    });
   }
 
   render() {
-    return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
+    return (
+      <TouchableOpacity style={styles.area} activeOpacity={0.8} onPress={() => this.climatemode()}>
+        <FontAwesomeIcon icon={faListOl} color="#90EE90" size={18} />
+        <TYText style={styles.items}>{Strings.getLang('climatemodet')}</TYText>
+      </TouchableOpacity>
+    );
   }
 }
 
@@ -109,6 +108,24 @@ ClimateMode.propTypes = {
 ClimateMode.defaultProps = {
   SensorSet3: 'air_flour_12',
 };
+
+const styles = StyleSheet.create({
+  area: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+  },
+  items: {
+    marginLeft: 10,
+    color: '#333',
+    fontSize: 16,
+  },
+});
 
 export default connect(({ dpState }) => ({
   SensorSet3: dpState[SensorSet3Code],

@@ -3,34 +3,49 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text, SafeAreaView, ActivityIndicator } from 'react-native';
-import { Divider, SwitchButton, TYSdk, TYText } from 'tuya-panel-kit';
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { TYSdk, TYText, Notification, Popup } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faSeedling,
-  faInfoCircle,
-  faListOl,
-  faExchangeAlt,
-  faSnowflake,
-  faFireAlt,
+  faProjectDiagram,
+  faSlidersH,
+  faAngleUp,
+  faRulerCombined,
+  faChartLine,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 import ClimateMode from './climatemode';
-import ClimateInfo from './climateinfo';
+import Channel from './climateinfo';
 
 const TYDevice = TYSdk.device;
 
 const { ClimateSelector: ClimateSelectorCode, chSelector: chSelectorCode } = dpCodes;
+
+const cancelText = Strings.getLang('cancelText');
+const confirmText = Strings.getLang('confirmText');
+
+const set = [
+  {
+    key: 'true',
+    title: Strings.getLang('climateTON'),
+    value: 'true',
+  },
+  {
+    key: 'false',
+    title: Strings.getLang('climateTOFF'),
+    value: 'false',
+  },
+];
 
 // включение режима климата и переключение режима каналов
 class ClimateScene extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      climate: this.props.ClimateSelector,
-      channel: this.props.chSelector,
       apl: false,
+      bar: true,
     };
   }
 
@@ -46,79 +61,118 @@ class ClimateScene extends React.PureComponent {
     }
   }
 
+  diablo() {
+    Notification.show({
+      message: Strings.getLang('ModeChanged'),
+      onClose: () => {
+        Notification.hide();
+      },
+      theme: {
+        successIcon: 'red',
+        errorIcon: 'yellow',
+        warningIcon: 'black',
+      },
+    });
+  }
+
+  goToSettingsZZZ = () => {
+    TYSdk.Navigator.push({
+      id: 'ZonesScene',
+      title: Strings.getLang('ZonesScene'),
+    });
+  };
+
+  goToSettingsSSS = () => {
+    TYSdk.Navigator.push({
+      id: 'CounterChartsScene',
+      title: Strings.getLang('CounterChartsScene'),
+    });
+  };
+
   render() {
-    const { ClimateSelector, chSelector } = this.props;
+    const { ClimateSelector } = this.props;
+    const hidden = this.state.bar;
     return (
       <View style={styles.container}>
-        <Divider />
-        <View style={styles.view}>
+        <View style={styles.viewUp}>
           <SafeAreaView style={styles.area}>
-            <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} />
-            <TYText style={styles.items}>{Strings.getLang('climateSw')}</TYText>
+            <FontAwesomeIcon
+              icon={ClimateSelector === true ? faSeedling : faProjectDiagram}
+              color={ClimateSelector === true ? '#90EE90' : '#ffb700'}
+              size={25}
+            />
+            <View>
+              <TYText style={styles.items}>{Strings.getLang('globalMode')}</TYText>
+              <TYText style={styles.subitems}>
+                {Strings.getLang(ClimateSelector === true ? 'climateON' : 'climateOFF')}
+              </TYText>
+            </View>
           </SafeAreaView>
-          <SwitchButton
-            disabled={this.state.apl}
-            style={styles.switch}
-            tintColor="#ffb700"
-            onTintColor="#90EE90"
-            value={this.state.climate}
-            onValueChange={() => {
-              TYDevice.putDeviceData({
-                [ClimateSelectorCode]: !ClimateSelector,
+          {this.state.apl === true ? (
+            <ActivityIndicator color={ClimateSelector === true ? '#90EE90' : '#ff7300'} />
+          ) : null}
+          <TouchableOpacity
+            style={styles.top}
+            activeOpacity={0.9}
+            onPress={() => {
+              Popup.list({
+                type: 'radio',
+                maxItemNum: 2,
+                dataSource: set,
+                iconTintColor: '#90EE90',
+                title: Strings.getLang('climateSw'),
+                subTitle: Strings.getLang('climateinfo'),
+                subTitleTextStyle: { color: 'red' },
+                cancelText,
+                confirmText,
+                showBack: false,
+                onBack: ({ close }) => {
+                  close();
+                },
+                value: String(ClimateSelector),
+                footerType: 'both',
+                onMaskPress: ({ close }) => {
+                  close();
+                },
+                onConfirm: (value, { close }) => {
+                  // this.diablo();
+                  TYDevice.putDeviceData({
+                    [ClimateSelectorCode]: value === 'true',
+                  });
+                  close();
+                },
               });
-              this.setState({ climate: !ClimateSelector });
             }}
-          />
+          >
+            <FontAwesomeIcon
+              icon={hidden === true ? faSlidersH : faAngleUp}
+              color="#ffb700"
+              size={25}
+              marginRight={30}
+            />
+          </TouchableOpacity>
         </View>
-        <Divider />
-        <View style={styles.view}>
-          <SafeAreaView style={styles.area}>
-            <FontAwesomeIcon icon={faExchangeAlt} color="#90EE90" size={20} />
-            <TYText style={styles.items}>{Strings.getLang('chSelector')}</TYText>
-            <SafeAreaView style={styles.полюшко}>
-              <Divider style={styles.divider} />
-              <TYText style={styles.itemsCH}>I</TYText>
-              <FontAwesomeIcon
-                icon={chSelector === false ? faSnowflake : faFireAlt}
-                color={chSelector === false ? '#00d0ff' : '#ffb700'}
-                size={20}
-                marginRight={10}
-              />
-              <Divider style={styles.divider} />
-              <TYText style={styles.itemsCH}>II</TYText>
-              <FontAwesomeIcon
-                icon={chSelector === false ? faFireAlt : faSnowflake}
-                color={chSelector === false ? '#ffb700' : '#00d0ff'}
-                size={20}
-                marginRight={10}
-              />
-              <Divider style={styles.divider} />
-            </SafeAreaView>
-          </SafeAreaView>
-          {this.state.apl === true ? <ActivityIndicator color="#90EE90" /> : null}
-          <SwitchButton
-            disabled={this.state.apl}
-            style={styles.switch}
-            tintColor="#ffb700"
-            onTintColor="#ffb700"
-            value={this.state.channel}
-            onValueChange={() => {
-              TYDevice.putDeviceData({
-                [chSelectorCode]: !chSelector,
-              });
-              this.setState({ channel: !chSelector });
-            }}
-          />
-        </View>
-        <SafeAreaView style={styles.area}>
-          <FontAwesomeIcon icon={faListOl} color="#90EE90" size={20} />
+        {ClimateSelector === true ? (
           <ClimateMode />
-        </SafeAreaView>
-        <SafeAreaView style={styles.area}>
-          <FontAwesomeIcon icon={faInfoCircle} color="#ffb700" size={20} />
-          <ClimateInfo />
-        </SafeAreaView>
-        <Divider />
+        ) : (
+          <TouchableOpacity
+            style={styles.area2}
+            activeOpacity={0.8}
+            onPress={() => this.goToSettingsZZZ()}
+          >
+            <FontAwesomeIcon icon={faRulerCombined} color="#ffb700" size={18} />
+            <TYText style={styles.items2}>{Strings.getLang('ZonesScene')}</TYText>
+          </TouchableOpacity>
+        )}
+        {ClimateSelector === true ? <Channel /> : null}
+        <TouchableOpacity
+          style={styles.area2}
+          activeOpacity={0.8}
+          onPress={() => this.goToSettingsSSS()}
+        >
+          <FontAwesomeIcon icon={faChartLine} color="#666" size={18} />
+          <TYText style={styles.items2}>{Strings.getLang('CounterChartsScene')}</TYText>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -136,41 +190,48 @@ ClimateScene.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
   },
   area: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 20,
   },
-  полюшко: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 10,
-  },
-  divider: {
-    flexDirection: 'column',
-  },
-  itemsCH: {
-    alignItems: 'center',
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 28,
-    paddingRight: 7,
-    paddingLeft: 14,
-  },
-  view: {
+  viewUp: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    // height: '25%',
+    borderBottomStartRadius: 20,
+    borderBottomEndRadius: 20,
   },
   items: {
     alignItems: 'center',
-    fontSize: 16,
-    padding: 14,
+    fontSize: 20,
+    paddingTop: 14,
+    paddingLeft: 14,
   },
-  switch: {
-    paddingRight: 14,
+  subitems: {
+    alignItems: 'center',
+    color: '#949494',
+    paddingLeft: 14,
+    paddingBottom: 14,
+  },
+  area2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+  },
+  items2: {
+    marginLeft: 10,
+    color: '#333',
+    fontSize: 16,
   },
 });
 

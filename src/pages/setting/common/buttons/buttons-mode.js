@@ -2,10 +2,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
-import { TYFlatList, Popup, Divider, TYText } from 'tuya-panel-kit';
+import { StyleSheet, ScrollView, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Popup, Divider, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faTh, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faThLarge, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n/index.ts';
 import dpCodes from '../../../../config/dpCodes.ts';
 import ButtonMode12 from './buttons-mode12';
@@ -35,12 +35,12 @@ class ButtonMode extends Component {
     }
   }
 
-  get data() {
-    return [
-      {
-        key: 'custom',
-        title: Strings.getLang('buttonsmodetitle1'),
-        onPress: () => {
+  render() {
+    return (
+      <TouchableOpacity
+        style={styles.area}
+        activeOpacity={0.8}
+        onPress={() => {
           const CliSel = this.props.ClimateSelector;
           Popup.custom({
             content: (
@@ -79,15 +79,15 @@ class ButtonMode extends Component {
               close();
             },
           });
-        },
-      },
-    ];
-  }
-
-  render() {
-    return <TYFlatList contentContainerStyle={{ paddingTop: 1 }} data={this.data} />;
+        }}
+      >
+        <FontAwesomeIcon icon={faThLarge} color="#FF7300" size={18} />
+        <TYText style={styles.items}>{Strings.getLang('buttonsmodetitle1')}</TYText>
+      </TouchableOpacity>
+    );
   }
 }
+
 ButtonMode.propTypes = {
   ClimateSelector: PropTypes.bool,
   ButtonSettings: PropTypes.string,
@@ -116,6 +116,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: 1,
     letterSpacing: 1,
+  },
+  area: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+  },
+  items: {
+    marginLeft: 10,
+    color: '#333',
+    fontSize: 16,
   },
 });
 
