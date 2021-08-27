@@ -1,11 +1,11 @@
 // выбор датчиков для климат-режима
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExchangeAlt, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
@@ -34,6 +34,7 @@ class ClimateMode extends Component {
   channelss() {
     const { chSelector } = this.props;
     Popup.list({
+      contentCenter: false,
       type: 'radio',
       maxItemNum: 2,
       dataSource: set,
@@ -59,8 +60,13 @@ class ClimateMode extends Component {
   render() {
     return (
       <TouchableOpacity style={styles.area} activeOpacity={0.8} onPress={() => this.channelss()}>
-        <FontAwesomeIcon icon={faExchangeAlt} color="#90EE90" size={18} />
-        <TYText style={styles.items}>{Strings.getLang('chSelector')}</TYText>
+        <View style={styles.area0}>
+          <FontAwesomeIcon icon={faExchangeAlt} color="#90EE90" size={18} />
+          <TYText style={styles.items}>{Strings.getLang('chSelector')}</TYText>
+        </View>
+        <View style={styles.area0}>
+          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+        </View>
       </TouchableOpacity>
     );
   }
@@ -83,6 +89,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: '#fff',
     borderRadius: 12,
+    justifyContent: 'space-between',
+  },
+  area0: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   items: {
     marginLeft: 10,

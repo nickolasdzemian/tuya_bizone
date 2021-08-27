@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faWind } from '@fortawesome/free-solid-svg-icons';
+import { faWind, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 
@@ -97,8 +97,13 @@ class AirCorrScene extends Component {
             },
           })}
       >
-        <FontAwesomeIcon icon={faWind} color="#FF7300" size={18} />
-        <TYText style={styles.items}>{aircorr}</TYText>
+        <View style={styles.area0}>
+          <FontAwesomeIcon icon={faWind} color="#FF7300" size={18} />
+          <TYText style={styles.items}>{aircorr}</TYText>
+        </View>
+        <View style={styles.area0}>
+          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+        </View>
       </TouchableOpacity>
     );
   }
@@ -112,8 +117,13 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
     marginTop: 8,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     borderRadius: 12,
+    justifyContent: 'space-between',
+  },
+  area0: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   items: {
     marginLeft: 10,

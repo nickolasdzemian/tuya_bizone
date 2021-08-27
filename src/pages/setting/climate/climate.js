@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
-import { TYSdk, TYText, Notification, Popup } from 'tuya-panel-kit';
+import { TYSdk, TYText, Notification, Popup, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faSeedling,
@@ -13,6 +13,7 @@ import {
   faAngleUp,
   faRulerCombined,
   faChartLine,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -21,7 +22,16 @@ import Channel from './climateinfo';
 
 const TYDevice = TYSdk.device;
 
-const { ClimateSelector: ClimateSelectorCode, chSelector: chSelectorCode } = dpCodes;
+const {
+  Zone: ZoneCode,
+  ClimateSelector: ClimateSelectorCode,
+  chSelector: chSelectorCode,
+  ButtonSettings: ButtonSettingsCode,
+  chart_1_part_1: chart_1_part_1Code,
+  chart_1_part_2: chart_1_part_2Code,
+  chart_1_part_3: chart_1_part_3Code,
+  chart_1_part_4: chart_1_part_4Code,
+} = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
@@ -116,6 +126,7 @@ class ClimateScene extends React.PureComponent {
             activeOpacity={0.9}
             onPress={() => {
               Popup.list({
+                contentCenter: false,
                 type: 'radio',
                 maxItemNum: 2,
                 dataSource: set,
@@ -138,7 +149,16 @@ class ClimateScene extends React.PureComponent {
                   // this.diablo();
                   TYDevice.putDeviceData({
                     [ClimateSelectorCode]: value === 'true',
+                    [ZoneCode]: '000000',
+                    [ButtonSettingsCode]: '0000',
                   });
+                  // ClimateSelector === true ?
+                  //   TYDevice.putDeviceData({
+                  //     [chart_1_part_1Code]: '000000',
+                  //     [chart_1_part_2Code]: '000000',
+                  //     [chart_1_part_3Code]: '000000',
+                  //     [chart_1_part_4Code]: '000000',
+                  //   }) : null;
                   close();
                 },
               });
@@ -146,32 +166,43 @@ class ClimateScene extends React.PureComponent {
           >
             <FontAwesomeIcon
               icon={hidden === true ? faSlidersH : faAngleUp}
-              color="#ffb700"
+              color="#666"
               size={25}
               marginRight={30}
             />
           </TouchableOpacity>
         </View>
+        <Divider style={{ marginTop: 8 }} />
         {ClimateSelector === true ? (
           <ClimateMode />
         ) : (
           <TouchableOpacity
-            style={styles.area2}
+            style={[styles.area2, { justifyContent: 'space-between' }]}
             activeOpacity={0.8}
             onPress={() => this.goToSettingsZZZ()}
           >
-            <FontAwesomeIcon icon={faRulerCombined} color="#ffb700" size={18} />
-            <TYText style={styles.items2}>{Strings.getLang('ZonesScene')}</TYText>
+            <View style={styles.area0}>
+              <FontAwesomeIcon icon={faRulerCombined} color="#ffb700" size={18} />
+              <TYText style={styles.items2}>{Strings.getLang('ZonesScene')}</TYText>
+            </View>
+            <View style={styles.area0}>
+              <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+            </View>
           </TouchableOpacity>
         )}
         {ClimateSelector === true ? <Channel /> : null}
         <TouchableOpacity
-          style={styles.area2}
+          style={[styles.area2, { justifyContent: 'space-between' }]}
           activeOpacity={0.8}
           onPress={() => this.goToSettingsSSS()}
         >
-          <FontAwesomeIcon icon={faChartLine} color="#666" size={18} />
-          <TYText style={styles.items2}>{Strings.getLang('CounterChartsScene')}</TYText>
+          <View style={styles.area0}>
+            <FontAwesomeIcon icon={faChartLine} color="#666" size={18} />
+            <TYText style={styles.items2}>{Strings.getLang('CounterChartsScene')}</TYText>
+          </View>
+          <View style={styles.area0}>
+            <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+          </View>
         </TouchableOpacity>
       </View>
     );
@@ -180,12 +211,22 @@ class ClimateScene extends React.PureComponent {
 
 ClimateScene.propTypes = {
   ClimateSelector: PropTypes.bool,
-  chSelector: PropTypes.bool,
+  Zone: PropTypes.string,
+  ButtonSettings: PropTypes.string,
+  chart_1_part_1: PropTypes.string,
+  chart_1_part_2: PropTypes.string,
+  chart_1_part_3: PropTypes.string,
+  chart_1_part_4: PropTypes.string,
 };
 
 ClimateScene.defaultProps = {
   ClimateSelector: false,
-  chSelector: false,
+  Zone: '010101',
+  ButtonSettings: '0000',
+  chart_1_part_1: '000000',
+  chart_1_part_2: '000000',
+  chart_1_part_3: '000000',
+  chart_1_part_4: '000000',
 };
 
 const styles = StyleSheet.create({
@@ -201,7 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     // height: '25%',
     borderBottomStartRadius: 20,
     borderBottomEndRadius: 20,
@@ -225,8 +266,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
     marginTop: 8,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     borderRadius: 12,
+  },
+  area0: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   items2: {
     marginLeft: 10,
@@ -238,4 +283,9 @@ const styles = StyleSheet.create({
 export default connect(({ dpState }) => ({
   ClimateSelector: dpState[ClimateSelectorCode],
   chSelector: dpState[chSelectorCode],
+  ButtonSettings: dpState[ButtonSettingsCode],
+  chart_1_part_1: dpState[chart_1_part_1Code],
+  chart_1_part_2: dpState[chart_1_part_2Code],
+  chart_1_part_3: dpState[chart_1_part_3Code],
+  chart_1_part_4: dpState[chart_1_part_4Code],
 }))(ClimateScene);

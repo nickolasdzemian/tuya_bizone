@@ -1,9 +1,11 @@
 // собственно сам выбор режимов (вкладки)
 import PropTypes from 'prop-types';
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Tabs, Divider } from 'tuya-panel-kit';
+import { StyleSheet, View } from 'react-native';
+import { Tabs, Divider, TYText } from 'tuya-panel-kit';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n/index.ts';
 import dpCodes from '../../../../config/dpCodes.ts';
 import Button1 from './button-1';
@@ -15,9 +17,7 @@ class ButtonsModeS extends React.PureComponent {
     super(props);
     this.state = {
       activeKey1: '1',
-      d1: this.props.ClimateSelector === true ? [
-        { value: '1', label: Strings.getLang('buttonsmodetap1') },
-      ] : [
+      d1:[
         { value: '1', label: Strings.getLang('buttonsmodetap1') },
         { value: '2', label: Strings.getLang('buttonsmodetap2') },
       ],
@@ -33,6 +33,9 @@ class ButtonsModeS extends React.PureComponent {
       <Tabs
         style={styles.panel}
         activeKey={this.state.activeKey1}
+        tabActiveStyle={{ width: '70%', height: 33, borderRadius: 10, backgroundColor: '#f0f0f0' }}
+        tabPosition="bottom"
+        underlineStyle={{ backgroundColor: 'transparent' }}
         dataSource={this.state.d1}
         swipeable={false}
         onChange={this._handleD1Change}
@@ -42,7 +45,29 @@ class ButtonsModeS extends React.PureComponent {
           <Divider />
           <Button1 />
         </Tabs.TabPanel>
-        {this.props.ClimateSelector === true ? null : (
+        {this.props.ClimateSelector === true ? (
+          <Tabs.TabPanel
+            style={{
+              alignItems: 'center',
+              alignContent: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+            }}
+          >
+            <View>
+              <Divider />
+              <FontAwesomeIcon icon={faInfoCircle} color="#666" size={40} margin={10} alignSelf="center" />
+              <TYText style={{ fontSize: 16, textAlign: 'center', padding: 10 }}>
+                {Strings.getLang('btn2cli')}
+                {'\n'}
+                {'\n'}
+                {Strings.getLang('btn1cli')}
+                {'\n'}
+              </TYText>
+              <Divider />
+            </View>
+          </Tabs.TabPanel>
+        ) : (
           <Tabs.TabPanel>
             <Divider />
             <Button2 />

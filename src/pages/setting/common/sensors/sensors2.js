@@ -5,23 +5,13 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Popup, Divider, TYText, Picker, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import {
-  faThermometerHalf,
-  faInfoCircle,
-  faStethoscope,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faThermometerHalf, faInfoCircle, faStethoscope, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n';
 import dpCodes from '../../../../config/dpCodes';
 
 const TYDevice = TYSdk.device;
-const {
-  Detector1: Detector1Code,
-  Detector2: Detector2Code,
-  ClimateSelector: ClimateSelectorCode,
-} = dpCodes;
+const { Detector2: Detector2Code } = dpCodes;
 
-const sensortype1 = Strings.getLang('sensortype1');
 const sensortype2 = Strings.getLang('sensortype2');
 
 const sensorstype = Strings.getLang('sensorstype');
@@ -29,29 +19,22 @@ const sensortype0 = Strings.getLang('sensortype0');
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
 
-class SensorsType extends Component {
+class SensorsTypeZ2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
       // определение списков
-      sensor1: ['AuBe', 'Warmup', 'Teplolux', 'DEVI', 'Eberle', 'Ensto'],
-      s1s: this.props.Detector1,
       sensor2: ['AuBe', 'Warmup', 'Teplolux', 'DEVI', 'Eberle', 'Ensto'],
       s2s: this.props.Detector2,
     };
   }
-
-  // функция выбора
-  _handleChange1 = value1 => {
-    this.setState({ s1s: value1 });
-  };
 
   _handleChange2 = value2 => {
     this.setState({ s2s: value2 });
   };
 
   render() {
-    return this.props.ClimateSelector === true ? (
+    return (
       <TouchableOpacity
         style={styles.area}
         activeOpacity={0.8}
@@ -60,32 +43,6 @@ class SensorsType extends Component {
             content: (
               <View style={{ backgroundColor: '#fff', height: 410 }}>
                 <View style={styles.pickerContainer}>
-                  <View>
-                    <FontAwesomeIcon
-                      icon={faThermometerHalf}
-                      color="#ffb700"
-                      size={25}
-                      alignSelf="center"
-                      marginBottom={5}
-                    />
-                    <TYText style={styles.title2}>{sensortype1}</TYText>
-                    {/* <TYText style={[styles.title2, {fontSize: 14, color: '#666'}]}>{Strings.getLang('Nz1')}</TYText> */}
-                    <Divider />
-                    <Picker
-                      loop={true}
-                      style={[styles.picker]}
-                      itemStyle={styles.pickerItem}
-                      selectedValue={this.state.s1s}
-                      onValueChange={this._handleChange1}
-                      selectedItemTextColor="#ffb700"
-                      theme={{ fontSize: 16 }}
-                    >
-                      {/* выбор значения из предоставленного массива */}
-                      {this.state.sensor1.map(value1 => (
-                        <Picker.Item key={value1} value={value1} label={value1} />
-                      ))}
-                    </Picker>
-                  </View>
                   <View>
                     <FontAwesomeIcon
                       icon={faThermometerHalf}
@@ -146,7 +103,6 @@ class SensorsType extends Component {
             },
             onConfirm: (value, { close }) => {
               TYDevice.putDeviceData({
-                [Detector1Code]: this.state.s1s,
                 [Detector2Code]: this.state.s2s,
               });
               close();
@@ -154,23 +110,21 @@ class SensorsType extends Component {
           })}
       >
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faStethoscope} color="#FF7300" size={18} />
+          <FontAwesomeIcon icon={faStethoscope} color="#FF7300" size={20} />
           <TYText style={styles.items}>{sensorstype}</TYText>
         </View>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} marginRight={10} />
         </View>
       </TouchableOpacity>
-    ) : null;
+    );
   }
 }
 
-SensorsType.propTypes = {
-  Detector1: PropTypes.string,
+SensorsTypeZ2.propTypes = {
   Detector2: PropTypes.string,
 };
-SensorsType.defaultProps = {
-  Detector1: 'Teplolux',
+SensorsTypeZ2.defaultProps = {
   Detector2: 'Teplolux',
 };
 
@@ -214,12 +168,10 @@ const styles = StyleSheet.create({
   area: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 8,
-    // backgroundColor: '#fff',
-    borderRadius: 12,
+    marginLeft: 22,
+    margin: 14,
+    marginTop: 8 + 14,
+    marginBottom: 8 + 14 + 35,
     justifyContent: 'space-between',
   },
   area0: {
@@ -227,14 +179,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   items: {
-    marginLeft: 10,
+    marginLeft: 14,
     color: '#333',
     fontSize: 16,
   },
 });
 
 export default connect(({ dpState }) => ({
-  Detector1: dpState[Detector1Code],
   Detector2: dpState[Detector2Code],
-  ClimateSelector: dpState[ClimateSelectorCode],
-}))(SensorsType);
+}))(SensorsTypeZ2);

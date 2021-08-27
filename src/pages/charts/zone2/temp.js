@@ -85,7 +85,8 @@ class ChartTemp2 extends PureComponent {
         { value: 6, label: Strings.getLang('sat') },
         { value: 7, label: Strings.getLang('sun') },
       ],
-      dutemps: _.range(-15, 81),
+      // dutemps: _.range(-15, 81),
+      dutemps: _.range(5, 46),
       apl: false,
     };
   }

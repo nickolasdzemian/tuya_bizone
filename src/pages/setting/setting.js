@@ -30,7 +30,7 @@ export default class WithContentTabsSSettings extends React.PureComponent {
       [ChristCode]: !Christ,
     });
     Notification.show({
-      message: 'Под музыку Рождественского чуда ты инициировал вызов Сатаны. Да пребудет с тобой Его сила!',
+      message: 'Режим Рождественского Чуда активирован',
       onClose: () => {
         Notification.hide();
       },
@@ -67,7 +67,7 @@ export default class WithContentTabsSSettings extends React.PureComponent {
 const styles = StyleSheet.create({
   cont: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#fff',
   },
   ver: {
     alignSelf: 'center',

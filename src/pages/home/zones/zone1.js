@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { Vibration, View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { TYSdk, Slider, Collapsible, Popup, TYText, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -144,6 +144,7 @@ class Zone1 extends PureComponent {
   };
 
   _changeDataTemp = valueZ1 => {
+    Vibration.vibrate([3, 30, 3]);
     this.setState({ valueZ1: Math.round(valueZ1) }, () => {
       const I = this.props.SetTemperature.substring(0, 4);
       const II = this.props.SetTemperature.substring(6, 10);
@@ -346,6 +347,7 @@ class Zone1 extends PureComponent {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={C === '01' && modeZ !== '02' ? this.timer1 : null}
+                  activeOpacity={C === '01' && modeZ !== '02' ? 0.2 : 1}
                   style={styles.touch}
                 >
                   <TYText style={styles.title}>
@@ -371,6 +373,7 @@ class Zone1 extends PureComponent {
                         : null
                   }
                   style={styles.touch}
+                  activeOpacity={C === '01' && modeZ !== '00' ? 0.2 : 1}
                 >
                   <TYText style={styles.title}>{Strings.getLang('prog')}</TYText>
                   <FontAwesomeIcon
@@ -389,6 +392,7 @@ class Zone1 extends PureComponent {
                 <TouchableOpacity
                   onPress={C === '01' ? this.onPressMode : null}
                   style={styles.touch}
+                  activeOpacity={C === '01' ? 0.2 : 1}
                 >
                   <TYText style={styles.title}>{Strings.getLang('mode')}</TYText>
                   <FontAwesomeIcon
@@ -457,6 +461,10 @@ class Zone1 extends PureComponent {
                 </TYText>
               </View>
             </View>
+            <Divider
+              color={win === true ? '#00d0ff' : alarm === true ? 'red' : null}
+              style={{ marginTop: 8 }}
+            />
             <View style={[styles.sel, { flexDirection: 'column', marginTop: 18 }]}>
               <TouchableOpacity
                 style={{
@@ -497,30 +505,34 @@ class Zone1 extends PureComponent {
                 </TYText>
               </View>
             </View>
-            <View style={styles.title}>
+            <View style={[styles.title, { paddingBottom: 8 }]}>
               <Slider.Horizontal
                 animationType="timing"
                 disabled={modeZ !== '00' || C === '00' || alarm}
                 theme={{
                   width: 300,
-                  height: 46,
-                  trackRadius: 16,
-                  trackHeight: 46,
+                  height: 36,
+                  trackRadius: 18,
+                  trackHeight: 36,
                   thumbSize: 20,
                   thumbRadius: 20,
-                  thumbTintColor: modeZ !== '00' || C === '00' || alarm ? '#E3E9EE' : '#ffb700',
+                  thumbTintColor: modeZ !== '00' || C === '00' || alarm ? '#f0f0f0' : '#fff',
                   minimumTrackTintColor: '#f0f0f0',
                   maximumTrackTintColor: '#f0f0f0',
                 }}
-                thumbTouchSize={{ width: 46, height: 46 }}
+                thumbTouchSize={{ width: 36, height: 36 }}
                 thumbStyle={{
                   shadowOffset: {
                     width: 0,
                     height: 0,
                   },
+                  width: 22,
+                  height: 22,
+                  borderColor: modeZ !== '00' || C === '00' ? '#E3E9EE' : alarm ? 'red' : '#ffb700',
+                  borderWidth: 3,
                   shadowOpacity: 0,
                   shadowRadius: 0,
-                  elevation: 0,
+                  elevation: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -528,29 +540,38 @@ class Zone1 extends PureComponent {
                 renderMinimumTrack={() => (
                   <View
                     style={{
-                      height: 38,
-                      borderRadius: 14,
+                      height: 30,
+                      borderRadius: 15,
                       backgroundColor:
-                        modeZ !== '00' || C === '00' || alarm ? '#E3E9EE' : '#ffb700',
-                      marginHorizontal: 4,
+                        C === '00' || alarm ? '#f0f0f0' : '#fff',
+                      marginHorizontal: 3,
                     }}
                   />
                 )}
-                renderThumb={() => (
-                  <View
-                    style={{
-                      height: 20,
-                      borderRadius: 5.5,
-                      width: 5,
-                      backgroundColor: alarm ? 'red' : '#FFF',
-                    }}
-                  />
-                )}
+                // renderMinimumTrack={() => (
+                //   <View
+                //     style={{
+                //       height: 30,
+                //       borderRadius: 15,
+                //       backgroundColor: alarm ? 'red' : '#FFF',
+                //       marginHorizontal: 3,
+                //     }} 
+                //   />)}
+                // renderThumb={() => (
+                //   <View
+                //     style={{
+                //       height: 20,
+                //       borderRadius: 5.5,
+                //       width: 5,
+                //       backgroundColor: alarm ? 'red' : '#FFF',
+                //     }}
+                //   />
+                // )}
                 style={styles.slider}
                 canTouchTrack={true}
-                maximumValue={50}
+                maximumValue={45}
                 stepValue={1}
-                minimumValue={-15}
+                minimumValue={5}
                 value={modeZ === '00' ? this.getDataTemp() : modeZ === '01' ? ProgTemp : 33}
                 onValueChange={valueZ1 => this.setState({ valueZ1: Math.round(valueZ1) })}
                 onSlidingComplete={this._changeDataTemp}
@@ -596,6 +617,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     margin: 8,
+    paddingBottom: 8,
   },
   top: {
     flexDirection: 'row',

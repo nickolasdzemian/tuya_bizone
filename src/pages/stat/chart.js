@@ -12,7 +12,7 @@ import debounce from 'lodash/debounce';
 import { Utils, TYSdk, Dialog, TYText, Divider, Popup, DatePicker } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCalendarTimes, faCalendarAlt, faWeight, faExchangeAlt, faPen } from '@fortawesome/free-solid-svg-icons';
-import { BarChart } from 'react-native-chart-kit';
+import { LineChart } from 'react-native-chart-kit';
 import { decode } from '../../utils/base-64';
 import dpCodes from '../../config/dpCodes.ts';
 // import { DefaultTransition } from 'tuya-panel-kit/@react-navigation/stack/TransitionConfigs/TransitionPresets';
@@ -515,7 +515,7 @@ class ChartView extends Component {
         ) : 
           this.state.isChart === true && this.state.startRender === true && this.state.dataVictory !== [] ? (
             <View style={{alignSelf: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, height: Dimensions.get('window').height - 220, width: Dimensions.get('window').width - 8}}>
-              <BarChart
+              <LineChart
                 data={{
                   labels: this.state.dataVictory.map(item => this.state.dataVictory.length < 20 ? item.x : ''),
                   datasets: [
@@ -547,6 +547,7 @@ class ChartView extends Component {
                 withInnerLines={false}
                 showValuesOnTopOfBars={this.state.dataVictory.length < 20}
                 zoom={false}
+                bezier={true}
                 style={{
                   marginTop: 20,
                   marginRight: 8,
@@ -557,7 +558,7 @@ class ChartView extends Component {
             </View>
           ) : (
             <View style={{alignSelf: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, height: Dimensions.get('window').height - 220, width: Dimensions.get('window').width - 8}}>
-              <BarChart
+              <LineChart
                 data={{
                   labels: this.state.dataVictory.map(item => this.state.dataVictory.length < 20 ? item.x : ''),
                   datasets: [
@@ -572,7 +573,7 @@ class ChartView extends Component {
                 yAxisSuffix={Strings.getLang('strUnits')}
                 yAxisInterval={1} // optional, defaults to 1
                 chartConfig={{
-                // backgroundColor: '#fff',
+                  backgroundColor: '#fff',
                   backgroundGradientFrom: '#fff',
                   backgroundGradientTo: '#fff',
                   decimalPlaces: 0, // optional, defaults to 2dp
@@ -589,10 +590,14 @@ class ChartView extends Component {
                 withInnerLines={false}
                 showValuesOnTopOfBars={this.state.dataVictory.length < 20}
                 zoom={false}
+                // bezier={true}
+                withDots={false}
+                backgroundColor="#fff"
                 style={{
                   marginTop: 20,
                   marginRight: 8,
-                  borderRadius: 16
+                  borderRadius: 16,
+                  backgroundColor: '#fff'
                 }}
               />
               <TYText style={{ alignSelf: 'center', textAlign: 'center', color: '#666'}}>{Strings.getLang('chartLegend')}</TYText>

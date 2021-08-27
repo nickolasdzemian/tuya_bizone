@@ -11,6 +11,7 @@ import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 import Zone2Mode from './zone2mode';
 import Zone2Air from './zone2AC';
+import SensorsTypeZ2 from '../common/sensors/sensors2';
 
 const TYDevice = TYSdk.device;
 const { Preheat2: Preheat2Code, OpenWndW: OpenWndWCode, SensorSet2: SensorSet2Code } = dpCodes;
@@ -53,7 +54,6 @@ class ZoneIIScene extends React.PureComponent {
             }}
           />
         </View>
-        <Divider />
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faBrain} color="#ff7300" size={20} />
@@ -71,17 +71,9 @@ class ZoneIIScene extends React.PureComponent {
             }}
           />
         </View>
-        <SafeAreaView style={styles.area}>
-          <FontAwesomeIcon icon={faListOl} color="#ff7300" size={20} />
-          <Zone2Mode />
-        </SafeAreaView>
-        {SensorSet2 === 'air_flour' ? (
-          <SafeAreaView style={styles.area}>
-            <FontAwesomeIcon icon={faSortAmountUp} color="#ff7300" size={20} />
-            <Zone2Air />
-          </SafeAreaView>
-        ) : null}
-        <Divider />
+        <Zone2Mode />
+        {SensorSet2 === 'air_flour' ? <Zone2Air /> : null}
+        <SensorsTypeZ2 />
       </View>
     );
   }
@@ -114,6 +106,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 8,
   },
   items: {
     alignItems: 'center',

@@ -1,8 +1,5 @@
 // главная страница для отображения зон
-// import PropTypes from 'prop-types';
 import React from 'react';
-// import { connect } from 'react-redux';
-// import { TYSdk } from 'tuya-panel-kit';
 import { ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 import { TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -19,13 +16,12 @@ const ZonesScene = () => (
       <TYText style={styles.title}>{Strings.getLang('zone1')}</TYText>
     </SafeAreaView>
     <ZoneIScene />
-    <SafeAreaView style={styles.area}>
+    <SafeAreaView style={[styles.area, { marginTop: 20 }]}>
       <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={20} />
       <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={25} />
       <TYText style={styles.title}>{Strings.getLang('zone2')}</TYText>
     </SafeAreaView>
     <ZoneIIScene />
-    {/* <TYText style={styles.warn}>{Strings.getLang('cliwarn')}</TYText> */}
   </ScrollView>
 );
 
@@ -38,13 +34,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    margin: 20,
-    marginTop: 25,
+    margin: 16,
+    // marginTop: 25,
   },
   title: {
     textAlign: 'center',
     fontWeight: '400',
-    fontSize: 18,
+    fontSize: 20,
     color: '#474747',
     flexDirection: 'row',
     justifyContent: 'center',

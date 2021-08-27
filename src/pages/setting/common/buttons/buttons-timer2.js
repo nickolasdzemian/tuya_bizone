@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, StyleSheet, ScrollView, View, AsyncStorage } from 'react-native';
+import { Text, StyleSheet, ScrollView, View, AsyncStorage, ActivityIndicator } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
@@ -53,11 +53,23 @@ class ButtonsTimer2S extends Component {
       value1: t1,
       value2: t2,
       value3: t3,
+      apl: false,
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.TimerPreset !== nextProps.TimerPreset) {
+      this.setState({ apl: true });
+      setTimeout(() => { this.setState({ apl: false }); }, 3000);
+    }
+
+    if (nextProps.TimerPreset) {
+      this.setState({ apl: false });
+    }
+  }
+
   _handleComplete1 = value1 => {
-    this.setState({ value1: Math.round(value1) });
+    this.setState({ value1: Math.round(value1), apl: true });
     const TimerI = this.props.TimerPreset.substring(0, 20);
     const TimerII = this.props.TimerPreset.substring(24, 36);
     const Tset = Math.round(value1);
@@ -77,7 +89,7 @@ class ButtonsTimer2S extends Component {
   };
 
   _handleComplete2 = value2 => {
-    this.setState({ value2: Math.round(value2) });
+    this.setState({ value2: Math.round(value2), apl: true });
     const TimerI = this.props.TimerPreset.substring(0, 16);
     const TimerII = this.props.TimerPreset.substring(20, 36);
     const Tset = Math.round(value2);
@@ -97,7 +109,7 @@ class ButtonsTimer2S extends Component {
   };
 
   _handleComplete3 = value3 => {
-    this.setState({ value3: Math.round(value3) });
+    this.setState({ value3: Math.round(value3), apl: true });
     const TimerI = this.props.TimerPreset.substring(0, 12);
     const TimerII = this.props.TimerPreset.substring(16, 36);
     const Tset = Math.round(value3);
@@ -117,6 +129,7 @@ class ButtonsTimer2S extends Component {
   };
 
   render() {
+    const apl = this.state.apl;
     return (
       <ScrollView
         style={{
@@ -124,9 +137,13 @@ class ButtonsTimer2S extends Component {
           marginTop: 10,
         }}
       >
-        <View style={styles.title}>
-          <FontAwesomeIcon icon={faClock} color="#ff7300" size={25} />
-        </View>
+        {apl === true ? 
+          <View>
+            <ActivityIndicator size="large" color="#ff7300" /> 
+          </View> : 
+          <View style={styles.title}>
+            <FontAwesomeIcon icon={faClock} color="#ff7300" size={25} />
+          </View>}
         <Text style={styles.buttontext}>
           {convertMinsToTime(this.state.value1)}
           {tonePress}
@@ -134,23 +151,24 @@ class ButtonsTimer2S extends Component {
         <View style={styles.title}>
           <Text style={styles.context}>0:01</Text>
           <Slider.Horizontal
-            disabled={this.state.value2 === 2}
+            disabled={this.state.value2 === 2 || apl === true}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value2 - 1}
             minimumValue={1}
             value={this.state.value1}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#ff7300'}
             onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
             onSlidingComplete={this._handleComplete1}
           />
-          <Text style={styles.context}>{convertMinsToTimeM(this.state.value2)}</Text>
+          <Text style={styles.context}>{convertMinsToTimeM(this.state.value2 - 1)}</Text>
         </View>
         <Stepper
+          disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#ff7300'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -166,25 +184,26 @@ class ButtonsTimer2S extends Component {
           {ttwoPress}
         </Text>
         <View style={styles.title}>
-          <Text style={styles.context}>{convertMinsToTimeM(this.state.value1)}</Text>
+          <Text style={styles.context}>{convertMinsToTimeM(this.state.value1 + 1)}</Text>
           <Slider.Horizontal
-            disabled={(this.state.value3 - this.state.value1) === 2}
+            disabled={(this.state.value3 - this.state.value1) === 2 || apl === true}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value3 - 1}
             minimumValue={this.state.value1 + 1}
             value={this.state.value2}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#ff7300'}
             onValueChange={value2 => this.setState({ value2: Math.round(value2) })}
             onSlidingComplete={this._handleComplete2}
           />
-          <Text style={styles.context}>{convertMinsToTimeM(this.state.value3)}</Text>
+          <Text style={styles.context}>{convertMinsToTimeM(this.state.value3 - 1)}</Text>
         </View>
         <Stepper
+          disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#ff7300'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -200,25 +219,26 @@ class ButtonsTimer2S extends Component {
           {tthreePress}
         </Text>
         <View style={styles.title}>
-          <Text style={styles.context}>{convertMinsToTimeM(this.state.value2)}</Text>
+          <Text style={styles.context}>{convertMinsToTimeM(this.state.value2 + 1)}</Text>
           <Slider.Horizontal
-            disabled={(1440 - this.state.value2) === 1}
+            disabled={(1440 - this.state.value2) === 1 || apl === true}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={1440}
             minimumValue={this.state.value2 + 1}
             value={this.state.value3}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#ff7300'}
             onValueChange={value3 => this.setState({ value3: Math.round(value3) })}
             onSlidingComplete={this._handleComplete3}
           />
           <Text style={styles.context}>24H</Text>
         </View>
         <Stepper
+          disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#ff7300'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}

@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
     marginTop: 8,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     borderRadius: 12,
   },
   items: {

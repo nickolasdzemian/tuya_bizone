@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
@@ -30,12 +30,24 @@ class ButtonsTemp2S extends Component {
       value1: t1 > 100 ? t1 - 256 : t1,
       value2: t2 > 100 ? t2 - 256 : t2,
       value3: t3 > 100 ? t3 - 256 : t3,
+      apl: false,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.PresetTemperature !== nextProps.PresetTemperature) {
+      this.setState({ apl: true });
+      setTimeout(() => { this.setState({ apl: false }); }, 3000);
+    }
+
+    if (nextProps.PresetTemperature) {
+      this.setState({ apl: false });
+    }
   }
 
   // функция выбора 1 значения (с округлением до целого числа)
   _handleComplete1 = value1 => {
-    this.setState({ value1: Math.round(value1) });
+    this.setState({ value1: Math.round(value1), apl: true });
     const I = this.props.PresetTemperature.substring(0, 10);
     const II = this.props.PresetTemperature.substring(12, 18);
     const Tset = Math.round(value1);
@@ -68,7 +80,7 @@ class ButtonsTemp2S extends Component {
 
   // функция выбора 2 значения
   _handleComplete2 = value2 => {
-    this.setState({ value2: Math.round(value2) });
+    this.setState({ value2: Math.round(value2), apl: true });
     const I = this.props.PresetTemperature.substring(0, 8);
     const II = this.props.PresetTemperature.substring(10, 18);
     const Tset = Math.round(value2);
@@ -101,7 +113,7 @@ class ButtonsTemp2S extends Component {
 
   // функция выбора 3 значения
   _handleComplete3 = value3 => {
-    this.setState({ value3: Math.round(value3) });
+    this.setState({ value3: Math.round(value3), apl: true });
     const I = this.props.PresetTemperature.substring(0, 6);
     const II = this.props.PresetTemperature.substring(8, 18);
     const Tset = Math.round(value3);
@@ -133,6 +145,7 @@ class ButtonsTemp2S extends Component {
   };
 
   render() {
+    const apl = this.state.apl;
     return (
       <ScrollView
         style={{
@@ -140,42 +153,48 @@ class ButtonsTemp2S extends Component {
           marginTop: 10,
         }}
       >
-        <View style={styles.title}>
-          <FontAwesomeIcon icon={faTemperatureLow} color="#ff7300" size={25} />
-        </View>
+        {apl === true ? 
+          <View>
+            {/* <TYText style={styles.wait}>{Strings.getLang('apl')}</TYText> */}
+            <ActivityIndicator size="large" color="#ff7300" /> 
+          </View> : 
+          <View style={styles.title}>
+            <FontAwesomeIcon icon={faTemperatureLow} color="#ff7300" size={25} />
+          </View>}
         <TYText style={styles.buttontext}>
           {this.state.value1}
           °C
           {tonePress}
         </TYText>
         <View style={styles.title}>
-          <TYText style={styles.context}>-15</TYText>
+          <TYText style={styles.context}> 5</TYText>
           <Slider.Horizontal
-            disabled={(this.state.value2 - -15) === 1}
+            disabled={(this.state.value2 - 5) === 1 || apl === true}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value2 - 1}
-            minimumValue={-15}
+            minimumValue={5}
             value={this.state.value1}
             stepValue={1}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#ff7300'}
             onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
             onSlidingComplete={this._handleComplete1}
           />
-          <TYText style={styles.context}> {this.state.value2}</TYText>
+          <TYText style={styles.context}> {this.state.value2 - 1}</TYText>
         </View>
         <Stepper
+          disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#ff7300'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
           onValueChange={this._handleComplete1}
           max={this.state.value2 - 1}
           stepValue={1}
-          min={-15}
+          min={5}
           value={this.state.value1}
         />
         <Divider />
@@ -185,9 +204,9 @@ class ButtonsTemp2S extends Component {
           {ttwoPress}
         </TYText>
         <View style={styles.title}>
-          <TYText style={styles.context}>{this.state.value1}</TYText>
+          <TYText style={styles.context}>{this.state.value1 + 1}</TYText>
           <Slider.Horizontal
-            disabled={(this.state.value3 - this.state.value1) === 2}
+            disabled={(this.state.value3 - this.state.value1) === 2 || apl === true}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={this.state.value3 - 1}
@@ -195,16 +214,17 @@ class ButtonsTemp2S extends Component {
             minimumValue={this.state.value1 + 1}
             value={this.state.value2}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#ff7300'}
             onValueChange={value2 => this.setState({ value2: Math.round(value2) })}
             onSlidingComplete={this._handleComplete2}
           />
-          <TYText style={styles.context}> {this.state.value3}</TYText>
+          <TYText style={styles.context}> {this.state.value3 - 1}</TYText>
         </View>
         <Stepper
+          disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#ff7300'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -221,9 +241,9 @@ class ButtonsTemp2S extends Component {
           {tthreePress}
         </TYText>
         <View style={styles.title}>
-          <TYText style={styles.context}>{this.state.value2}</TYText>
+          <TYText style={styles.context}>{this.state.value2 + 1}</TYText>
           <Slider.Horizontal
-            disabled={(80 - this.state.value2) === 1}
+            disabled={(80 - this.state.value2) === 1 || apl === true}
             style={styles.slider}
             canTouchTrack={true}
             maximumValue={80}
@@ -231,21 +251,22 @@ class ButtonsTemp2S extends Component {
             minimumValue={this.state.value2 + 1}
             value={this.state.value3}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor="#ff7300"
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#ff7300'}
             onValueChange={value3 => this.setState({ value3: Math.round(value3) })}
             onSlidingComplete={this._handleComplete3}
           />
-          <TYText style={styles.context}> 80</TYText>
+          <TYText style={styles.context}> 45</TYText>
         </View>
         <Stepper
+          disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor="#ff7300"
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#ff7300'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
           onValueChange={this._handleComplete3}
-          max={80}
+          max={45}
           stepValue={1}
           min={this.state.value2 + 1}
           value={this.state.value3}

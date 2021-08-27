@@ -119,6 +119,7 @@ class ClimateController extends PureComponent {
   render() {
     const C = this.state.power;
     const modeCli = this.props.ModeChannel.substring(4, 6);
+    const opacityPress = C === '00' ? 1 : 0.2;
     return (
       <View style={styles.container}>
         <View style={styles.areaContols}>
@@ -132,8 +133,9 @@ class ClimateController extends PureComponent {
             <TYText style={styles.title}>{Strings.getLang('pwr')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={modeCli === '01' ? this.goToClimateChart : null}
+            onPress={modeCli === '01' && C !== '00' ? this.goToClimateChart : null}
             style={styles.touch}
+            activeOpacity={opacityPress}
           >
             <FontAwesomeIcon
               icon={faChartBar}
@@ -143,7 +145,11 @@ class ClimateController extends PureComponent {
             />
             <TYText style={styles.title}>{Strings.getLang('prog')}</TYText>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.onPressMode} style={styles.touch}>
+          <TouchableOpacity 
+            onPress={C !== '00' ? this.onPressMode : null} 
+            style={styles.touch}
+            activeOpacity={opacityPress}
+          >
             <FontAwesomeIcon
               icon={faTasks}
               color={C === '01' ? '#90EE90' : '#d6d6d6'}
