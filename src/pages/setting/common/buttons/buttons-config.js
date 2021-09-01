@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
 import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faAlignLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faGripVertical, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Cache } from 'react-native-cache';
 // import { NumberUtils } from 'tuya-panel-kit/src/utils';
 import Strings from '../../../../i18n/index.ts';
@@ -14,7 +14,7 @@ import dpCodes from '../../../../config/dpCodes.ts';
 import ButtonsModeS from './buttons-main12';
 
 // const TYDevice = TYSdk.device;
-const { PresetTemperature: PresetTemperatureCode } = dpCodes;
+const { PresetTemperature: PresetTemperatureCode, ClimateSelector: ClimateSelectorCode } = dpCodes;
 
 // const cache = new Cache({
 //   namespace: 'BtnsConfig',
@@ -87,11 +87,15 @@ class ButtonsConfig extends Component {
         onPress={() => this.buttonsConfiguration()}
       >
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faAlignLeft} color="#FF7300" size={18} />
+          <FontAwesomeIcon icon={faGripVertical} color="#333" size={18} />
           <TYText style={styles.items}>{Strings.getLang('buttonsmodetap0')}</TYText>
         </View>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+          <FontAwesomeIcon
+            icon={faChevronRight}
+            color={this.props.ClimateSelector === true ? '#666' : '#ff7300'}
+            size={15}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -131,4 +135,5 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   PresetTemperature: dpState[PresetTemperatureCode],
+  ClimateSelector: dpState[ClimateSelectorCode],
 }))(ButtonsConfig);

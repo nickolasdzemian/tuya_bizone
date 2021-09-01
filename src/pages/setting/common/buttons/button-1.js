@@ -49,6 +49,7 @@ class Button1 extends React.PureComponent {
       <Tabs
         style={{ marginTop: 10 }}
         tabActiveStyle={{ width: '75%', height: 33, borderRadius: 10, backgroundColor: '#f0f0f0' }}
+        tabActiveTextStyle={this.props.ClimateSelector === true ? { color: '#57BCFB' } : null}
         underlineStyle={{ backgroundColor: 'transparent' }}
         activeKey={this.state.activeKey1}
         dataSource={this.state.d1}

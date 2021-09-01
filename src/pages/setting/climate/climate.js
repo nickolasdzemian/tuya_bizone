@@ -7,13 +7,16 @@ import { View, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } f
 import { TYSdk, TYText, Notification, Popup, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-  faSeedling,
-  faProjectDiagram,
+  faSun,
+  faThermometerQuarter,
   faSlidersH,
   faAngleUp,
-  faRulerCombined,
+  faOutdent,
   faChartLine,
   faChevronRight,
+  faBorderStyle,
+  faSnowflake,
+  faThermometerEmpty,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -106,11 +109,12 @@ class ClimateScene extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.viewUp}>
           <SafeAreaView style={styles.area}>
-            <FontAwesomeIcon
-              icon={ClimateSelector === true ? faSeedling : faProjectDiagram}
-              color={ClimateSelector === true ? '#90EE90' : '#ffb700'}
-              size={25}
-            />
+            {ClimateSelector === true ?
+              <View style={{ flexDirection: 'row' }}>
+                <FontAwesomeIcon icon={faThermometerEmpty} color="#57BCFB" size={30} />
+                <FontAwesomeIcon icon={faSun} color="#57BCFB" size={18} marginLeft={-8} />
+              </View> : 
+              <FontAwesomeIcon icon={faBorderStyle} color="#ff7300" size={25} />}
             <View>
               <TYText style={styles.items}>{Strings.getLang('globalMode')}</TYText>
               <TYText style={styles.subitems}>
@@ -119,7 +123,7 @@ class ClimateScene extends React.PureComponent {
             </View>
           </SafeAreaView>
           {this.state.apl === true ? (
-            <ActivityIndicator color={ClimateSelector === true ? '#90EE90' : '#ff7300'} />
+            <ActivityIndicator color={ClimateSelector === true ? '#57BCFB' : '#ff7300'} />
           ) : null}
           <TouchableOpacity
             style={styles.top}
@@ -130,7 +134,8 @@ class ClimateScene extends React.PureComponent {
                 type: 'radio',
                 maxItemNum: 2,
                 dataSource: set,
-                iconTintColor: '#90EE90',
+                iconTintColor: ClimateSelector === true ? '#57BCFB' : '#ff7300',
+                confirmTextStyle: { color: ClimateSelector === true ? '#57BCFB' : '#ff7300'},
                 title: Strings.getLang('climateSw'),
                 subTitle: Strings.getLang('climateinfo'),
                 subTitleTextStyle: { color: 'red' },
@@ -166,7 +171,7 @@ class ClimateScene extends React.PureComponent {
           >
             <FontAwesomeIcon
               icon={hidden === true ? faSlidersH : faAngleUp}
-              color="#666"
+              color="#333"
               size={25}
               marginRight={30}
             />
@@ -182,26 +187,31 @@ class ClimateScene extends React.PureComponent {
             onPress={() => this.goToSettingsZZZ()}
           >
             <View style={styles.area0}>
-              <FontAwesomeIcon icon={faRulerCombined} color="#ffb700" size={18} />
+              <FontAwesomeIcon icon={faOutdent} color="#333" size={18} />
               <TYText style={styles.items2}>{Strings.getLang('ZonesScene')}</TYText>
             </View>
             <View style={styles.area0}>
-              <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+              <FontAwesomeIcon icon={faChevronRight} color="#ff7300" size={15} />
             </View>
           </TouchableOpacity>
         )}
         {ClimateSelector === true ? <Channel /> : null}
+        {/* Переход в статистику (почему здесь - одному боженьке известно) */}
         <TouchableOpacity
           style={[styles.area2, { justifyContent: 'space-between' }]}
           activeOpacity={0.8}
           onPress={() => this.goToSettingsSSS()}
         >
           <View style={styles.area0}>
-            <FontAwesomeIcon icon={faChartLine} color="#666" size={18} />
+            <FontAwesomeIcon icon={faChartLine} color="#333" size={18} />
             <TYText style={styles.items2}>{Strings.getLang('CounterChartsScene')}</TYText>
           </View>
           <View style={styles.area0}>
-            <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              color={ClimateSelector === true ? '#666' : '#ff7300'}
+              size={15}
+            />
           </View>
         </TouchableOpacity>
       </View>

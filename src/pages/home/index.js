@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { TYText, TYSdk } from 'tuya-panel-kit';
+import { TYText, TYSdk, Utils } from 'tuya-panel-kit';
 import dpCodes from '../../config/dpCodes.ts';
 import ClimateReport from './ClimateReport';
 import ClimateM from './climate/climate';
@@ -11,6 +11,7 @@ import ClimateController from './climate/controller';
 import Strings from '../../i18n/index.ts';
 
 const { ClimateSelector: ClimateSelectorCode } = dpCodes;
+const { isIos } = Utils.RatioUtils; 
 
 class ClimateMain extends React.PureComponent {
   render() {
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     height: 50,
     margin: 8,
-    marginBottom: 33,
+    marginBottom: isIos === true ? 33 : 12,
     justifyContent: 'center',
   },
 });

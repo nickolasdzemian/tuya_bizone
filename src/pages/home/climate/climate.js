@@ -235,7 +235,7 @@ class ClimateM extends PureComponent {
               style={{
                 width: '80%',
                 alignSelf: 'center',
-                marginBottom: 8,
+                marginBottom: 10,
               }}
               canTouchTrack={true}
               maximumValue={80}
@@ -306,7 +306,7 @@ class ClimateM extends PureComponent {
               style={{
                 width: '80%',
                 alignSelf: 'center',
-                marginBottom: 8,
+                marginBottom: 10,
               }}
               canTouchTrack={true}
               maximumValue={4}

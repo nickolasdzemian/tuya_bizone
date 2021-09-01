@@ -150,10 +150,10 @@ class Zone1Air extends Component {
         }}
       >
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faSortAmountUp} color="#ffb700" size={20} />
+          <FontAwesomeIcon icon={faSortAmountUp} color="#666" size={20} />
           <TYText style={styles.items}>{Strings.getLang('air_limit')}</TYText>
         </View>
-        <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} marginRight={10} />
+        <FontAwesomeIcon icon={faChevronRight} color="#ffb700" size={15} marginRight={10} />
       </TouchableOpacity>
     );
   }

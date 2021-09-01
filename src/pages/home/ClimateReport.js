@@ -9,9 +9,9 @@ import { TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faExclamationTriangle,
-  faSeedling,
+  faThermometerEmpty,
   faSnowflake,
-  faFireAlt,
+  faSun,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../i18n/index.ts';
 import dpCodes from '../../config/dpCodes.ts';
@@ -73,7 +73,7 @@ class ClimateReport extends React.PureComponent {
             <View style={styles.areaAir}>
               <TYText style={[styles.titlekwh, {fontSize: 20}]}>{Strings.getLang('climateTemp')}</TYText>
               <View style={styles.air}>
-                <FontAwesomeIcon icon={faSeedling} color="#90EE90" size={20} marginRight={7} />
+                <FontAwesomeIcon icon={faThermometerEmpty} color="#fff" size={25} marginRight={7} />
                 <TYText style={[styles.num, { fontSize: 26 }]}>
                   {FaultAlarm === 0 ? Math.round(tC) : '--'}
                   °C
@@ -88,7 +88,7 @@ class ClimateReport extends React.PureComponent {
               {chSelector === false ? (
                 <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} marginTop={8} />
               ) : (
-                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} marginTop={8} />
+                <FontAwesomeIcon icon={faSun} color="#ffb700" size={25} marginTop={8} />
               )}
               <TYText style={styles.num}>
                 {Relay1flag === true ? Strings.getLang(chSelector === false ? 'oncool' : 'on') : Strings.getLang('off')}
@@ -105,7 +105,7 @@ class ClimateReport extends React.PureComponent {
               {chSelector === true ? (
                 <FontAwesomeIcon icon={faSnowflake} color="#00d0ff" size={25} marginTop={8} />
               ) : (
-                <FontAwesomeIcon icon={faFireAlt} color="#ffb700" size={25} marginTop={8} />
+                <FontAwesomeIcon icon={faSun} color="#ffb700" size={25} marginTop={8} />
               )}
               <TYText style={styles.num}>
                 {Relay2flag === true ? Strings.getLang(chSelector === true ? 'oncool' : 'on') : Strings.getLang('off')}
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: '90%',
-    padding: 8,
+    padding: 5,
   },
   areaPWR: {
     alignItems: 'center',

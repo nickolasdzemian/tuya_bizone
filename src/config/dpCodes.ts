@@ -81,11 +81,12 @@ export default {
   Preheat2: 'preheat_2',
 
   // ГРАФИКИ
-  //
+  // Программный режим климата или программный режим (таймера) первой зоны
   chart_1_part_1: 'chart_11',
   chart_1_part_2: 'chart_12',
   chart_1_part_3: 'chart_13',
   chart_1_part_4: 'chart_14',
+  // Программный режим (таймера) второй зоны
   chart_2_part_1: 'chart_21',
   chart_2_part_2: 'chart_22',
   chart_2_part_3: 'chart_23',

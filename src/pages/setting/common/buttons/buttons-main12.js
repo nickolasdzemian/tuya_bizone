@@ -34,6 +34,7 @@ class ButtonsModeS extends React.PureComponent {
         style={styles.panel}
         activeKey={this.state.activeKey1}
         tabActiveStyle={{ width: '70%', height: 33, borderRadius: 10, backgroundColor: '#f0f0f0' }}
+        tabActiveTextStyle={this.props.ClimateSelector === true ? { color: '#57BCFB' } : null}
         tabPosition="bottom"
         underlineStyle={{ backgroundColor: 'transparent' }}
         dataSource={this.state.d1}

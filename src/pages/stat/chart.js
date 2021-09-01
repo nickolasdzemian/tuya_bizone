@@ -7,12 +7,13 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
 import debounce from 'lodash/debounce';
-import { Utils, TYSdk, Dialog, TYText, Divider, Popup, DatePicker } from 'tuya-panel-kit';
+import { Utils, TYSdk, Dialog, TYText, Popup, DatePicker } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCalendarTimes, faCalendarAlt, faWeight, faExchangeAlt, faPen } from '@fortawesome/free-solid-svg-icons';
-import { LineChart } from 'react-native-chart-kit';
+import { BarChart, LineChart } from 'react-native-chart-kit';
+import { VictoryLine, VictoryChart, VictoryTheme, Background } from 'victory-native';
 import { decode } from '../../utils/base-64';
 import dpCodes from '../../config/dpCodes.ts';
 // import { DefaultTransition } from 'tuya-panel-kit/@react-navigation/stack/TransitionConfigs/TransitionPresets';
@@ -46,11 +47,12 @@ class ChartView extends Component {
     const Exact = this.getFullSettings();
     this.state = {
       dataVictory: [],
+      dataVictory2: [],
       startRender: false,
       dateStart: new Date(),
       dateEnd: new Date(),
       ini: true,
-      isChart: false,
+      isChart: true,
       яблоко: (Math.floor(Exact[this.props.idCount].value)) / 1000,
     };
     this.periodSelect = 1; // 0-day, 1-month, 2-year
@@ -60,9 +62,10 @@ class ChartView extends Component {
     this.lineOrBar = false; // if folse then line else bar
     this.intervalText = '';
     this.interval = 0;
-    this.apelle = 153;
+    this.apelle = 0;
     TYSdk.native.showLoading({ title: Strings.getLang('load') });
     this.getLogs();
+    this.getLogs2();
   }
 
   onChangePeriodDay = () => {
@@ -72,6 +75,7 @@ class ChartView extends Component {
     this.setState({ startRender: false }, () => {
       TYSdk.native.showLoading({ title: Strings.getLang('load') });
       this.getLogs();
+      this.getLogs2();
     });
     this.forceUpdate();
   };
@@ -83,6 +87,7 @@ class ChartView extends Component {
     this.setState({ startRender: false }, () => {
       TYSdk.native.showLoading({ title: Strings.getLang('load') });
       this.getLogs();
+      this.getLogs2();
     });
     this.forceUpdate();
   };
@@ -94,6 +99,7 @@ class ChartView extends Component {
     this.setState({ startRender: false }, () => {
       TYSdk.native.showLoading({ title: Strings.getLang('load') });
       this.getLogs();
+      this.getLogs2();
     });
     this.forceUpdate();
   };
@@ -114,6 +120,7 @@ class ChartView extends Component {
     this.setState({ startRender: false }, () => {
       TYSdk.native.showLoading({ title: Strings.getLang('load') });
       this.getLogs();
+      this.getLogs2();
     });
     this.forceUpdate();
   };
@@ -125,6 +132,7 @@ class ChartView extends Component {
     this.setState({ startRender: false }, () => {
       TYSdk.native.showLoading({ title: Strings.getLang('load') });
       this.getLogs();
+      this.getLogs2();
     });
     this.forceUpdate();
   };
@@ -143,6 +151,7 @@ class ChartView extends Component {
     return data;
   }
 
+  // Первый реле
   getLog = interval => {
     return new Promise((resolve, reject) => {
       TYSdk.device.getDeviceInfo().then(res => {
@@ -160,7 +169,7 @@ class ChartView extends Component {
             (a = 'tuya.m.dp.rang.stat.hour.list'),
             (postData = {
               devId,
-              dpId: this.apelle,
+              dpId: 153,
               date: timeForDrowing,
               auto: 1,
               type: 'avg',
@@ -194,7 +203,7 @@ class ChartView extends Component {
             (a = 'tuya.m.dp.rang.stat.day.list'),
             (postData = {
               devId,
-              dpId: this.apelle,
+              dpId: 153,
               // startDay: monthAgo,
               // endDay: timeForDrowing,
               startDay,
@@ -217,7 +226,7 @@ class ChartView extends Component {
             (a = 'tuya.m.dp.stat.month.list'),
             (postData = {
               devId,
-              dpId: this.apelle,
+              dpId: 153,
               type: 'avg',
             }),
             (v = '1.0')
@@ -364,6 +373,228 @@ class ChartView extends Component {
     this.forceUpdate();
   }, 500);
 
+  // Второй реле
+  getLog2 = interval => {
+    return new Promise((resolve, reject) => {
+      TYSdk.device.getDeviceInfo().then(res => {
+        const { devId } = res;
+        const currentData = this.state.dateEnd;
+        if (this.periodSelect === 0) {
+          // for curent day
+          if (interval > 0) {
+            currentData.setDate(currentData.getDate() - interval);
+          }
+          const timeForDrowing = Utils.TimeUtils.dateFormat('yyyyMMdd', currentData);
+          this.intervalText = Utils.TimeUtils.dateFormat('dd.MM.yyyy', currentData);
+
+          TYSdk.apiRequest(
+            (a = 'tuya.m.dp.rang.stat.hour.list'),
+            (postData = {
+              devId,
+              dpId: 154,
+              date: timeForDrowing,
+              auto: 1,
+              type: 'avg',
+            }),
+            (v = '1.0')
+          )
+            .then(d => {
+              const data = Utils.JsonUtils.parseJSON(d);
+              resolve(data);
+            })
+            .catch(error => {
+              reject(error);
+            });
+        } else if (this.periodSelect === 1) {
+          if (interval > 1) {
+            currentData.setMonth(currentData.getMonth() - interval);
+          }
+          const monthAgoTemp = this.state.dateStart;
+          const timeForDrowing = Utils.TimeUtils.dateFormat('yyyyMMdd', currentData);
+          this.state.ini ? monthAgoTemp.setMonth(currentData.getMonth() - 1) : null;
+          // monthAgoTemp.setMonth(currentData.getMonth() - 1);
+          const monthAgo = Utils.TimeUtils.dateFormat('yyyyMMdd', monthAgoTemp);
+          monthAgoTemp.setDate(monthAgoTemp.getDate());
+          // eslint-disable-next-line max-len
+          // this.intervalText = `${Strings.getLang('strFrom')} ${Utils.TimeUtils.dateFormat('dd.MM.yyyy', monthAgoTemp)} ${Strings.getLang('strTo')} ${Utils.TimeUtils.dateFormat('dd.MM.yyyy', currentData)}`;
+          this.intervalText = `${Utils.TimeUtils.dateFormat('dd.MM.yyyy', monthAgoTemp)} - ${Utils.TimeUtils.dateFormat('dd.MM.yyyy', currentData)}`;
+
+          const startDay = this.state.dateStart === new Date() ? monthAgo : Utils.TimeUtils.dateFormat('yyyyMMdd', this.state.dateStart);
+          const endDay = this.state.dateStart === new Date() ? timeForDrowing : Utils.TimeUtils.dateFormat('yyyyMMdd', this.state.dateEnd);
+          TYSdk.apiRequest(
+            (a = 'tuya.m.dp.rang.stat.day.list'),
+            (postData = {
+              devId,
+              dpId: 154,
+              // startDay: monthAgo,
+              // endDay: timeForDrowing,
+              startDay,
+              endDay,
+              auto: 1,
+              type: 'avg',
+            }),
+            (v = '1.0')
+          )
+            .then(d => {
+              const data = Utils.JsonUtils.parseJSON(d);
+              resolve(data);
+            })
+            .catch(error => {
+              reject(error);
+            });
+        } else if (this.periodSelect === 2) {
+          // for current year
+          TYSdk.apiRequest(
+            (a = 'tuya.m.dp.stat.month.list'),
+            (postData = {
+              devId,
+              dpId: 154,
+              type: 'avg',
+            }),
+            (v = '1.0')
+          )
+            .then(d => {
+              const data = Utils.JsonUtils.parseJSON(d);
+              resolve(data);
+            })
+            .catch(error => {
+              reject(error);
+            });
+        }
+      });
+    });
+  };
+
+  getLogs2 = debounce(() => {
+    this.getLog2(this.interval).then(
+      d => {
+        let xLable = [];
+        let valuesNum = [];
+        if (d === undefined || d.totalCount === 0) {
+          TYSdk.native.hideLoading();
+          return this.setState({ dataVictory: [] });
+        }
+        TYSdk.native.hideLoading();
+        
+        if (this.periodSelect === 0) { // for day
+          const keys = Object.keys(d);
+          xLable = keys.map(string => parseInt(string, 10) % 100);
+          const values = Object.values(d);
+          valuesNum = values.map(string => string);
+          const valuesTemp = [];
+          for (let i = 0; i < valuesNum.length; i++) {
+            if (i === 0) {
+              valuesTemp[i] = valuesNum[i];
+            } else if (valuesNum[i] >= valuesNum[i - 1]) {
+              valuesTemp[i] = valuesNum[i] - valuesNum[i - 1];
+            } else {
+              valuesTemp[i] = valuesNum[i];
+            }
+            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+              this.litrEnable = false;
+            }
+          }
+          valuesNum = valuesTemp;
+          if (!this.litrEnable) {
+            for (let i = 0; i < valuesNum.length; i++) {
+              valuesNum[i] /= 1000;
+            }
+          }
+          xLable.shift();
+          valuesNum.shift();
+        } else if (this.periodSelect === 1) { // for month
+          const keys = Object.keys(d.result);
+          xLable = keys.map(string => this.state.isChart === false ? `${string.substr(6, 7)}.${string.substring(4, 6)}.${string.substring(2, 4)}` : `${string.substr(6, 7)}`);
+          const values = Object.values(d.result);
+          valuesNum = values.map(string => string, 10);
+          const valuesTemp = [];
+          for (let i = 0; i < valuesNum.length; i++) {
+            if (i === 0) {
+              valuesTemp[i] = valuesNum[i];
+            } else if (valuesNum[i] >= valuesNum[i - 1]) {
+              valuesTemp[i] = valuesNum[i] - valuesNum[i - 1];
+            } else {
+              valuesTemp[i] = valuesNum[i];
+            }
+            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+              this.litrEnable = false;
+            }
+          }
+          valuesNum = valuesTemp;
+          if (!this.litrEnable) {
+            for (let i = 0; i < valuesNum.length; i++) {
+              valuesNum[i] /= 1000;
+            }
+          }
+          xLable.shift();
+          valuesNum.shift();
+        } else if (this.periodSelect === 2) { // for year
+          const temDate = new Date();
+          temDate.setFullYear(temDate.getFullYear() - this.interval);
+          const year = Utils.TimeUtils.dateFormat('yyyy', temDate);
+          this.intervalText = year;
+          const keys = Object.keys(d.years[year]);
+          xLable = keys.map(string => string);
+          const values = Object.values(d.years[year]);
+          valuesNum = values.map(string => string, 10);
+          const valuesTemp = [];
+          for (let i = 0; i < valuesNum.length; i++) {
+            if (i === 0) {
+              valuesTemp[i] = valuesNum[i];
+            } else if (valuesNum[i] >= valuesNum[i - 1]) {
+              valuesTemp[i] = valuesNum[i] - valuesNum[i - 1];
+            } else {
+              valuesTemp[i] = valuesNum[i];
+            }
+            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+              this.litrEnable = false;
+            }
+          }
+          valuesNum = valuesTemp;
+          if (!this.litrEnable) {
+            for (let i = 0; i < valuesNum.length; i++) {
+              valuesNum[i] /= 1000;
+            }
+          }
+        }
+
+        const dataLog = {
+          labels: xLable,
+          datasets: [
+            {
+              data: valuesNum,
+            },
+          ],
+        };
+        const victoryData = [];
+        for (let i = 0; i < xLable.length; i++) {
+          victoryData[i] = {
+            x: xLable[i], y: valuesNum[i],
+          };
+        };
+        console.log('dataLog2', dataLog, dataLog.labels.length);
+        console.log('victoryData2', victoryData, victoryData.length);
+
+        this.setState({ dataVictory2: this.periodSelect === 2 ? victoryData.slice(1) : this.periodSelect === 1 ? victoryData.splice(0, victoryData.length - 1) : victoryData }, () => {
+          this.setState({ startRender: true }, () => {
+            this.forceUpdate();
+          });
+        });
+      },
+      e => {
+        console.log(e, 'Error');
+        TYSdk.native.hideLoading();
+        const err = typeof e === 'string' ? JSON.parse(e) : e;
+        const _err = err.message || err.errorMsg || err;
+        Dialog.alert({
+          title: _err,
+          confirmText: Strings.getLang('strOk'),
+        });
+      }
+    );
+    this.forceUpdate();
+  }, 500);
+
   render() {
     const I = this.periodSelect;
     const { ClimateSelector, chSelector } = this.props;
@@ -462,10 +693,11 @@ class ChartView extends Component {
                 () => {
                   this.interval = 0;
                   this.litrEnable = true;
-                  this.apelle = 153;
+                  this.apelle = 0;
                   this.setState({ isChart: false, startRender: false}, () => {
                     TYSdk.native.showLoading({ title: Strings.getLang('load') });
                     this.getLogs();
+                    this.getLogs2();
                   });
                   this.forceUpdate();
                 }
@@ -487,10 +719,11 @@ class ChartView extends Component {
                 () => {
                   this.interval = 0;
                   this.litrEnable = true;
-                  this.apelle = 154;
+                  this.apelle = 0;
                   this.setState({ isChart: true, startRender: false}, () => {
                     TYSdk.native.showLoading({ title: Strings.getLang('load') });
                     this.getLogs();
+                    this.getLogs2();
                   });
                   this.forceUpdate();
                 }
@@ -507,63 +740,21 @@ class ChartView extends Component {
             </TouchableOpacity>
           </View>
         </View>
-        {this.state.dataVictory === null || this.state.dataVictory.length < 1 ? (
+        {(this.state.dataVictory === null || this.state.dataVictory.length < 1) || (this.state.dataVictory2 === null || this.state.dataVictory.length2 < 1) ? (
           <View style={{ height: cy(550), alignSelf: 'center', alignContent: 'center', justifyContent: 'center'}}>
             <FontAwesomeIcon icon={faCalendarTimes} color={ClimateSelector === true ? '#90EE90' : '#ff7300'} size={65} alignSelf="center" marginBottom={35} />
             <TYText style={[styles.textButton]}>{Strings.getLang('пыщьпыщь')}</TYText>
           </View>
-        ) : 
+        ) : (
           this.state.isChart === true && this.state.startRender === true && this.state.dataVictory !== [] ? (
             <View style={{alignSelf: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, height: Dimensions.get('window').height - 220, width: Dimensions.get('window').width - 8}}>
-              <LineChart
+              {/* <BarChart
                 data={{
                   labels: this.state.dataVictory.map(item => this.state.dataVictory.length < 20 ? item.x : ''),
                   datasets: [
                     {
-                      data: this.state.dataVictory.map(item => item.y < 1 ? null : item.y === this.state.яблоко ? '0' : I === 2 ? item.y : item.y)
-                    }
-                  ]
-                }}
-                width={Dimensions.get('window').width - 10} // from react-native
-                height={Dimensions.get('window').height - 300}
-                // yAxisLabel="$"
-                yAxisSuffix={Strings.getLang('strUnits')}
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                // backgroundColor: '#fff',
-                  backgroundGradientFrom: '#fff',
-                  backgroundGradientTo: '#fff',
-                  decimalPlaces: 0, // optional, defaults to 2dp
-                  barPercentage: this.state.dataVictory.length < 20 ? 0.5 : 0.1,
-                  color: (opacity = 1) => {ClimateSelector === true ? `rgba(144, 238, 144, ${opacity})` : `rgba(255, 115, 0, ${opacity})`;},
-                  labelColor: (opacity = 1) => `rgba(102, 102, 102, ${opacity})`,
-                  propsForDots: {
-                    r: '4',
-                    stroke: ClimateSelector === true ? '#90EE90' : '#ff7300'
-                  }
-                }}
-                withVerticalLines={false}
-                withHorizontalLines={false}
-                withInnerLines={false}
-                showValuesOnTopOfBars={this.state.dataVictory.length < 20}
-                zoom={false}
-                bezier={true}
-                style={{
-                  marginTop: 20,
-                  marginRight: 8,
-                  borderRadius: 16
-                }}
-              />
-              <TYText style={{ alignSelf: 'center', textAlign: 'center', color: '#666'}}>{Strings.getLang('chartLegend')}</TYText>
-            </View>
-          ) : (
-            <View style={{alignSelf: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, height: Dimensions.get('window').height - 220, width: Dimensions.get('window').width - 8}}>
-              <LineChart
-                data={{
-                  labels: this.state.dataVictory.map(item => this.state.dataVictory.length < 20 ? item.x : ''),
-                  datasets: [
-                    {
-                      data: this.state.dataVictory.map(item => item.y < 1 ? null : item.y === this.state.яблоко ? '0' : I === 2 ? item.y : item.y)
+                      data: this.state.dataVictory.map(item => item.y < 1 ? null : item.y === this.state.яблоко ? '0' : I === 2 ? item.y : item.y),
+                      data2: this.state.dataVictory2.map(item => item.y < 1 ? null : item.y === this.state.яблоко ? '0' : I === 2 ? item.y : item.y)
                     }
                   ]
                 }}
@@ -579,9 +770,9 @@ class ChartView extends Component {
                   decimalPlaces: 0, // optional, defaults to 2dp
                   barPercentage: this.state.dataVictory.length < 20 ? 0.5 : 0.1,
                   color: (opacity = 1) => {ClimateSelector === true ? `rgba(144, 238, 144, ${opacity})` : `rgba(255, 115, 0, ${opacity})`;},
-                  labelColor: (opacity = 1) => {ClimateSelector === true ? `rgba(144, 238, 144, ${opacity})` : `rgba(255, 115, 0, ${opacity})`;},
+                  labelColor: (opacity = 1) => `rgba(102, 102, 102, ${opacity})`,
                   propsForDots: {
-                    r: '4',
+                    r: '2',
                     stroke: ClimateSelector === true ? '#90EE90' : '#ff7300'
                   }
                 }}
@@ -590,19 +781,41 @@ class ChartView extends Component {
                 withInnerLines={false}
                 showValuesOnTopOfBars={this.state.dataVictory.length < 20}
                 zoom={false}
-                // bezier={true}
-                withDots={false}
-                backgroundColor="#fff"
+                bezier={true}
                 style={{
                   marginTop: 20,
                   marginRight: 8,
-                  borderRadius: 16,
-                  backgroundColor: '#fff'
+                  borderRadius: 16
                 }}
-              />
+              /> */}
+              <VictoryChart
+                height={Dimensions.get('window').height - 300}
+                width={Dimensions.get('window').width + 30}
+                // theme={VictoryTheme.material}
+                style={{ background: { fill: '#fff', borderRadius: 12 }}}
+                backgroundComponent={<Background y={0} x={0} height={Dimensions.get('window').height} width={Dimensions.get('window').width + 30} />}
+              >
+                <VictoryLine
+                  domain={0}
+                  style={{
+                    data: { stroke: '#ffb700' },
+                    parent: { border: '1px solid #FFF' },
+                    labels: { fill: '#ffb700', margin: 1 },
+                  }}
+                  data={this.state.dataVictory}
+                  labels={this.state.dataVictory.length < 20 ? (({ datum }) => Math.round(datum.y)) : null}
+                />
+                <VictoryLine
+                  style={{
+                    data: { stroke: '#ff7300' },
+                    parent: { border: '1px solid #ccc'}
+                  }}
+                  data={this.state.dataVictory2}
+                />
+              </VictoryChart>
               <TYText style={{ alignSelf: 'center', textAlign: 'center', color: '#666'}}>{Strings.getLang('chartLegend')}</TYText>
             </View>
-          )}
+          ) : null) }
       </SafeAreaView>
     );
   }

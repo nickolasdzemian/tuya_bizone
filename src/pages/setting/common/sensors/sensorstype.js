@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faThermometerHalf,
   faInfoCircle,
-  faStethoscope,
+  faThermometerQuarter,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n';
@@ -63,7 +63,7 @@ class SensorsType extends Component {
                   <View>
                     <FontAwesomeIcon
                       icon={faThermometerHalf}
-                      color="#ffb700"
+                      color="#57BCFB"
                       size={25}
                       alignSelf="center"
                       marginBottom={5}
@@ -77,7 +77,7 @@ class SensorsType extends Component {
                       itemStyle={styles.pickerItem}
                       selectedValue={this.state.s1s}
                       onValueChange={this._handleChange1}
-                      selectedItemTextColor="#ffb700"
+                      selectedItemTextColor="#57BCFB"
                       theme={{ fontSize: 16 }}
                     >
                       {/* выбор значения из предоставленного массива */}
@@ -89,7 +89,7 @@ class SensorsType extends Component {
                   <View>
                     <FontAwesomeIcon
                       icon={faThermometerHalf}
-                      color="#FF7300"
+                      color="#4badeb"
                       size={25}
                       alignSelf="center"
                       marginBottom={5}
@@ -102,7 +102,7 @@ class SensorsType extends Component {
                       itemStyle={styles.pickerItem}
                       selectedValue={this.state.s2s}
                       onValueChange={this._handleChange2}
-                      selectedItemTextColor="#FF7300"
+                      selectedItemTextColor="#4badeb"
                       theme={{ fontSize: 16 }}
                     >
                       {this.state.sensor2.map(value2 => (
@@ -136,6 +136,7 @@ class SensorsType extends Component {
             title: sensortype0,
             cancelText,
             confirmText,
+            confirmTextStyle: { color: '#57BCFB'},
             onMaskPress: ({ close }) => {
               this.setState({ s1s: this.props.Detector1, s2s: this.props.Detector2 });
               close();
@@ -154,11 +155,15 @@ class SensorsType extends Component {
           })}
       >
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faStethoscope} color="#FF7300" size={18} />
+          <FontAwesomeIcon icon={faThermometerQuarter} color="#333" size={18} />
           <TYText style={styles.items}>{sensorstype}</TYText>
         </View>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+          <FontAwesomeIcon 
+            icon={faChevronRight} 
+            color={this.props.ClimateSelector === true ? '#666' : '#ff7300'} 
+            size={15} 
+          />
         </View>
       </TouchableOpacity>
     ) : null;

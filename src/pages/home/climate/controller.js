@@ -55,7 +55,7 @@ class ClimateController extends PureComponent {
           value: String(modeI + modeCliProg),
         },
       ],
-      iconTintColor: '#90EE90',
+      iconTintColor: '#57BCFB',
       title: [mode],
       cancelText,
       confirmText,
@@ -126,7 +126,7 @@ class ClimateController extends PureComponent {
           <TouchableOpacity onPress={this.changePowerZone} style={styles.touch}>
             <FontAwesomeIcon
               icon={faPowerOff}
-              color={C === '01' ? '#90EE90' : '#d6d6d6'}
+              color={C === '01' ? '#333' : '#d6d6d6'}
               size={30}
               margin={10}
             />
@@ -135,11 +135,11 @@ class ClimateController extends PureComponent {
           <TouchableOpacity
             onPress={modeCli === '01' && C !== '00' ? this.goToClimateChart : null}
             style={styles.touch}
-            activeOpacity={opacityPress}
+            activeOpacity={C === '00' || modeCli === '00' ? 1 : 0.2}
           >
             <FontAwesomeIcon
               icon={faChartBar}
-              color={C === '01' && modeCli === '01' ? '#90EE90' : '#d6d6d6'}
+              color={C === '01' && modeCli === '01' ? '#333' : '#d6d6d6'}
               size={30}
               margin={10}
             />
@@ -152,14 +152,14 @@ class ClimateController extends PureComponent {
           >
             <FontAwesomeIcon
               icon={faTasks}
-              color={C === '01' ? '#90EE90' : '#d6d6d6'}
+              color={C === '01' ? '#333' : '#d6d6d6'}
               size={30}
               margin={10}
             />
             <TYText style={styles.title}>{Strings.getLang('mode')}</TYText>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.goToSettingsPage} style={styles.touch}>
-            <FontAwesomeIcon icon={faCog} color="#90EE90" size={30} margin={10} />
+            <FontAwesomeIcon icon={faCog} color="#333" size={30} margin={10} />
             <TYText style={styles.title}>{Strings.getLang('settings')}</TYText>
           </TouchableOpacity>
         </View>
@@ -175,7 +175,7 @@ ClimateController.propTypes = {
 
 ClimateController.defaultProps = {
   Zone: '010101',
-  ModeChannel: '90EE9090EE90',
+  ModeChannel: '333333',
 };
 
 const styles = StyleSheet.create({

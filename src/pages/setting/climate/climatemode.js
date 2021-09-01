@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
-import { Popup, TYSdk, TYText, Notification, Dialog } from 'tuya-panel-kit';
+import { Popup, TYSdk, TYText, Dialog } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faListOl, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
@@ -19,44 +19,6 @@ const confirmText = Strings.getLang('confirmText');
 const climatemode = Strings.getLang('climatemode');
 
 // определение массива с режимами
-// const set = [
-//   {
-//     key: 'air',
-//     title: Strings.getLang('air'),
-//     value: 'air',
-//   },
-//   {
-//     key: 'flour_1',
-//     title: Strings.getLang('flour_1'),
-//     value: 'flour_1',
-//   },
-//   {
-//     key: 'flour_2',
-//     title: Strings.getLang('flour_2'),
-//     value: 'flour_2',
-//   },
-//   {
-//     key: 'flour_12',
-//     title: Strings.getLang('flour_12'),
-//     value: 'flour_12',
-//   },
-//   {
-//     key: 'air_flour_1',
-//     title: Strings.getLang('air_flour_1'),
-//     value: 'air_flour_1',
-//   },
-//   {
-//     key: 'air_flour_2',
-//     title: Strings.getLang('air_flour_2'),
-//     value: 'air_flour_2',
-//   },
-//   {
-//     key: 'air_flour_12',
-//     title: Strings.getLang('air_flour_12'),
-//     value: 'air_flour_12',
-//   },
-// ];
-
 const set = [
   {
     key: 'air',
@@ -139,13 +101,15 @@ class ClimateMode extends Component {
       type: 'switch',
       maxItemNum: 3,
       dataSource: set,
-      iconTintColor: '#90EE90',
+      // iconTintColor: '#57BCFB',
+      // checkboxColor: '#57BCFB',
+      // tintColor: '#57BCFB',
+      // confirmTextStyle: { color: '#57BCFB' },
       title: [climatemode],
       cancelText,
       confirmText,
       showBack: false,
       value: this.getDataSensors(),
-      // footerType: 'singleCancel',
       onMaskPress: ({ close }) => {
         close();
       },
@@ -159,7 +123,7 @@ class ClimateMode extends Component {
     return (
       <TouchableOpacity style={styles.area} activeOpacity={0.8} onPress={() => this.climatemode()}>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faListOl} color="#90EE90" size={18} />
+          <FontAwesomeIcon icon={faListOl} color="#333" size={18} />
           <TYText style={styles.items}>{Strings.getLang('climatemodet')}</TYText>
         </View>
         <View style={styles.area0}>

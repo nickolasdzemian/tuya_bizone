@@ -9,7 +9,7 @@ import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 
 const TYDevice = TYSdk.device;
-const { Backlight: BacklightCode } = dpCodes;
+const { Backlight: BacklightCode, ClimateSelector: ClimateSelectorCode } = dpCodes;
 
 const brightnessText = Strings.getLang('brightness');
 const cancelText = Strings.getLang('cancelText');
@@ -61,11 +61,15 @@ class BrightnessScene extends Component {
           })}
       >
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faSpinner} color="#FF7300" size={18} />
+          <FontAwesomeIcon icon={faSpinner} color="#333" size={18} />
           <TYText style={styles.items}>{brightnessText}</TYText>
         </View>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+          <FontAwesomeIcon
+            icon={faChevronRight}
+            color={this.props.ClimateSelector === true ? '#666' : '#ff7300'}
+            size={15}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
     marginTop: 8,
-    // backgroundColor: '#fff',
+    // backgroundColor: '#bbb',
     borderRadius: 12,
     justifyContent: 'space-between',
   },
@@ -97,4 +101,5 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   Backlight: dpState[BacklightCode],
+  ClimateSelector: dpState[ClimateSelectorCode],
 }))(BrightnessScene);

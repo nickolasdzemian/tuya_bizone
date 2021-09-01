@@ -55,7 +55,7 @@ export default class WithContentTabsSSettings extends React.PureComponent {
           alignSelf="center"
           onLongPress={() => this.diablo()}
         >
-          <FontAwesomeIcon icon={faInfoCircle} color="#666" size={30} marginBottom={5} />
+          <FontAwesomeIcon icon={faInfoCircle} color="#333" size={30} marginBottom={5} />
           <TYText style={{ color: '#333' }}>{Strings.getLang('faq')}</TYText>
           <TYText style={{ color: '#333' }}>{`v ${version}`}</TYText>
         </TouchableOpacity>
@@ -74,9 +74,8 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff0',
-    height: 80,
     width: 100,
-    marginBottom: 10,
+    marginBottom: isIos === true ? 33 : 12,
   },
 
 });

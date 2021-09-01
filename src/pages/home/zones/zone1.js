@@ -317,7 +317,7 @@ class Zone1 extends PureComponent {
             >
               1
             </TYText>
-            <TYText style={{ fontSize: 20, color: 'black' }}>{Strings.getLang('Nz1')}</TYText>
+            {/* <TYText style={{ fontSize: 20, color: 'black' }}>{Strings.getLang('Nz1')}</TYText> */}
             <FontAwesomeIcon
               icon={hidden === true ? faSlidersH : faAngleUp}
               color="#ffb700"

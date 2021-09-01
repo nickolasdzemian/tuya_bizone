@@ -154,10 +154,10 @@ class ButtonsTemp1CLI extends Component {
         {apl === true ? 
           <View>
             {/* <TYText style={styles.wait}>{Strings.getLang('apl')}</TYText> */}
-            <ActivityIndicator size="large" color="#90EE90" /> 
+            <ActivityIndicator size="large" color="#57BCFB" /> 
           </View> : 
           <View style={styles.title}>
-            <FontAwesomeIcon icon={faTemperatureLow} color="#90EE90" size={25} />
+            <FontAwesomeIcon icon={faTemperatureLow} color="#57BCFB" size={25} />
           </View>}
         <TYText style={styles.buttontext}>
           {this.state.value1}
@@ -175,7 +175,7 @@ class ButtonsTemp1CLI extends Component {
             value={this.state.value1}
             stepValue={1}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#90EE90'}
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#57BCFB'}
             onValueChange={value1 => this.setState({ value1: Math.round(value1) })}
             onSlidingComplete={this._handleComplete1}
           />
@@ -185,7 +185,7 @@ class ButtonsTemp1CLI extends Component {
           disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor={apl === true ? '#d0d0d0' : '#90EE90'}
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#57BCFB'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -212,7 +212,7 @@ class ButtonsTemp1CLI extends Component {
             minimumValue={this.state.value1 + 1}
             value={this.state.value2}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#90EE90'}
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#57BCFB'}
             onValueChange={value2 => this.setState({ value2: Math.round(value2) })}
             onSlidingComplete={this._handleComplete2}
           />
@@ -222,7 +222,7 @@ class ButtonsTemp1CLI extends Component {
           disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor={apl === true ? '#d0d0d0' : '#90EE90'}
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#57BCFB'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}
@@ -249,7 +249,7 @@ class ButtonsTemp1CLI extends Component {
             minimumValue={this.state.value2 + 1}
             value={this.state.value3}
             maximumTrackTintColor="rgba(0, 0, 0, 0.1)"
-            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#90EE90'}
+            minimumTrackTintColor={apl === true ? '#d0d0d0' : '#57BCFB'}
             onValueChange={value3 => this.setState({ value3: Math.round(value3) })}
             onSlidingComplete={this._handleComplete3}
           />
@@ -259,7 +259,7 @@ class ButtonsTemp1CLI extends Component {
           disabled={apl}
           buttonType="ellipse"
           buttonStyle={{ size: 'small' }}
-          ellipseIconColor={apl === true ? '#d0d0d0' : '#90EE90'}
+          ellipseIconColor={apl === true ? '#d0d0d0' : '#57BCFB'}
           style={styles.stepper}
           inputStyle={{ color: 'transparent' }}
           editable={false}

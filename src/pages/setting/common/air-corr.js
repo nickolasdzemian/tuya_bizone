@@ -9,7 +9,7 @@ import Strings from '../../../i18n';
 import dpCodes from '../../../config/dpCodes';
 
 const TYDevice = TYSdk.device;
-const { TemperatureCorr: TemperatureCorrCode } = dpCodes;
+const { TemperatureCorr: TemperatureCorrCode, ClimateSelector: ClimateSelectorCode } = dpCodes;
 
 const aircorr = Strings.getLang('aircorr');
 const cancelText = Strings.getLang('cancelText');
@@ -73,13 +73,13 @@ class AirCorrScene extends Component {
         activeOpacity={0.8}
         onPress={() =>
           Popup.numberSelector({
-            title: aircorr,
+            title: `${aircorr}, °C`,
             cancelText,
             confirmText,
             type: 'slider',
             value: this.getDataCorr(),
-            maximumTrackTintColor: 'rgba(47, 47, 47, 0.5)',
-            minimumTrackTintColor: '#FF7300',
+            maximumTrackTintColor: '#ff7300',
+            minimumTrackTintColor: '#00d0ff',
             min: -9,
             max: 9,
             onMaskPress: ({ close }) => {
@@ -98,11 +98,15 @@ class AirCorrScene extends Component {
           })}
       >
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faWind} color="#FF7300" size={18} />
+          <FontAwesomeIcon icon={faWind} color="#333" size={18} />
           <TYText style={styles.items}>{aircorr}</TYText>
         </View>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} />
+          <FontAwesomeIcon 
+            icon={faChevronRight} 
+            color={this.props.ClimateSelector === true ? '#666' : '#ff7300'} 
+            size={15}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -134,4 +138,5 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   TemperatureCorr: dpState[TemperatureCorrCode],
+  ClimateSelector: dpState[ClimateSelectorCode],
 }))(AirCorrScene);

@@ -37,7 +37,7 @@ class ZoneIScene extends React.PureComponent {
         <Divider />
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
-            <FontAwesomeIcon icon={faDoorOpen} color="#ffb700" size={20} />
+            <FontAwesomeIcon icon={faDoorOpen} color="#666" size={20} />
             <TYText style={styles.items}>{windowSw}</TYText>
           </SafeAreaView>
           <SwitchButton
@@ -57,7 +57,7 @@ class ZoneIScene extends React.PureComponent {
         </View>
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
-            <FontAwesomeIcon icon={faBrain} color="#ffb700" size={20} />
+            <FontAwesomeIcon icon={faBrain} color="#666" size={20} />
             <TYText style={styles.items}>{selflearnSw}</TYText>
           </SafeAreaView>
           <SwitchButton

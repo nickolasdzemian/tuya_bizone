@@ -128,8 +128,8 @@ export default {
     windowSw: 'Look up for open window',
     selflearnSw: 'Self-learning or preheat',
     zoneSens: 'Select controlling sensors',
-    zone1: 'I zone',
-    zone2: 'II zone',
+    zone1: 'Zone I',
+    zone2: 'Zone II',
     cliwarn: 'The climate mode is on. Setup will no take effect.',
     // air: 'Air sensor',
     flour: 'Zone external sensor',
@@ -272,7 +272,7 @@ export default {
     minutess: 'минут',
 
     // Settings Common
-    brightness: 'Яркость подсветки индикаторов',
+    brightness: 'Яркость индикаторов',
     aircorr: 'Корректировка датчика воздуха',
     sensorstype: 'Настройки внешних датчиков',
     sensortype0: 'Выбрать тип внешнего датчика',
@@ -333,12 +333,12 @@ export default {
     chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
-    ZonesScene: 'Настройка по зонам',
+    ZonesScene: 'Настройка зон',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
-    zone1: 'I зона',
-    zone2: 'II зона',
+    zone1: 'Зона I',
+    zone2: 'Зона II',
     cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
     // air: 'Датчик воздуха',
     flour: 'Внешний датчик зоны',
@@ -480,7 +480,7 @@ export default {
     minutess: 'минут',
 
     // Settings Common
-    brightness: 'Яркость подсветки индикаторов',
+    brightness: 'Яркость индикаторов',
     aircorr: 'Корректировка датчика воздуха',
     sensorstype: 'Настройки внешних датчиков',
     sensortype0: 'Выбрать тип внешнего датчика',
@@ -541,12 +541,12 @@ export default {
     chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
-    ZonesScene: 'Настройка по зонам',
+    ZonesScene: 'Настройка зон',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
-    zone1: 'I зона',
-    zone2: 'II зона',
+    zone1: 'Зона I',
+    zone2: 'Зона II',
     cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
     // air: 'Датчик воздуха',
     flour: 'Внешний датчик зоны',

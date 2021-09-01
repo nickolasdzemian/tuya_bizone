@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Popup, Divider, TYText, Picker, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faThermometerHalf, faInfoCircle, faStethoscope, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faThermometerHalf, faInfoCircle, faSwatchbook, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n';
 import dpCodes from '../../../../config/dpCodes';
 
@@ -104,11 +104,11 @@ class SensorsTypeZ1 extends Component {
         }
       >
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faStethoscope} color="#ffb700" size={20} />
+          <FontAwesomeIcon icon={faSwatchbook} color="#666" size={20} />
           <TYText style={styles.items}>{sensorstype}</TYText>
         </View>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faChevronRight} color="#666" size={15} marginRight={10} />
+          <FontAwesomeIcon icon={faChevronRight} color="#ffb700" size={15} marginRight={10} />
         </View>
       </TouchableOpacity>
     );

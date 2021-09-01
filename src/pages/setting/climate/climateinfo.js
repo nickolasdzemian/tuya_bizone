@@ -38,7 +38,8 @@ class ClimateMode extends Component {
       type: 'radio',
       maxItemNum: 2,
       dataSource: set,
-      iconTintColor: '#90EE90',
+      iconTintColor: '#57BCFB',
+      confirmTextStyle: { color: '#57BCFB' },
       title: Strings.getLang('chSelector'),
       cancelText,
       confirmText,
@@ -61,7 +62,7 @@ class ClimateMode extends Component {
     return (
       <TouchableOpacity style={styles.area} activeOpacity={0.8} onPress={() => this.channelss()}>
         <View style={styles.area0}>
-          <FontAwesomeIcon icon={faExchangeAlt} color="#90EE90" size={18} />
+          <FontAwesomeIcon icon={faExchangeAlt} color="#333" size={18} />
           <TYText style={styles.items}>{Strings.getLang('chSelector')}</TYText>
         </View>
         <View style={styles.area0}>
