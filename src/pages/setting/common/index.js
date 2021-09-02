@@ -6,7 +6,7 @@ import BrightnessScene from './brightness';
 import ButtonsConfig from './buttons/buttons-config';
 import AirCorrScene from './air-corr';
 import SensorsType from './sensors/sensorstype';
-import LoadCapacity from './loadcap/loadcap';
+// import LoadCapacity from './loadcap/loadcap';
 
 const SettingScene = () => (
   <View style={styles.container}>
@@ -15,7 +15,7 @@ const SettingScene = () => (
     <ButtonsConfig />
     <AirCorrScene />
     <SensorsType />
-    <LoadCapacity />
+    {/* <LoadCapacity /> */}
   </View>
 );
 

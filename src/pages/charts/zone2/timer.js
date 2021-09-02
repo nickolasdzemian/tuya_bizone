@@ -366,14 +366,8 @@ class ChartTime2 extends PureComponent {
         close();
         TYDevice.putDeviceData({
           [chart_2_part_1Code]: '000000',
-        });
-        TYDevice.putDeviceData({
           [chart_2_part_2Code]: '000000',
-        });
-        TYDevice.putDeviceData({
           [chart_2_part_3Code]: '000000',
-        });
-        TYDevice.putDeviceData({
           [chart_2_part_4Code]: '000000',
         });
         this.setState({god: 0});

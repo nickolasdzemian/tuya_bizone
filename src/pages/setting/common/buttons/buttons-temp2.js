@@ -243,10 +243,10 @@ class ButtonsTemp2S extends Component {
         <View style={styles.title}>
           <TYText style={styles.context}>{this.state.value2 + 1}</TYText>
           <Slider.Horizontal
-            disabled={(80 - this.state.value2) === 1 || apl === true}
+            disabled={(45 - this.state.value2) === 1 || apl === true}
             style={styles.slider}
             canTouchTrack={true}
-            maximumValue={80}
+            maximumValue={45}
             stepValue={1}
             minimumValue={this.state.value2 + 1}
             value={this.state.value3}

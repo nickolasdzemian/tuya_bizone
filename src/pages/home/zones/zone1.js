@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Vibration, View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { TYSdk, Slider, Collapsible, Popup, TYText, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -144,7 +144,6 @@ class Zone1 extends PureComponent {
   };
 
   _changeDataTemp = valueZ1 => {
-    Vibration.vibrate([3, 30, 3]);
     this.setState({ valueZ1: Math.round(valueZ1) }, () => {
       const I = this.props.SetTemperature.substring(0, 4);
       const II = this.props.SetTemperature.substring(6, 10);

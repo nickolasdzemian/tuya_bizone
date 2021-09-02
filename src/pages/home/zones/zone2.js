@@ -320,9 +320,8 @@ class Zone2 extends PureComponent {
                 marginLeft: 8,
               }}
             >
-              
+              2
             </TYText>
-            <TYText style={{ fontSize: 20, color: 'black' }}>{Strings.getLang('Nz2')}</TYText>
             <FontAwesomeIcon
               icon={hidden === true ? faSlidersH : faAngleUp}
               color="#ff7300"
