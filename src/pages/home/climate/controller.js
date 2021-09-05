@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { TYSdk, Popup, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChartBar, faTasks, faCog, faPowerOff } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,8 @@ const { Zone: ZoneCode, ModeChannel: ModeChannelCode } = dpCodes;
 const cancelText = Strings.getLang('cancelText');
 const confirmText = Strings.getLang('confirmText');
 const mode = Strings.getLang('mode');
+
+const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
 class ClimateController extends PureComponent {
   constructor(props) {
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: windowHeight === 'normal' ? 20 : 5,
   },
   areaContols: {
     flexDirection: 'row',
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: '90%',
-    height: 90,
+    height: windowHeight === 'normal' ? 90 : 72,
   },
   touch: {
     textAlign: 'center',

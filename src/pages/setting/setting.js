@@ -40,6 +40,7 @@ export default class WithContentTabsSSettings extends React.PureComponent {
         warningIcon: 'black',
       },
     }); 
+    // TYSdk.mobile.enablePopGesture();
   } 
 
   render() {

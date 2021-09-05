@@ -2,7 +2,14 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, AsyncStorage, ActivityIndicator } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  AsyncStorage,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
 import { Slider, Divider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +20,8 @@ import dpCodes from '../../../../config/dpCodes.ts';
 const TYDevice = TYSdk.device;
 
 const { TimerPreset: TimerPresetCode } = dpCodes;
+
+const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
 const tonePress = Strings.getLang('tonePress');
 const ttwoPress = Strings.getLang('ttwoPress');
@@ -140,9 +149,10 @@ class ButtonsTimer1S extends Component {
           <View>
             <ActivityIndicator size="large" color="#ffb700" /> 
           </View> : 
-          <View style={styles.title}>
-            <FontAwesomeIcon icon={faClock} color="#ffb700" size={25} />
-          </View>}
+          windowHeight === 'normal' ? 
+            <View style={styles.title}>
+              <FontAwesomeIcon icon={faClock} color="#ffb700" size={25} />
+            </View> : null}
         <TYText style={styles.buttontext}>
           {convertMinsToTime(this.state.value1)}
           {tonePress}

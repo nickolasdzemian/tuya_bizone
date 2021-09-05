@@ -535,7 +535,7 @@ class ChartClimateT extends PureComponent {
     const ICO = 
       (
         <View style={styles.info}>
-          <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
+          <FontAwesomeIcon icon={faChartPie} color="#57BCFB" size={50} alignSelf="center" />
           <TYText style={styles.info}>
             {Strings.getLang('nullcharts')}
           </TYText>
@@ -544,7 +544,7 @@ class ChartClimateT extends PureComponent {
     const ICODAY = 
     (
       <View style={styles.info}>
-        <FontAwesomeIcon icon={faChartPie} color="#FF7300" size={50} alignSelf="center" />
+        <FontAwesomeIcon icon={faChartPie} color="#57BCFB" size={50} alignSelf="center" />
         <TYText style={styles.info}>
           {Strings.getLang('nullchartsday')}
         </TYText>
@@ -583,7 +583,7 @@ class ChartClimateT extends PureComponent {
           }
           style={styles.insideADD}
         >
-          <FontAwesomeIcon icon={faPlus} color={G >= 336 || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
+          <FontAwesomeIcon icon={faPlus} color={G >= 336 || A === true ? '#d6d6d6' : '#57BCFB'} size={20} />
           <TYText style={styles.titleADD}>{Strings.getLang('addNew')}</TYText>  
         </TouchableOpacity>
         <TouchableOpacity 
@@ -592,7 +592,7 @@ class ChartClimateT extends PureComponent {
             this.setState({god: this._getLenth()});
           }}
         >
-          <FontAwesomeIcon icon={faCoins} color={G >= 336 || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
+          <FontAwesomeIcon icon={faCoins} color={G >= 336 || A === true ? '#d6d6d6' : '#57BCFB'} size={20} />
           <TYText style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</TYText>
         </TouchableOpacity>
         <TouchableOpacity 
@@ -616,7 +616,7 @@ class ChartClimateT extends PureComponent {
                         this._copyDayB();
                       }}
                     >
-                      <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
+                      <FontAwesomeIcon icon={faCopy} color="#57BCFB" size={20} />
                       <TYText style={styles.title}>{Strings.getLang('copyB')}</TYText>
                       <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
                     </TouchableOpacity>)}
@@ -628,7 +628,7 @@ class ChartClimateT extends PureComponent {
                         this._copyDayF();
                       }}
                     >
-                      <FontAwesomeIcon icon={faCopy} color="#90EE90" size={20} />
+                      <FontAwesomeIcon icon={faCopy} color="#57BCFB" size={20} />
                       <TYText style={styles.title}>{Strings.getLang('copyF')}</TYText>
                       <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
                     </TouchableOpacity>)}
@@ -663,7 +663,7 @@ class ChartClimateT extends PureComponent {
             });
           }}
         >
-          <FontAwesomeIcon icon={faCogs} color={(G === 0 && L === 0) || A === true ? '#d6d6d6' : '#90EE90'} size={20} />
+          <FontAwesomeIcon icon={faCogs} color={(G === 0 && L === 0) || A === true ? '#d6d6d6' : '#57BCFB'} size={20} />
           <TYText style={styles.titleADD}>{Strings.getLang('options')}</TYText>
         </TouchableOpacity>
         <TouchableOpacity
@@ -678,7 +678,7 @@ class ChartClimateT extends PureComponent {
     const empty = () => (
       <View>
         <TYText style={styles.wait}>{Strings.getLang('apl2')}</TYText>
-        <ActivityIndicator color="#90EE90" /> 
+        <ActivityIndicator color="#57BCFB" /> 
       </View>
     );
 
@@ -739,7 +739,7 @@ class ChartClimateT extends PureComponent {
         {this.state.apl === true ? 
           <View>
             <TYText style={styles.wait}>{Strings.getLang('apl')}</TYText>
-            <ActivityIndicator color="#90EE90" /> 
+            <ActivityIndicator color="#57BCFB" /> 
           </View> : null}
         <Tabs
           style={{borderRadius: 10, paddingBottom: 30, paddingTop: 1}}
@@ -755,7 +755,7 @@ class ChartClimateT extends PureComponent {
           renderPlaceholder={empty}
           animationConfig={{duration: 10000, delay: 10, useNativeDriver: false}}
           velocityThreshold={1}
-          activeColor={A === true ? '#d6d6d6' : '#90EE90'}
+          activeColor={A === true ? '#d6d6d6' : '#57BCFB'}
           tabActiveTextStyle={{fontWeight: 'bold', fontSize: 20}}
           tabStyle={{width: 50}}
           tabActiveStyle={{backgroundColor: '#fff'}}
@@ -925,7 +925,7 @@ const styles = StyleSheet.create({
     height: 60,
     width: '50%',
     alignItems: 'center',
-    backgroundColor: '#90EE90',
+    backgroundColor: '#57BCFB',
     flexDirection: 'row',
     borderRadius: 6,
     marginHorizontal: 0,
@@ -945,7 +945,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 60,
     backgroundColor: '#f7f7f7',
-    borderLeftColor: '#90EE90',
+    borderLeftColor: '#57BCFB',
     borderRightColor: '#FF4040',
     borderLeftWidth: 5,
     borderRightWidth: 3,
@@ -961,7 +961,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 60,
     backgroundColor: '#fafafa',
-    borderLeftColor: '#90EE90',
+    borderLeftColor: '#57BCFB',
     borderRightColor: '#FF4040',
     borderLeftWidth: 5,
     borderRightWidth: 3,

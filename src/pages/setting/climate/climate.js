@@ -197,7 +197,7 @@ class ClimateScene extends React.PureComponent {
         )}
         {ClimateSelector === true ? <Channel /> : null}
         {/* Переход в статистику (почему здесь - одному боженьке известно) */}
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={[styles.area2, { justifyContent: 'space-between' }]}
           activeOpacity={0.8}
           onPress={() => this.goToSettingsSSS()}
@@ -213,7 +213,7 @@ class ClimateScene extends React.PureComponent {
               size={15}
             />
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     );
   }

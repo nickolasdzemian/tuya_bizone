@@ -3,7 +3,7 @@
 import PropTypes, { number } from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { Slider, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFan, faThermometerQuarter } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +19,8 @@ const {
   ReportProgTemp: ReportProgTempCode,
   FaultAlarm: FaultAlarmCode,
 } = dpCodes;
+
+const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
 class ClimateM extends PureComponent {
   constructor(props) {
@@ -162,14 +164,14 @@ class ClimateM extends PureComponent {
     return C === '01' ? (
       <SafeAreaView style={styles.container}>
         <View style={styles.area}>
-          <TYText style={[styles.num, { fontSize: 20, color: '#949494', marginTop: 8 }]}>
+          <TYText style={[styles.num, { fontSize: windowHeight === 'normal' ? 20 : 15, color: '#949494', marginTop: 8 }]}>
             {Strings.getLang(displayMode)}
           </TYText>
           <View style={styles.title}>
             <FontAwesomeIcon
               icon={faThermometerQuarter}
               color="#57BCFB"
-              size={25}
+              size={windowHeight === 'normal' ? 25 : 18}
               marginRight={10}
             />
             <TYText style={styles.num}>
@@ -189,9 +191,9 @@ class ClimateM extends PureComponent {
               disabled={modeCli !== '00' || C === '00' || alarm !== 0}
               theme={{
                 width: 300,
-                height: 46,
+                height: windowHeight === 'normal' ? 46 : 30,
                 trackRadius: 16,
-                trackHeight: 46,
+                trackHeight: windowHeight === 'normal' ? 46 : 30,
                 thumbSize: 20,
                 thumbRadius: 20,
                 thumbTintColor: modeCli !== '00' || C === '00' || alarm ? '#E3E9EE' : '#57BCFB',
@@ -248,11 +250,11 @@ class ClimateM extends PureComponent {
           </View>
         </View>
         <View style={styles.area}>
-          <TYText style={[styles.num, { fontSize: 20, color: '#949494', marginTop: 8 }]}>
+          <TYText style={[styles.num, { fontSize: windowHeight === 'normal' ? 20 : 15, color: '#949494', marginTop: 8 }]}>
             {Strings.getLang('fantitle')}
           </TYText>
           <View style={styles.title}>
-            <FontAwesomeIcon icon={faFan} color="#57BCFB" size={25} marginRight={10} />
+            <FontAwesomeIcon icon={faFan} color="#57BCFB" size={windowHeight === 'normal' ? 25 : 18} marginRight={10} />
             <TYText style={styles.num}>{Strings.getLang(this.state.fan)}</TYText>
           </View>
           <View style={styles.title}>
@@ -261,9 +263,9 @@ class ClimateM extends PureComponent {
               disabled={C === '00' || alarm !== 0}
               theme={{
                 width: 300,
-                height: 46,
+                height: windowHeight === 'normal' ? 46 : 30,
                 trackRadius: 16,
-                trackHeight: 46,
+                trackHeight: windowHeight === 'normal' ? 46 : 30,
                 thumbSize: 20,
                 thumbRadius: 20,
                 thumbTintColor: C === '00' || alarm ? '#E3E9EE' : '#57BCFB',
@@ -356,11 +358,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 5,
     width: '90%',
-    height: 140,
+    height: windowHeight === 'normal' ? 140 : 105,
   },
   num: {
     textAlign: 'center',
-    fontSize: 26,
+    fontSize: windowHeight === 'normal' ? 26 : 18,
     color: '#333',
     justifyContent: 'center',
     alignItems: 'center',
