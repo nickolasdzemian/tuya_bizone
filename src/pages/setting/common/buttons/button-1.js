@@ -37,7 +37,7 @@ class Button1 extends React.PureComponent {
   }
 
   _handleD1Change = tab => {
-    this.setState({ activeKey1: tab.value });
+    this.setState({ activeKey1: tab.value, show: true });
     TYDevice.putDeviceData({
       [ButtonSettingsCode]: String(`${tab.value}${this.props.ButtonSettings.substring(2, 4)}`),
     });
@@ -47,10 +47,11 @@ class Button1 extends React.PureComponent {
     const { ClimateSelector } = this.props;
     return (
       <Tabs
-        style={{ marginTop: 10 }}
-        tabActiveStyle={{ width: '75%', height: 33, borderRadius: 10, backgroundColor: '#f0f0f0' }}
-        tabActiveTextStyle={this.props.ClimateSelector === true ? { color: '#57BCFB' } : null}
-        underlineStyle={{ backgroundColor: 'transparent' }}
+        style={{ marginTop: 3 }}
+        tabTextStyle={{ color: '#666' }}
+        tabActiveStyle={{ width: '75%', height: 33, borderRadius: 10 }}
+        tabActiveTextStyle={{ color: this.props.ClimateSelector === true ? '#57BCFB' : '#ffb700'}}
+        underlineStyle={{ backgroundColor: this.props.ClimateSelector === true ? '#57BCFB' : '#ffb700' }}
         activeKey={this.state.activeKey1}
         dataSource={this.state.d1}
         swipeable={false}

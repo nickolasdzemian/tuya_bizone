@@ -1,13 +1,12 @@
 /* eslint-disable react/destructuring-assignment */
 // настройка температур для 1 кнопки
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faGripVertical, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Cache } from 'react-native-cache';
+// import { Cache } from 'react-native-cache';
 // import { NumberUtils } from 'tuya-panel-kit/src/utils';
 import Strings from '../../../../i18n/index.ts';
 import dpCodes from '../../../../config/dpCodes.ts';
@@ -15,6 +14,7 @@ import ButtonsModeS from './buttons-main12';
 
 // const TYDevice = TYSdk.device;
 const { PresetTemperature: PresetTemperatureCode, ClimateSelector: ClimateSelectorCode } = dpCodes;
+const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
 // const cache = new Cache({
 //   namespace: 'BtnsConfig',
@@ -33,15 +33,22 @@ class ButtonsConfig extends Component {
     };
   }
 
+  goToSettingsBBB = () => {
+    TYSdk.Navigator.push({
+      id: 'ButtonsScene',
+      title: Strings.getLang('buttonsmodetap0'),
+    });
+  };
+
   buttonsConfiguration() {
     // const config = this.props.PresetTemperature;
     // cache.set('fullconfig', config);
     // this.setState({ config });
     Popup.custom({
       content: (
-        <ScrollView style={{ backgroundColor: '#fff' }}>
+        <SafeAreaView style={{ height: Dimensions.get('window').height - (Dimensions.get('window').height * 0.33), backgroundColor: '#fff' }}>
           <ButtonsModeS />
-        </ScrollView>
+        </SafeAreaView>
       ),
       title: Strings.getLang('buttonsmodetitle2'),
       cancelText: Strings.getLang('cancelText'),
@@ -74,7 +81,6 @@ class ButtonsConfig extends Component {
   //     console.log(this.state.config, 'ПИЗДА ЕЖУ');
   //   };
 
-
   // const data = cache.get('fullconfig').then(response => {
   //     this.setState({ config: response });
   //   });
@@ -84,7 +90,12 @@ class ButtonsConfig extends Component {
       <TouchableOpacity
         style={styles.area}
         activeOpacity={0.8}
-        onPress={() => this.buttonsConfiguration()}
+        onPress={
+          windowHeight === 'normal'
+            ? () => this.buttonsConfiguration()
+            : () => this.goToSettingsBBB()
+        }
+        onLongPress={windowHeight === 'normal' ? () => this.goToSettingsBBB() : null}
       >
         <View style={styles.area0}>
           <FontAwesomeIcon icon={faGripVertical} color="#333" size={18} />

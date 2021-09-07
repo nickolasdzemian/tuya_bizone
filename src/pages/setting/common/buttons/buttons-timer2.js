@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, StyleSheet, ScrollView, View, AsyncStorage, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, View, AsyncStorage, ActivityIndicator, Dimensions } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,8 @@ import dpCodes from '../../../../config/dpCodes.ts';
 const TYDevice = TYSdk.device;
 
 const { TimerPreset: TimerPresetCode } = dpCodes;
+
+const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
 const tonePress = Strings.getLang('tonePress');
 const ttwoPress = Strings.getLang('ttwoPress');
@@ -131,9 +133,9 @@ class ButtonsTimer2S extends Component {
   render() {
     const apl = this.state.apl;
     return (
-      <ScrollView
+      <View
         style={{
-          flex: 0.5,
+          flex: 1,
           marginTop: 10,
         }}
       >
@@ -141,9 +143,10 @@ class ButtonsTimer2S extends Component {
           <View>
             <ActivityIndicator size="large" color="#ff7300" /> 
           </View> : 
-          <View style={styles.title}>
-            <FontAwesomeIcon icon={faClock} color="#ff7300" size={25} />
-          </View>}
+          windowHeight === 'normal' ?
+            <View style={styles.title}>
+              <FontAwesomeIcon icon={faClock} color="#ff7300" size={25} />
+            </View> : null}
         <Text style={styles.buttontext}>
           {convertMinsToTime(this.state.value1)}
           {tonePress}
@@ -248,7 +251,7 @@ class ButtonsTimer2S extends Component {
           min={this.state.value2 + 1}
           value={this.state.value3}
         />
-      </ScrollView>
+      </View>
     );
   }
 }

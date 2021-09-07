@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import ButtonMode from './buttons-mode';
+import ButtonsModeS from './buttons-main12';
 
 const ButtonsScene = () => (
   <View style={styles.container}>
-    <ButtonMode />
+    <ButtonsModeS />
   </View>
 );
 

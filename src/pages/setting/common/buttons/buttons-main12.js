@@ -33,17 +33,16 @@ class ButtonsModeS extends React.PureComponent {
       <Tabs
         style={styles.panel}
         activeKey={this.state.activeKey1}
-        tabActiveStyle={{ width: '70%', height: 33, borderRadius: 10, backgroundColor: '#f0f0f0' }}
-        tabActiveTextStyle={this.props.ClimateSelector === true ? { color: '#57BCFB' } : null}
+        tabActiveStyle={{ width: '70%', height: 33, borderRadius: 10 }}
+        tabActiveTextStyle={{ color: this.props.ClimateSelector === true ? '#57BCFB' : this.state.activeKey1 === '1' ? '#ffb700' : '#FF7300' }}
         tabPosition="top"
-        underlineStyle={{ backgroundColor: 'transparent' }}
+        underlineStyle={{ backgroundColor: this.props.ClimateSelector === true ? '#57BCFB' : this.state.activeKey1 === '1' ? '#ffb700' : '#FF7300' }}
         dataSource={this.state.d1}
         swipeable={false}
         onChange={this._handleD1Change}
         maxItem={2}
       >
         <Tabs.TabPanel>
-          <Divider />
           <Button1 />
         </Tabs.TabPanel>
         {this.props.ClimateSelector === true ? (
@@ -70,7 +69,6 @@ class ButtonsModeS extends React.PureComponent {
           </Tabs.TabPanel>
         ) : (
           <Tabs.TabPanel>
-            <Divider />
             <Button2 />
           </Tabs.TabPanel>
         )}

@@ -12,7 +12,6 @@ import {
   faTasks,
   faAngleUp,
   faPowerOff,
-  faStopwatch20,
   faStopwatch,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
@@ -357,7 +356,7 @@ class Zone1 extends PureComponent {
                       )}
                   </TYText>
                   <FontAwesomeIcon
-                    icon={TimerOn === '01' ? faStopwatch20 : faStopwatch}
+                    icon={faStopwatch}
                     color={C === '01' && modeZ !== '02' ? '#ffb700' : '#d6d6d6'}
                     size={30}
                     margin={5}

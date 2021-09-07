@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { TouchableOpacity, StyleSheet, AsyncStorage } from 'react-native';
-import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
+import { Utils, Popup, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faCogs } from '@fortawesome/free-solid-svg-icons';
 import { Cache } from 'react-native-cache';
 import Strings from '../../../../i18n';
 import dpCodes from '../../../../config/dpCodes';
@@ -15,6 +15,8 @@ const confirmText = Strings.getLang('confirmText');
 
 const TYDevice = TYSdk.device;
 const { PowerRate1: PowerRate1Code, PowerRate2: PowerRate2Code } = dpCodes;
+
+const { convertY: cy } = Utils.RatioUtils;
 
 const cache = new Cache({
   namespace: 'Capacity',
@@ -44,7 +46,16 @@ class LoadCapacity extends Component {
   render() {
     return (
       <TouchableOpacity
-        style={styles.area}
+        style={{ 
+          flexDirection: 'row',
+          alignItems: 'center',
+          alignContent: 'center',
+          justifyContent: 'center',
+          height: cy(30),
+          borderTopEndRadius: 12,
+          borderBottomEndRadius: 12, 
+          marginRight: 8,
+        }}
         activeOpacity={0.8}
         onPress={() =>
           Popup.custom({
@@ -64,28 +75,24 @@ class LoadCapacity extends Component {
             },
           })}
       >
-        <FontAwesomeIcon icon={faBolt} color="#FF7300" size={18} />
-        <TYText style={styles.items}>{Strings.getLang('loadcapacity')}</TYText>
+        <FontAwesomeIcon
+          icon={faCogs}
+          color="#999"
+          size={16}
+          marginLeft={8}
+          marginRight={8}
+          alignSelf="center"
+        />
+        <TYText style={styles.items}>{Strings.getLang('setLoad')}</TYText>
       </TouchableOpacity>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  area: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 8,
-    // backgroundColor: '#fff',
-    borderRadius: 12,
-  },
   items: {
-    marginLeft: 10,
     color: '#333',
-    fontSize: 16,
+    textAlignVertical: 'center',
   },
 });
 

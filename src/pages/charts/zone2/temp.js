@@ -639,13 +639,13 @@ class ChartTemp2 extends PureComponent {
                     <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={18} />
                     <TYText style={styles.title}>{Strings.getLang('eraseday')}</TYText>
                   </TouchableOpacity>
-                  <View>
+                  {/* <View>
                     <Divider style={{marginBottom: 10, marginTop: 10}} />
                     <FontAwesomeIcon icon={faInfoCircle} size={16} margin={10} alignSelf="center" />
                     <TYText style={styles.annotation}>
                       {Strings.getLang('copyNote')}
                     </TYText>
-                  </View>
+                  </View> */}
                 </View>
               ),
               title: Strings.getLang('adtnopt'),

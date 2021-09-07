@@ -37,9 +37,11 @@ class Button2 extends React.PureComponent {
     return (
       <Tabs
         // style={{ justifyContent: 'flex-end' }}
-        style={{ marginTop: 10 }}
-        tabActiveStyle={{ width: '75%', height: 33, borderRadius: 10, backgroundColor: '#f0f0f0' }}
-        underlineStyle={{ backgroundColor: 'transparent' }}
+        style={{ marginTop: 3 }}
+        tabTextStyle={{ color: '#666' }}
+        tabActiveStyle={{ width: '75%', height: 33, borderRadius: 10 }}
+        tabActiveTextStyle={{ color: this.props.ClimateSelector === true ? '#57BCFB' : '#ff7300'}}
+        underlineStyle={{ backgroundColor: this.props.ClimateSelector === true ? '#57BCFB' : '#ff7300' }}
         activeKey={this.state.activeKey2}
         dataSource={this.state.d2}
         swipeable={false}

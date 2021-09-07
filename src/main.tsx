@@ -18,6 +18,7 @@ import Zone2 from './pages/charts/zone2/index';
 import Climate from './pages/charts/climate/index';
 import ZonesScene from './pages/setting/zones/index';
 import CounterChartsScene from './pages/stat/index';
+import ButtonsScene from './pages/setting/common/buttons/index';
 
 console.disableYellowBox = true;
 
@@ -91,6 +92,13 @@ class MainLayout extends NavigatorLayout<Props> {
           '90%': '#FFFFFF',
         };
         break;
+      case 'ButtonsScene':
+        routeProps.title = Strings.getLang('buttonsmodetap0');
+        routeProps.background = {
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
+        };
+        break;
       default:
         break;
     }
@@ -136,6 +144,9 @@ class MainLayout extends NavigatorLayout<Props> {
         break;
       case 'ChartZone2Scene':
         component = <Zone2 />;
+        break;
+      case 'ButtonsScene':
+        component = <ButtonsScene />;
         break;
       default:
         break;

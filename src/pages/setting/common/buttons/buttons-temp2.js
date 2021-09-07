@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Dimensions } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,8 @@ import dpCodes from '../../../../config/dpCodes.ts';
 const TYDevice = TYSdk.device;
 
 const { PresetTemperature: PresetTemperatureCode } = dpCodes;
+
+const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
 const tonePress = Strings.getLang('tonePress');
 const ttwoPress = Strings.getLang('ttwoPress');
@@ -147,9 +149,9 @@ class ButtonsTemp2S extends Component {
   render() {
     const apl = this.state.apl;
     return (
-      <ScrollView
+      <View
         style={{
-          flex: 0.5,
+          flex: 1,
           marginTop: 10,
         }}
       >
@@ -158,9 +160,10 @@ class ButtonsTemp2S extends Component {
             {/* <TYText style={styles.wait}>{Strings.getLang('apl')}</TYText> */}
             <ActivityIndicator size="large" color="#ff7300" /> 
           </View> : 
-          <View style={styles.title}>
-            <FontAwesomeIcon icon={faTemperatureLow} color="#ff7300" size={25} />
-          </View>}
+          windowHeight === 'normal' ?
+            <View style={styles.title}>
+              <FontAwesomeIcon icon={faTemperatureLow} color="#ff7300" size={25} />
+            </View> : null}
         <TYText style={styles.buttontext}>
           {this.state.value1}
           °C
@@ -271,7 +274,7 @@ class ButtonsTemp2S extends Component {
           min={this.state.value2 + 1}
           value={this.state.value3}
         />
-      </ScrollView>
+      </View>
     );
   }
 }

@@ -120,8 +120,8 @@ export default {
     flour_12: 'External sensors 1 + 2',
     air_flour_12: 'All sensors',
     chSelector: 'Channel selection',
-    chfalse: 'I zone set to cooling, II set to heating',
-    chtrue: 'I zone set to heating, II set to cooling',
+    chfalse: 'I zone is set to cooling, II is set to heating',
+    chtrue: 'I zone is set to heating, II is set to cooling',
 
     // Settings Zones
     ZonesScene: 'Zones settings',
@@ -215,7 +215,10 @@ export default {
     endPer: 'Select end date:',
     per: 'Period selection',
     IntErr: 'Invalid selected interval.\nChoose another one.',
-
+    detailed: 'Detailed',
+    charrr: 'Chart',
+    setLoad: 'Capacity',
+    intervala: 'Period',
   },
   ru_RU: {
     apl: 'Ждите применения..',
@@ -428,6 +431,10 @@ export default {
     endPer: 'Выберете конечную дату:',
     per: 'Выбор пероида',
     IntErr: 'Некорректно выбран интервал.\nПовторите попытку',
+    detailed: 'Подробно',
+    charrr: 'График',
+    setLoad: 'Мощность',
+    intervala: 'Интервал',
   },
   ru: {
     apl: 'Ждите применения..',
@@ -640,5 +647,9 @@ export default {
     endPer: 'Выберете конечную дату:',
     per: 'Выбор пероида',
     IntErr: 'Некорректно выбран интервал.\nПовторите попытку',
+    detailed: 'Подробно',
+    charrr: 'График',
+    setLoad: 'Мощность',
+    intervala: 'Интервал',
   },
 };

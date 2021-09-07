@@ -2,14 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  AsyncStorage,
-  ActivityIndicator,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View, AsyncStorage, ActivityIndicator, Dimensions } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
@@ -139,9 +132,9 @@ class ButtonsTimer1S extends Component {
   render() {
     const apl = this.state.apl;
     return (
-      <ScrollView
+      <View
         style={{
-          flex: 0.5,
+          flex: 1,
           marginTop: 10,
         }}
       >
@@ -257,7 +250,7 @@ class ButtonsTimer1S extends Component {
           min={this.state.value2 + 1}
           value={this.state.value3}
         />
-      </ScrollView>
+      </View>
     );
   }
 }

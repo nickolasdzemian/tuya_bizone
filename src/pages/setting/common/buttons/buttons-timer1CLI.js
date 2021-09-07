@@ -117,9 +117,9 @@ class ButtonsTimer1CLI extends Component {
 
   render() {
     return (
-      <ScrollView
+      <View
         style={{
-          flex: 0.5,
+          flex: 1,
           marginTop: 10,
         }}
       >
@@ -227,7 +227,7 @@ class ButtonsTimer1CLI extends Component {
           min={this.state.value2 + 1}
           value={this.state.value3}
         />
-      </ScrollView>
+      </View>
     );
   }
 }

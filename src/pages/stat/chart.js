@@ -11,7 +11,7 @@ import { View, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, FlatList 
 import debounce from 'lodash/debounce';
 import { Utils, TYSdk, Dialog, TYText, Divider, Popup, DatePicker } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCalendarTimes, faCalendarAlt, faWeight, faExchangeAlt, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarTimes, faCalendarAlt, faWeight, faBars, faChartBar, faChartLine, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 // import { BarChart } from 'react-native-chart-kit';
 import { VictoryChart, VictoryBar, VictoryLine, Background, VictoryTheme, VictoryLegend, VictoryLabel } from 'victory-native';
 // import { decode } from '../../utils/base-64';
@@ -23,7 +23,10 @@ import Strings from '../../i18n';
 // import { ScrollView } from 'react-native-gesture-handler';
 
 const { 
-  settingsCounter: settingsCounterCode, ClimateSelector: ClimateSelectorCode, chSelector: chSelectorCode } = dpCodes;
+  settingsCounter: settingsCounterCode,
+  ClimateSelector: ClimateSelectorCode,
+  chSelector: chSelectorCode,
+} = dpCodes;
 const { convertY: cy, isIos } = Utils.RatioUtils;
 const TYNative = TYSdk.native;
 
@@ -39,6 +42,7 @@ class ChartView extends Component {
       dateEnd: new Date(),
       ini: true,
       isChart: true,
+      zone: true,
       dp: 153,
       maxY: 200,
       maxX: 200,
@@ -46,7 +50,7 @@ class ChartView extends Component {
       maxX2: 200,
     };
     this.periodSelect = 1; // 0-day, 1-month, 2-year
-    this.dpID = 153; // 137 + this.props.numCounter;
+    this.dpID = 153;
     this.litrEnable = true;
     this.offset = 0;
     this.lineOrBar = false; // if folse then line else bar
@@ -230,7 +234,7 @@ class ChartView extends Component {
         
         if (this.periodSelect === 0) { // for day
           const keys = Object.keys(d);
-          xLable = keys.map(string => parseInt(string, 10) % 100);
+          xLable = keys.map(string => parseInt(string, 10));
           const values = Object.values(d);
           valuesNum = values.map(string => Math.trunc(parseInt(string, 10)));
           const valuesTemp = [];
@@ -242,7 +246,7 @@ class ChartView extends Component {
             } else {
               valuesTemp[i] = valuesNum[i];
             }
-            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+            if ((i !== 0) && (valuesTemp[i] >= 1)) {
               this.litrEnable = false;
             }
           }
@@ -256,7 +260,7 @@ class ChartView extends Component {
           valuesNum.shift();
         } else if (this.periodSelect === 1) { // for month
           const keys = Object.keys(d.result);
-          xLable = keys.map(string => this.state.isChart === false ? `${string.substr(6, 7)}.${string.substring(4, 6)}.${string.substring(2, 4)}` : `${string.substr(6, 7)}`);
+          xLable = keys.map(string => `${string.substr(6, 7)}.${string.substring(4, 6)}.${string.substring(2, 4)}`);
           const values = Object.values(d.result);
           valuesNum = values.map(string => Math.trunc(parseInt(string, 10)));
           const valuesTemp = [];
@@ -268,7 +272,7 @@ class ChartView extends Component {
             } else {
               valuesTemp[i] = valuesNum[i];
             }
-            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+            if ((i !== 0) && (valuesTemp[i] >= 1)) {
               this.litrEnable = false;
             }
           }
@@ -298,7 +302,7 @@ class ChartView extends Component {
             } else {
               valuesTemp[i] = valuesNum[i];
             }
-            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+            if ((i !== 0) && (valuesTemp[i] >= 1)) {
               this.litrEnable = false;
             }
           }
@@ -459,7 +463,7 @@ class ChartView extends Component {
         
         if (this.periodSelect === 0) { // for day
           const keys = Object.keys(d);
-          xLable = keys.map(string => parseInt(string, 10) % 100);
+          xLable = keys.map(string => parseInt(string, 10));
           const values = Object.values(d);
           valuesNum = values.map(string => Math.trunc(parseInt(string, 10)));
           const valuesTemp = [];
@@ -471,7 +475,7 @@ class ChartView extends Component {
             } else {
               valuesTemp[i] = valuesNum[i];
             }
-            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+            if ((i !== 0) && (valuesTemp[i] >= 1)) {
               this.litrEnable = false;
             }
           }
@@ -485,7 +489,7 @@ class ChartView extends Component {
           valuesNum.shift();
         } else if (this.periodSelect === 1) { // for month
           const keys = Object.keys(d.result);
-          xLable = keys.map(string => this.state.isChart === false ? `${string.substr(6, 7)}.${string.substring(4, 6)}.${string.substring(2, 4)}` : `${string.substr(6, 7)}`);
+          xLable = keys.map(string => `${string.substr(6, 7)}.${string.substring(4, 6)}.${string.substring(2, 4)}`);
           const values = Object.values(d.result);
           valuesNum = values.map(string => Math.trunc(parseInt(string, 10)));
           const valuesTemp = [];
@@ -497,7 +501,7 @@ class ChartView extends Component {
             } else {
               valuesTemp[i] = valuesNum[i];
             }
-            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+            if ((i !== 0) && (valuesTemp[i] >= 1)) {
               this.litrEnable = false;
             }
           }
@@ -527,7 +531,7 @@ class ChartView extends Component {
             } else {
               valuesTemp[i] = valuesNum[i];
             }
-            if ((i !== 0) && (valuesTemp[i] >= 1000)) {
+            if ((i !== 0) && (valuesTemp[i] >= 1)) {
               this.litrEnable = false;
             }
           }
@@ -583,146 +587,156 @@ class ChartView extends Component {
     const { ClimateSelector, chSelector } = this.props;
     const maxY = Math.max.apply(null, [this.state.maxY + 1, this.state.maxY2 + 1]);
     const maxX = this.state.maxX || this.state.maxX2;
+    const Zopa = this.state.zone;
 
     const Item = ({ id, x, y }) => (
       <View style={{ flexDirection: 'row', backgroundColor: '#fff', padding: 10, borderRadius: 7, marginBottom: 5, marginHorizontal: 20, justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
-          <FontAwesomeIcon icon={faCalendarAlt} color={ClimateSelector ? '#57BCFB' : '#ffb700'} size={20} marginRight={8} />
+          <FontAwesomeIcon icon={faCalendarAlt} color="#999" size={20} marginRight={8} />
           <TYText>{this.periodSelect === 0 ? `${x < 10 ? `0${x}:00` : `${x}:00`}` : x}</TYText>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
-          <FontAwesomeIcon icon={faWeight} color={ClimateSelector ? '#57BCFB' : '#ffb700'} size={20} marginRight={8} />
+          <FontAwesomeIcon icon={faWeight} color="#999" size={20} marginRight={8} />
           <TYText>{`${y} ${Strings.getLang('kwh')}`}</TYText>
         </View>
       </View>
     );
     const renderItem = ({ item }) => (
-      <Item id={item.id} x={item.x} y={item.y} />
+      item.y > 0 ?
+        <View>
+          <Divider />
+          <Item id={item.id} x={item.x} y={item.y} />
+          <Divider />
+        </View> : null
     );
 
     return (
       <SafeAreaView style={[{ backgroundColor: '#fff', marginBottom: 5, flex: 1 }]}>
         <View style={[styles.container, { backgroundColor: '#FFF', borderBottomStartRadius: 20, borderBottomEndRadius: 20, marginBottom: 10 }]}>
-          <TouchableOpacity
-            style={{ flexDirection: 'row', justifyContent: 'space-between', height: cy(38), borderColor: ClimateSelector ? '#57BCFB' : '#ffb700', borderRadius: 12, borderWidth: 0.7 }}
-            activeOpacity={0.7}
-            onPress={() => {
-              this.setState({ ini: false });
-              Popup.custom({
-                content: (
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'transparent',
-                    }}
-                  >
-                    <TYText>{Strings.getLang('startPer')}</TYText>
-                    <DatePicker
-                      defaultDate={this.state.dateStart}
-                      onDateChange={date => this.setState({ dateStart: new Date(date) })}
-                      style={styles.datePickerStyle}
-                      pickerFontColor={ClimateSelector ? '#57BCFB' : '#ffb700'}
-                      dateSortKeys={['day', 'month', 'year']}
-                      // mode={this.periodSelect === 1 ? 'date' : 'year'}
-                      mode="date"
-                    />
-                    <TYText>{Strings.getLang('endPer')}</TYText>
-                    <DatePicker
-                      defaultDate={this.state.dateEnd}
-                      onDateChange={date => this.setState({ dateEnd: new Date(date) })}
-                      style={styles.datePickerStyle}
-                      pickerFontColor={ClimateSelector ? '#57BCFB' : '#ffb700'}
-                      dateSortKeys={['day', 'month', 'year']}
-                      // mode={this.periodSelect === 1 ? 'date' : 'year'}
-                      mode="date"
-                    />
-                  </View>
-                ),
-                title: Strings.getLang('per'),
-                cancelText: Strings.getLang('strCancel'),
-                confirmText: 'OK',
-                onMaskPress: ({ close }) => {
-                  close();
-                },
-                onConfirm: (date, { close }) => {
-                  this.setState({ startRender: false }, () => {
-                    const DEP = Math.floor((this.state.dateEnd.getTime() - this.state.dateStart.getTime()) / (1000 * 60 * 60 * 24));
-                    DEP > 360 
-                      ? this.onChangePeriodYear()
-                      : DEP === 0
-                        ? this.onChangePeriodDay()
-                        : DEP < 0 || this.state.dateEnd > new Date()
-                          ? TYNative.simpleTipDialog(`${Strings.getLang('IntErr')}`, () => {})
-                          : this.onChangePeriodMonth();
-                    // TYSdk.native.showLoading({ title: Strings.getLang('load') });
-                    // this.litrEnable = true;
-                    // this.getLogs();
-                  });
-                  // this.forceUpdate();
-                  Popup.close();
-                },
-              });
-            }}
-          >
-            <FontAwesomeIcon icon={faExchangeAlt} color={ClimateSelector ? '#57BCFB' : '#ffb700'} size={18} marginLeft={12} marginRight={8} alignSelf="center" />
-            <TYText style={[styles.textButtonStep, { alignSelf: 'center'}]}>{this.intervalText}</TYText>
-            <FontAwesomeIcon icon={faPen} color="#999" size={10} marginLeft={8} marginRight={12} alignSelf="center" />
-          </TouchableOpacity>
-
           <View style={[styles.buttonGgroup]}>
             <TouchableOpacity
               style={[styles.touch]}
               activeOpacity={0.8}
               onPress={
                 () => {
-                  this.interval = 0;
-                  this.litrEnable = true;
-                  this.setState({ isChart: false, startRender: false}, () => {
-                    TYSdk.native.showLoading({ title: Strings.getLang('load') });
-                    this.getLogs();
-                    this.getLogs2();
-                  });
-                  this.forceUpdate();
+                  this.setState({ isChart: false });
                 }
               }
             >
               <View
-                style={[
-                  styles.buttonView1,
-                  { backgroundColor: this.state.isChart && ClimateSelector ? '#57BCFB' : !this.state.isChart ? '#ffb700' : '#ddd' },
-                ]}
+                style={[styles.buttonView1, { flexDirection: 'row' }]}
               >
-                <TYText style={[styles.textButton]}>{Strings.getLang('пыщь1')}</TYText>
+                <FontAwesomeIcon icon={faBars} color="#999" size={16} marginLeft={8} marginRight={8} alignSelf="center" />
+                <TYText style={[styles.textButton, { color: !this.state.isChart && ClimateSelector ? '#57BCFB' : !this.state.isChart && ClimateSelector === false ? '#ffb700' : '#333'}]}>{Strings.getLang('detailed')}</TYText>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.touch]}
+              style={styles.touch}
               activeOpacity={0.8}
               onPress={
                 () => {
-                  this.interval = 0;
-                  this.litrEnable = true;
-                  this.setState({ isChart: true, startRender: false}, () => {
-                    TYSdk.native.showLoading({ title: Strings.getLang('load') });
-                    this.getLogs();
-                    this.getLogs2();
-                  });
-                  this.forceUpdate();
+                  this.setState({ isChart: true });
                 }
               }
             >
-              <View
-                style={[
-                  styles.buttonView3,
-                  { backgroundColor: this.state.isChart && ClimateSelector ? '#57BCFB' : this.state.isChart ? '#ffb700' : '#ddd' },
-                ]}
-              >
-                <TYText style={[styles.textButton]}>{Strings.getLang('пыщь2')}</TYText>
+              <View style={[styles.buttonView3, { flexDirection: 'row' }]}>
+                <FontAwesomeIcon icon={isIos ? faChartLine : faChartBar} color="#999" size={16} marginLeft={8} marginRight={8} alignSelf="center" />
+                <TYText style={[styles.textButton, {color: this.state.isChart && ClimateSelector ? '#57BCFB' : this.state.isChart ? '#ffb700' : '#333'}]}>{Strings.getLang('charrr')}</TYText>
               </View>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.touch}
+              activeOpacity={0.8}
+              onPress={() => {
+                this.setState({ ini: false });
+                Popup.custom({
+                  content: (
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'transparent',
+                      }}
+                    >
+                      <TYText>{Strings.getLang('startPer')}</TYText>
+                      <DatePicker
+                        defaultDate={this.state.dateStart}
+                        onDateChange={date => this.setState({ dateStart: new Date(date) })}
+                        style={styles.datePickerStyle}
+                        itemStyle={styles.pickerItem}
+                        pickerFontColor={ClimateSelector ? '#57BCFB' : '#ffb700'}
+                        dateSortKeys={['day', 'month', 'year']}
+                        // mode={this.periodSelect === 1 ? 'date' : 'year'}
+                        mode="date"
+                      />
+                      <TYText>{Strings.getLang('endPer')}</TYText>
+                      <DatePicker
+                        defaultDate={this.state.dateEnd}
+                        onDateChange={date => this.setState({ dateEnd: new Date(date) })}
+                        style={styles.datePickerStyle}
+                        itemStyle={styles.pickerItem}
+                        pickerFontColor={ClimateSelector ? '#57BCFB' : '#ffb700'}
+                        dateSortKeys={['day', 'month', 'year']}
+                        // mode={this.periodSelect === 1 ? 'date' : 'year'}
+                        mode="date"
+                      />
+                    </View>
+                  ),
+                  title: Strings.getLang('per'),
+                  cancelText: Strings.getLang('cancelText'),
+                  confirmText: Strings.getLang('confirmText'),
+                  onMaskPress: ({ close }) => {
+                    close();
+                  },
+                  onConfirm: (date, { close }) => {
+                    this.setState({ startRender: false }, () => {
+                      const DEP = Math.floor((this.state.dateEnd.getTime() - this.state.dateStart.getTime()) / (1000 * 60 * 60 * 24));
+                      DEP > 360 
+                        ? this.onChangePeriodYear()
+                        : DEP === 0
+                          ? this.onChangePeriodDay()
+                          : DEP < 0 || this.state.dateEnd > new Date()
+                            ? TYNative.simpleTipDialog(`${Strings.getLang('IntErr')}`, () => {})
+                            : this.onChangePeriodMonth();
+                    // TYSdk.native.showLoading({ title: Strings.getLang('load') });
+                    // this.litrEnable = true;
+                    // this.getLogs();
+                    });
+                    // this.forceUpdate();
+                    Popup.close();
+                  },
+                });
+              }}
+            >
+              <View style={[styles.buttonView3, { flexDirection: 'row' }]}>
+                <FontAwesomeIcon icon={faCalendarAlt} color="#999" size={18} marginLeft={8} marginRight={5} alignSelf="center" />
+                <TYText style={[styles.textButton, { alignSelf: 'center'}]}>{Strings.getLang('intervala')}</TYText>
+              </View>
+            </TouchableOpacity>
+            <LoadCapacity style={styles.touch} />
           </View>
-          <LoadCapacity />
+          <Divider style={{ marginBottom: 25 }} />
+          {this.state.isChart ? (
+            <TYText style={[styles.textButtonStep, { alignSelf: 'center'}]}>{this.intervalText}</TYText>
+          ) : (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginRight: 8, marginLeft: 8 }}>
+              <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.setState({ zone: !Zopa })}>
+                <FontAwesomeIcon icon={faExchangeAlt} color="#999" size={16} marginLeft={8} marginRight={8} alignSelf="center" />
+                {/* <TYText style={[styles.textButtonStep, { alignSelf: 'center'}]}>
+                  {ClimateSelector && chSelector === false ? Strings.getLang(this.state.zone ? 'пыщь1кли' : 'пыщь2кли') : ClimateSelector && chSelector === true ? Strings.getLang(this.state.zone ? 'пыщь2кли' : 'пыщь1кли') : Strings.getLang(this.state.zone ? 'пыщь1' : 'пыщь2')}
+                </TYText> */}
+                {ClimateSelector ?
+                  <View style={{ flexDirection: 'row' }}>
+                    <TYText style={[styles.textButtonStep, { alignSelf: 'center', marginRight: 8, color: Zopa && !chSelector ? '#57BCFB' : Zopa && chSelector ? '#ffb700' : '#999' }]}>{Strings.getLang(chSelector ? 'пыщь2кли' : 'пыщь1кли')}</TYText>
+                    <TYText style={[styles.textButtonStep, { alignSelf: 'center', color: !Zopa && !chSelector ? '#ffb700' : !Zopa && chSelector ? '#57BCFB' : '#999'}]}>{Strings.getLang(chSelector ? 'пыщь1кли' : 'пыщь2кли')}</TYText>
+                  </View> : 
+                  <View style={{ flexDirection: 'row' }}>
+                    <TYText style={[styles.textButtonStep, { alignSelf: 'center', marginRight: 8, color: Zopa ? '#ffb700' : '#999' }]}>{Strings.getLang('пыщь1')}</TYText>
+                    <TYText style={[styles.textButtonStep, { alignSelf: 'center', color: !Zopa ? '#ff7300' : '#999'}]}>{Strings.getLang('пыщь2')}</TYText>
+                  </View>}
+              </TouchableOpacity>
+              <TYText style={[styles.textButtonStep, { alignSelf: 'center'}]}>{this.intervalText}</TYText>
+            </View>)}
         </View>
         {this.state.dataVictory === null || this.state.dataVictory.length < 1 ? (
           <View style={{ height: cy(550), alignSelf: 'center', alignContent: 'center', justifyContent: 'center'}}>
@@ -730,7 +744,7 @@ class ChartView extends Component {
             <TYText style={[styles.textButton]}>{Strings.getLang('пыщьпыщь')}</TYText>
           </View>
         ) : 
-          this.state.isChart === true && this.state.startRender === true && this.state.dataVictory !== [] ? (
+          this.state.isChart === true && this.state.dataVictory !== [] ? (
             <View style={{alignSelf: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, height: '90%', width: Dimensions.get('window').width - 8}}>
               {isIos ? 
                 <VictoryChart
@@ -743,7 +757,7 @@ class ChartView extends Component {
                 >
                   <VictoryLegend 
                     x={100}
-                    y={55}
+                    y={10}
                     orientation="horizontal"
                     gutter={70}
                     data={
@@ -847,7 +861,7 @@ class ChartView extends Component {
             </View>
           ) : (
             <FlatList
-              data={this.state.dataVictory}
+              data={Zopa ? this.state.dataVictory : this.state.dataVictory2}
               renderItem={renderItem}
               keyExtractor={item => item.id}
             />
@@ -876,21 +890,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
   },
   buttonGgroup: {
-    paddingTop: 10,
-    // paddingBottom: 10,
-    height: cy(50),
+    paddingTop: 1,
+    height: cy(40),
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'stretch',
     justifyContent: 'center',
   },
+  pickerItem: {
+    fontFamily: 'System',
+    fontSize: 18,
+  },
   touch: {
-    flex: 1,
-    width: '50%',
-    margin: 1,
   },
   buttonView1: {
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'center',
     height: cy(30),
     borderTopStartRadius: 12,
@@ -898,6 +913,7 @@ const styles = StyleSheet.create({
   },
   buttonView3: {
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'center',
     height: cy(30),
     borderTopEndRadius: 12,
@@ -905,13 +921,11 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: '#333',
-    fontSize: cy(14),
     textAlignVertical: 'center',
   },
   textButtonStep: {
     // flex: 3,
     color: '#333',
-    fontSize: cy(14),
     textAlign: 'center',
     textAlignVertical: 'center',
   },
