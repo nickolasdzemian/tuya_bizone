@@ -148,8 +148,8 @@ class ButtonsTimer2S extends Component {
               <FontAwesomeIcon icon={faClock} color="#ff7300" size={25} />
             </View> : null}
         <Text style={styles.buttontext}>
-          {convertMinsToTime(this.state.value1)}
           {tonePress}
+          {convertMinsToTime(this.state.value1)}
         </Text>
         <View style={styles.title}>
           <Text style={styles.context}>0:01</Text>
@@ -183,8 +183,8 @@ class ButtonsTimer2S extends Component {
         />
         <Divider />
         <Text style={styles.buttontext}>
-          {convertMinsToTime(this.state.value2)}
           {ttwoPress}
+          {convertMinsToTime(this.state.value2)}
         </Text>
         <View style={styles.title}>
           <Text style={styles.context}>{convertMinsToTimeM(this.state.value1 + 1)}</Text>
@@ -218,8 +218,8 @@ class ButtonsTimer2S extends Component {
         />
         <Divider />
         <Text style={styles.buttontext}>
-          {convertMinsToTime(this.state.value3)}
           {tthreePress}
+          {convertMinsToTime(this.state.value3)}
         </Text>
         <View style={styles.title}>
           <Text style={styles.context}>{convertMinsToTimeM(this.state.value2 + 1)}</Text>

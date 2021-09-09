@@ -66,6 +66,7 @@ class Zone1Mode extends Component {
             title: [climatemode],
             cancelText,
             confirmText,
+            confirmTextStyle: { color: '#ffb700' },
             showBack: false,
             onBack: ({ close }) => {
               console.log('Select climate --none');

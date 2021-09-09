@@ -31,7 +31,7 @@ import {
   faTrashAlt,
   faChartPie,
   faPlus,
-  faCoins,
+  faListOl,
   faCogs,
   faCopy,
   faInfoCircle,
@@ -57,6 +57,8 @@ const {
   chart_1_part_4: chart_1_part_4Code,
 } = dpCodes;
 
+// Здесь и далее - создание хранилища. В данном приложении используется для хранения локальных данных
+// и для предотварщения вызова rendera (да, есть другие способы и, возможно будут внесены правки)
 const cache = new Cache({
   namespace: 'ChartClimateT',
   policy: {
@@ -69,12 +71,15 @@ class ChartClimateT extends PureComponent {
   constructor(props) {
     super(props);
 
+    // Определение длины массива графиков
     const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
 
     const date = new Date();
     
     this.state = {
+      // длина
       god: EVA > 0 ? EVA : 0,
+      // текущий день
       activeKey: [7, 1, 2, 3, 4, 5, 6][date.getDay()],
       d1: [
         { value: 1, label: Strings.getLang('mon') },
@@ -85,7 +90,9 @@ class ChartClimateT extends PureComponent {
         { value: 6, label: Strings.getLang('sat') },
         { value: 7, label: Strings.getLang('sun') },
       ],
+      // определение диапазона температур
       dutemps: _.range(-15, 81),
+      // определение включаться ли лоадеру или нет
       apl: false,
     };
   }
@@ -164,12 +171,14 @@ class ChartClimateT extends PureComponent {
     return DTM;              
   }
 
+  // Получение длины массива (непрямое использование)
   _getLenth() {
     const EVA = parseInt(this.props.chart_1_part_1.substring(0, 4), 16);
     const LENA = EVA > 0 ? EVA : 0;
     return LENA;
   }
 
+  // Получение всех данных и создание единого массива для работы с ним
   _getAll() {
     const L = this._getLenth();
     const I = this.props.chart_1_part_1.substring(4);
@@ -373,6 +382,7 @@ class ChartClimateT extends PureComponent {
     });
   };
 
+  // Преобразование данных через сторонние функции, создание разделенных строк и их отправка
   _sender(DATA) {    
     DATA.sort(function(a, b) {
       if (a.time > b.time) {
@@ -452,10 +462,12 @@ class ChartClimateT extends PureComponent {
     }
   };
 
+  // Выбор дня недели
   _handleD1Change = tab => {
     this.setState({ activeKey: tab.value });
   };
 
+  // Редактор температуры и времени для точек
   _selector(temp, time) {
     const selector = (
       <View
@@ -592,7 +604,7 @@ class ChartClimateT extends PureComponent {
             this.setState({god: this._getLenth()});
           }}
         >
-          <FontAwesomeIcon icon={faCoins} color={G >= 336 || A === true ? '#d6d6d6' : '#57BCFB'} size={20} />
+          <FontAwesomeIcon icon={faListOl} color={G >= 336 || A === true ? '#d6d6d6' : '#57BCFB'} size={20} />
           <TYText style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</TYText>
         </TouchableOpacity>
         <TouchableOpacity 

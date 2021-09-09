@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, AsyncStorage } from 'react-native';
+import { StyleSheet, View, AsyncStorage } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
@@ -127,8 +127,8 @@ class ButtonsTimer1CLI extends Component {
           <FontAwesomeIcon icon={faClock} color="#90EE90" size={25} />
         </View>
         <TYText style={styles.buttontext}>
-          {convertMinsToTime(this.state.value1)}
           {tonePress}
+          {convertMinsToTime(this.state.value1)}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>0:01</TYText>
@@ -161,8 +161,8 @@ class ButtonsTimer1CLI extends Component {
         />
         <Divider />
         <TYText style={styles.buttontext}>
-          {convertMinsToTime(this.state.value2)}
           {ttwoPress}
+          {convertMinsToTime(this.state.value2)}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>{convertMinsToTimeM(this.state.value1)}</TYText>
@@ -195,8 +195,8 @@ class ButtonsTimer1CLI extends Component {
         />
         <Divider />
         <TYText style={styles.buttontext}>
-          {convertMinsToTime(this.state.value3)}
           {tthreePress}
+          {convertMinsToTime(this.state.value3)}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>{convertMinsToTimeM(this.state.value2)}</TYText>

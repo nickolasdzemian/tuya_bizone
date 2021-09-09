@@ -234,7 +234,7 @@ class ChartView extends Component {
         
         if (this.periodSelect === 0) { // for day
           const keys = Object.keys(d);
-          xLable = keys.map(string => parseInt(string, 10));
+          xLable = keys.map(string => parseInt(string.substring(8), 10));
           const values = Object.values(d);
           valuesNum = values.map(string => Math.trunc(parseInt(string, 10)));
           const valuesTemp = [];
@@ -463,7 +463,7 @@ class ChartView extends Component {
         
         if (this.periodSelect === 0) { // for day
           const keys = Object.keys(d);
-          xLable = keys.map(string => parseInt(string, 10));
+          xLable = keys.map(string => parseInt(string.substring(8), 10));
           const values = Object.values(d);
           valuesNum = values.map(string => Math.trunc(parseInt(string, 10)));
           const valuesTemp = [];
@@ -738,7 +738,7 @@ class ChartView extends Component {
               <TYText style={[styles.textButtonStep, { alignSelf: 'center'}]}>{this.intervalText}</TYText>
             </View>)}
         </View>
-        {this.state.dataVictory === null || this.state.dataVictory.length < 1 ? (
+        {(this.state.dataVictory === null || this.state.dataVictory.length < 1) && (this.state.dataVictory2 === null || this.state.dataVictory2.length < 1) ? (
           <View style={{ height: cy(550), alignSelf: 'center', alignContent: 'center', justifyContent: 'center'}}>
             <FontAwesomeIcon icon={faCalendarTimes} color={ClimateSelector ? '#57BCFB' : '#ffb700'} size={65} alignSelf="center" marginBottom={35} />
             <TYText style={[styles.textButton]}>{Strings.getLang('пыщьпыщь')}</TYText>
@@ -861,6 +861,7 @@ class ChartView extends Component {
             </View>
           ) : (
             <FlatList
+              style={{ marginTop: 10 }}
               data={Zopa ? this.state.dataVictory : this.state.dataVictory2}
               renderItem={renderItem}
               keyExtractor={item => item.id}

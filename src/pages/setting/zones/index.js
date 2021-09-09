@@ -5,12 +5,14 @@ import { TYText } from 'tuya-panel-kit';
 // import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 // import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import ZoneIScene from './zone1';
+// import ZoneIName from './name';
 import ZoneIIScene from './zone2';
 
 const ZonesScene = () => (
   <ScrollView style={styles.container}>
     <SafeAreaView style={styles.area}>
       <TYText style={[styles.title, { color: '#ffb700' }]}>1</TYText>
+      {/* <ZoneIName /> */}
       {/* <SafeAreaView style={[styles.area, { flexDirection: 'row' }]}>
         <FontAwesomeIcon icon={faMapMarkerAlt} color="#ffb700" size={25} />
         <FontAwesomeIcon icon={faMapMarkerAlt} color="#ff7300" size={20} marginRight={14} />

@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TouchableOpacity, AsyncStorage } from 'react-native';
 import { TYSdk, Slider, Collapsible, Popup, TYText, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -10,15 +10,24 @@ import {
   faSlidersH,
   faChartBar,
   faTasks,
-  faAngleUp,
+  faAngleDown,
   faPowerOff,
   faStopwatch,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
+import { Cache } from 'react-native-cache';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
 const TYDevice = TYSdk.device;
+
+const cache = new Cache({
+  namespace: 'ZNames',
+  policy: {
+    maxEntries: 5000,
+  },
+  backend: AsyncStorage,
+});
 
 const {
   Zone: ZoneCode,
@@ -51,7 +60,9 @@ class Zone2 extends PureComponent {
       valueZ1: V > 100 ? V - 256 : V,
       power: this.props.Zone.substring(2, 4),
       bar: true,
+      name: undefined,
     };
+    this.getName();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -96,11 +107,12 @@ class Zone2 extends PureComponent {
           title: Strings.getLang('programmmode'),
           value: String(modeII + modeZProg + modeI),
         },
-        {
-          key: '02',
-          title: Strings.getLang('programmtimermode'),
-          value: String(modeII + modeZTime + modeI),
-        },
+        // Режим программного таймера - выключен по требованию
+        // {
+        //   key: '02',
+        //   title: Strings.getLang('programmtimermode'),
+        //   value: String(modeII + modeZTime + modeI),
+        // },
       ],
       iconTintColor: '#ff7300',
       title: [mode],
@@ -127,6 +139,15 @@ class Zone2 extends PureComponent {
       },
     });
   };
+
+  getName() {
+    let name = null;
+    cache.get('name2').then(response => {
+      this.setState({ name: response });
+    });
+    name = this.state.name;
+    return name;
+  }
 
   getDataTemp() {
     const { SetTemperature } = this.props;
@@ -192,18 +213,38 @@ class Zone2 extends PureComponent {
     });
   };
 
+  resetT = () => {
+    const TimerSwitch = this.props.TimerSettings.substring(14, 16);
+    const I = this.props.TimerSettings.substring(0, 14);
+    const II = this.props.TimerSettings.substring(16, 18);
+    // const ON = '01';
+    const OFF = '00';
+    const Tfin = TimerSwitch === '00' ? null : String(I + OFF + II);
+    TYDevice.putDeviceData({
+      [TimerSettingsCode]: Tfin,
+    });
+    Popup.close();
+  };
+
   // йункция таймера
   timer1 = () => {
     Popup.countdown(
       {
         title: ttimer,
+        subTitle: (
+          <TYText style={{ color: '#ff7300', fontSize: 14 }} onPress={() => this.resetT()}>
+            {Strings.getLang('resetT')}
+          </TYText>
+        ),
         cancelText,
         confirmText,
+        confirmTextStyle: { color: '#ff7300' },
         hourText: hrss,
         minuteText: minss,
         max: 1440,
         value: parseInt(this.props.TimerSettings.substring(4, 8), 16),
-        switchValue: this.props.TimerSettings.substring(14, 16) === '01',
+        // switchValue: this.props.TimerSettings.substring(14, 16) === '01',
+        switchValue: true,
         onSwitchValueChange: () => {
           const TimerSwitch = this.props.TimerSettings.substring(14, 16);
           const I = this.props.TimerSettings.substring(0, 14);
@@ -267,9 +308,10 @@ class Zone2 extends PureComponent {
     setTimeout(() => {
       this.setState({ bar: true });
     }, 14000);
-  };
+  }
 
   render() {
+    this.getName();
     const { Relay2flag, OpenWindowStatus, FaultAlarm, SensorSet2, OpenWndW } = this.props;
 
     const OpenWndW1 = OpenWndW.substring(2, 4);
@@ -321,8 +363,9 @@ class Zone2 extends PureComponent {
             >
               2
             </TYText>
+            <TYText style={{ fontSize: 20, color: '#ff7300' }}>{this.state.name}</TYText>
             <FontAwesomeIcon
-              icon={hidden === true ? faSlidersH : faAngleUp}
+              icon={hidden === true ? faSlidersH : faAngleDown}
               color="#ff7300"
               size={22}
               marginRight={8}
@@ -349,9 +392,9 @@ class Zone2 extends PureComponent {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={C === '01' && modeZ !== '02' ? this.timer1 : null}
+                  onPress={C === '01' && modeZ === '00' ? this.timer1 : null}
                   style={styles.touch}
-                  activeOpacity={C === '01' && modeZ !== '02' ? 0.2 : 1}
+                  activeOpacity={C === '01' && modeZ === '00' ? 0.2 : 1}
                 >
                   <TYText style={styles.title}>
                     {TimerOn === '00'
@@ -362,7 +405,7 @@ class Zone2 extends PureComponent {
                   </TYText>
                   <FontAwesomeIcon
                     icon={faStopwatch}
-                    color={C === '01' && modeZ !== '02' ? '#ff7300' : '#d6d6d6'}
+                    color={C === '01' && modeZ === '00' ? '#ff7300' : '#d6d6d6'}
                     size={30}
                     margin={5}
                   />
@@ -545,8 +588,7 @@ class Zone2 extends PureComponent {
                     style={{
                       height: 30,
                       borderRadius: 15,
-                      backgroundColor:
-                        C === '00' || alarm ? '#f0f0f0' : '#fff',
+                      backgroundColor: C === '00' || alarm ? '#f0f0f0' : '#fff',
                       marginHorizontal: 3,
                     }}
                   />

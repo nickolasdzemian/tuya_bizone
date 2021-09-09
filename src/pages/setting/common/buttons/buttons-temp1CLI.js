@@ -163,9 +163,9 @@ class ButtonsTemp1CLI extends Component {
             </View>
           ) : null}
         <TYText style={styles.buttontext}>
+          {tonePress}
           {this.state.value1}
           °C
-          {tonePress}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>-15</TYText>
@@ -200,9 +200,9 @@ class ButtonsTemp1CLI extends Component {
         />
         <Divider />
         <TYText style={styles.buttontext}>
+          {ttwoPress}
           {this.state.value2}
           °C
-          {ttwoPress}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>{this.state.value1}</TYText>
@@ -237,9 +237,9 @@ class ButtonsTemp1CLI extends Component {
         />
         <Divider />
         <TYText style={styles.buttontext}>
+          {tthreePress}
           {this.state.value3}
           °C
-          {tthreePress}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>{this.state.value2}</TYText>

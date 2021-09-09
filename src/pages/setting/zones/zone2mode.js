@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { TYFlatList, Popup, TYSdk, TYText } from 'tuya-panel-kit';
+import { Popup, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight, faListOl } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n';
@@ -28,12 +28,12 @@ const set = [
   },
   {
     key: 'flour',
-    title: Strings.getLang('flour'),
+    title: Strings.getLang('flour2'),
     value: 'flour',
   },
   {
     key: 'air_flour',
-    title: Strings.getLang('air_flour'),
+    title: Strings.getLang('air_flour2'),
     value: 'air_flour',
   },
 ];
@@ -66,6 +66,7 @@ class Zone2Mode extends Component {
             title: [climatemode],
             cancelText,
             confirmText,
+            confirmTextStyle: { color: '#ff7300' },
             showBack: false,
             onBack: ({ close }) => {
               console.log('Select climate --none');
@@ -90,7 +91,6 @@ class Zone2Mode extends Component {
 
   render() {
     return (
-      
       <TouchableOpacity
         style={styles.area}
         onPress={() =>

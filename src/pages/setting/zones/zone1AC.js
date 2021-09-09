@@ -43,6 +43,7 @@ class Zone1Air extends Component {
             title: Strings.getLang('air_limit'),
             cancelText,
             confirmText,
+            confirmTextStyle: { color: '#ffb700' },
             type: 'slider',
             value: this.getDataTemp(),
             maximumTrackTintColor: 'rgba(47, 47, 47, 0.5)',

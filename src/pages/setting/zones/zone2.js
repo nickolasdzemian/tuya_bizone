@@ -3,10 +3,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { Divider, SwitchButton, TYSdk, TYText } from 'tuya-panel-kit';
+import { View, StyleSheet, SafeAreaView, AsyncStorage, TouchableOpacity } from 'react-native';
+import { Divider, SwitchButton, TYSdk, TYText, Dialog } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faDoorOpen, faBrain, faListOl, faSortAmountUp } from '@fortawesome/free-solid-svg-icons';
+import { faDoorOpen, faBrain, faChevronRight, faItalic } from '@fortawesome/free-solid-svg-icons';
+import { Cache } from 'react-native-cache';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 import Zone2Mode from './zone2mode';
@@ -15,6 +16,14 @@ import SensorsTypeZ2 from '../common/sensors/sensors2';
 
 const TYDevice = TYSdk.device;
 const { Preheat2: Preheat2Code, OpenWndW: OpenWndWCode, SensorSet2: SensorSet2Code } = dpCodes;
+
+const cache = new Cache({
+  namespace: 'ZNames',
+  policy: {
+    maxEntries: 5000,
+  },
+  backend: AsyncStorage,
+});
 
 const windowSw = Strings.getLang('windowSw');
 const selflearnSw = Strings.getLang('selflearnSw');
@@ -25,7 +34,41 @@ class ZoneIIScene extends React.PureComponent {
     this.state = {
       wind: this.props.OpenWndW.substring(2, 4) === '01',
       overheat: this.props.Preheat2,
+      name: undefined,
     };
+    this.getName();
+  }
+
+  getName() {
+    let name = null;
+    cache.get('name2').then(response => {
+      this.setState({ name: response });
+    });
+    name = this.state.name;
+    return name;
+  }
+
+  renameZone() {
+    this.getName();
+    Dialog.prompt({
+      showHelp: true,
+      onHelpPress: () => alert(Strings.getLang('namehelp')),
+      title: Strings.getLang('name2'),
+      cancelText: Strings.getLang('cancelText'),
+      confirmText: Strings.getLang('confirmText'),
+      confirmTextStyle: { color: '#ff7300' },
+      inputStyle: { color: 'black' },
+      defaultValue: this.state.name !== undefined ? this.state.name : Strings.getLang('zone2'),
+      placeholder: Strings.getLang('placeholder1'),
+      maxLength: 20,
+      autoCorrect: false,
+      selectionColor: '#999',
+      onConfirm: (text, { close }) => {
+        this.setState({ name: text });
+        cache.set('name2', text);
+        close();
+      },
+    });
   }
 
   render() {
@@ -71,6 +114,15 @@ class ZoneIIScene extends React.PureComponent {
             }}
           />
         </View>
+
+        <TouchableOpacity style={styles.view} onPress={() => this.renameZone()}>
+          <SafeAreaView style={styles.area}>
+            <FontAwesomeIcon icon={faItalic} color="#333" size={20} />
+            <TYText style={styles.items}>{Strings.getLang('rename')}</TYText>
+          </SafeAreaView>
+          <FontAwesomeIcon icon={faChevronRight} color="#ff7300" size={15} marginRight={23} />
+        </TouchableOpacity>
+
         <Zone2Mode />
         {SensorSet2 === 'air_flour' ? <Zone2Air /> : null}
         <SensorsTypeZ2 />

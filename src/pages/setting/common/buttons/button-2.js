@@ -19,17 +19,18 @@ class Button2 extends React.PureComponent {
     this.state = {
       activeKey2: this.props.ButtonSettings.substring(2, 4),
       d2: [
+        { value: '0000', label: null },
         { value: '00', label: Strings.getLang('buttonsmodenametemp') },
         { value: '01', label: Strings.getLang('buttonsmodenametimer') },
-        { value: '02', label: Strings.getLang('buttonsmodenamemode') },
+        // { value: '02', label: Strings.getLang('buttonsmodenamemode') },
       ],
     };
   }
 
   _handleD2Change = tab => {
-    this.setState({ activeKey2: tab.value });
+    this.setState({ activeKey2: tab.value === '0000' ? '00' : tab.value });
     TYDevice.putDeviceData({
-      [ButtonSettingsCode]: String(`${this.props.ButtonSettings.substring(0, 2)}${tab.value}`),
+      [ButtonSettingsCode]: String(`${this.props.ButtonSettings.substring(0, 2)}${tab.value === '0000' ? '00' : tab.value}`),
     });
   };
 
@@ -48,6 +49,7 @@ class Button2 extends React.PureComponent {
         onChange={this._handleD2Change}
         maxItem={3}
       >
+        <Tabs.TabPanel style={styles.panelcontent} />
         <Tabs.TabPanel style={styles.panelcontent}>
           <Divider />
           <ButtonsTemp2S />

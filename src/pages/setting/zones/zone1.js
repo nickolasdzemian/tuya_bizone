@@ -4,10 +4,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { Divider, SwitchButton, TYSdk, TYText } from 'tuya-panel-kit';
+import { View, StyleSheet, SafeAreaView, AsyncStorage, TouchableOpacity } from 'react-native';
+import { Divider, SwitchButton, TYSdk, TYText, Dialog } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faDoorOpen, faBrain, faListOl, faSortAmountUp } from '@fortawesome/free-solid-svg-icons';
+import { faDoorOpen, faBrain, faChevronRight, faItalic } from '@fortawesome/free-solid-svg-icons';
+import { Cache } from 'react-native-cache';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 import Zone1Mode from './zone1mode';
@@ -15,6 +16,15 @@ import Zone1Air from './zone1AC';
 import SensorsTypeZ1 from '../common/sensors/sensors1';
 
 const TYDevice = TYSdk.device;
+
+const cache = new Cache({
+  namespace: 'ZNames',
+  policy: {
+    maxEntries: 5000,
+  },
+  backend: AsyncStorage,
+});
+
 const { Preheat1: Preheat1Code, OpenWndW: OpenWndWCode, SensorSet1: SensorSet1Code } = dpCodes;
 
 const windowSw = Strings.getLang('windowSw');
@@ -26,7 +36,41 @@ class ZoneIScene extends React.PureComponent {
     this.state = {
       wind: this.props.OpenWndW.substring(0, 2) === '01',
       overheat: this.props.Preheat1,
+      name: undefined,
     };
+    this.getName();
+  }
+
+  getName() {
+    let name = null;
+    cache.get('name1').then(response => {
+      this.setState({ name: response });
+    });
+    name = this.state.name;
+    return name;
+  }
+
+  renameZone() {
+    this.getName();
+    Dialog.prompt({
+      showHelp: true,
+      onHelpPress: () => alert(Strings.getLang('namehelp')),
+      title: Strings.getLang('name1'),
+      cancelText: Strings.getLang('cancelText'),
+      confirmText: Strings.getLang('confirmText'),
+      confirmTextStyle: { color: '#ffb700' },
+      inputStyle: { color: 'black' },
+      defaultValue: this.state.name !== undefined ? this.state.name : Strings.getLang('zone1'),
+      placeholder: Strings.getLang('placeholder1'),
+      maxLength: 20,
+      autoCorrect: false,
+      selectionColor: '#999',
+      onConfirm: (text, { close }) => {
+        this.setState({ name: text });
+        cache.set('name1', text);
+        close();
+      },
+    });
   }
 
   render() {
@@ -72,6 +116,15 @@ class ZoneIScene extends React.PureComponent {
             }}
           />
         </View>
+
+        <TouchableOpacity style={styles.view} onPress={() => this.renameZone()}>
+          <SafeAreaView style={styles.area}>
+            <FontAwesomeIcon icon={faItalic} color="#666" size={20} />
+            <TYText style={styles.items}>{Strings.getLang('rename')}</TYText>
+          </SafeAreaView>
+          <FontAwesomeIcon icon={faChevronRight} color="#ffb700" size={15} marginRight={23} />
+        </TouchableOpacity>
+
         <Zone1Mode />
         {SensorSet1 === 'air_flour' ? <Zone1Air /> : null}
         <SensorsTypeZ1 />

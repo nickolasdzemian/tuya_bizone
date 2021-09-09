@@ -165,9 +165,9 @@ class ButtonsTemp2S extends Component {
               <FontAwesomeIcon icon={faTemperatureLow} color="#ff7300" size={25} />
             </View> : null}
         <TYText style={styles.buttontext}>
+          {tonePress}
           {this.state.value1}
           °C
-          {tonePress}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}> 5</TYText>
@@ -202,9 +202,9 @@ class ButtonsTemp2S extends Component {
         />
         <Divider />
         <TYText style={styles.buttontext}>
+          {ttwoPress}
           {this.state.value2}
           °C
-          {ttwoPress}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>{this.state.value1 + 1}</TYText>
@@ -239,9 +239,9 @@ class ButtonsTemp2S extends Component {
         />
         <Divider />
         <TYText style={styles.buttontext}>
+          {tthreePress}
           {this.state.value3}
           °C
-          {tthreePress}
         </TYText>
         <View style={styles.title}>
           <TYText style={styles.context}>{this.state.value2 + 1}</TYText>

@@ -19,13 +19,16 @@ class AirCorrScene extends Component {
   static propTypes = {
     TemperatureCorr: PropTypes.number,
   };
+
   static defaultProps = {
     TemperatureCorr: 0,
   };
+
   constructor(props) {
     super(props);
     this.state = {};
   }
+
   getDataCorr() {
     const { TemperatureCorr } = this.props;
     return TemperatureCorr;

@@ -5,7 +5,12 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Popup, Divider, TYText, Picker, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faThermometerHalf, faInfoCircle, faSwatchbook, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faThermometerHalf,
+  faInfoCircle,
+  faSwatchbook,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../../i18n';
 import dpCodes from '../../../../config/dpCodes';
 
@@ -93,6 +98,7 @@ class SensorsTypeZ2 extends Component {
             title: sensortype0,
             cancelText,
             confirmText,
+            confirmTextStyle: { color: '#ff7300' },
             onMaskPress: ({ close }) => {
               this.setState({ s1s: this.props.Detector1, s2s: this.props.Detector2 });
               close();

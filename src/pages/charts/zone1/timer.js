@@ -31,7 +31,7 @@ import {
   faTrashAlt,
   faChartPie,
   faPlus,
-  faCoins,
+  faListOl,
   faCogs,
   faCopy,
   faInfoCircle,
@@ -584,7 +584,7 @@ class ChartTime1 extends PureComponent {
             this.setState({god: this._getLenth()});
           }}
         >
-          <FontAwesomeIcon icon={faCoins} color={G >= 336 || A === true ? '#d6d6d6' : '#ffb700'} size={20} />
+          <FontAwesomeIcon icon={faListOl} color={G >= 336 || A === true ? '#d6d6d6' : '#ffb700'} size={20} />
           <TYText style={styles.titleADD}>{G !== 0 ? `${336 - G}${Strings.getLang('pointleft')}` : `${336}${Strings.getLang('pointleft')}`}</TYText>
         </TouchableOpacity>
         <TouchableOpacity 

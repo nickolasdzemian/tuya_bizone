@@ -10,8 +10,6 @@ import Strings from '../../i18n/index.ts';
 import dpCodes from '../../config/dpCodes.ts';
 import Common from './common/index';
 import ClimateScene from './climate/climate';
-import ZonesScene from './zones/index';
-import ChartView from '../stat/chart';
 
 const TYDevice = TYSdk.device;
 const { isIos } = Utils.RatioUtils;

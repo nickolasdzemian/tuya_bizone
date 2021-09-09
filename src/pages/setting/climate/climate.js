@@ -8,14 +8,12 @@ import { TYSdk, TYText, Notification, Popup, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faSun,
-  faThermometerQuarter,
   faSlidersH,
   faAngleUp,
   faOutdent,
   faChartLine,
   faChevronRight,
   faBorderStyle,
-  faSnowflake,
   faThermometerEmpty,
 } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';

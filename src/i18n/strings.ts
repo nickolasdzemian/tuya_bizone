@@ -2,6 +2,13 @@
 export default {
   en: {
 
+    // Initial screen
+    iniTitle: 'Choose device mode to continue',
+    iniSubTitle: 'Pressing any of these buttons hides this window locally on your phone until the device will be reconnected. If you don\'t know what to choose, please read user\'s manual. If you\'re invited, skip this window.',
+    manual: 'Open user manual (web)',
+    iniGone: 'Skip and continue',
+    inisettings: 'Go to Settings page',
+
     // Statistics
     strUnits: 'kW*h',
 
@@ -18,6 +25,8 @@ export default {
     Nz2: 'Second zone',
     relaySS: 'Status',
     pwrOFF: 'Power is off now',
+
+    resetT: 'Press to reset',
 
     now_temp: 'Sensor',
     now_temp_air: 'Air t',
@@ -82,11 +91,11 @@ export default {
     buttonsmodenamemodeZZ: 'Changing mode:\n -manual\n -programm\n -programm-timer',
     buttonsmodenametemp: 'Temperature',
     nothing: 'Blocked',
-    btn1cli: 'Timer isnt supported in climate mode',
+    btn1cli: 'Timer isn\'t supported in climate mode',
     btn2cli: 'When Climate is ON Button II controls fan',
-    tonePress: ' for the 1st press',
-    ttwoPress: ' for the 2nd press',
-    tthreePress: ' for the 3rd press',
+    tonePress: 'I setting: ',
+    ttwoPress: 'II setting: ',
+    tthreePress: 'III setting: ',
     choose_outsensor: 'Type of external sensor',
     cancelText: 'Cancel',
     confirmText: 'Confirm',
@@ -113,17 +122,22 @@ export default {
       // eslint-disable-next-line max-len
       'Be carefull with changing mode!\nPay attention to selected mode!',
     air: 'Air sensor',
-    flour_1: 'External sensor 1',
-    flour_2: 'External sensor 2',
-    air_flour_1: 'Air + External sensor 1',
-    air_flour_2: 'Air + External sensor 2',
-    flour_12: 'External sensors 1 + 2',
+    flour_1: 'Sensor 1',
+    flour_2: 'Sensor 2',
+    air_flour_1: 'Sensor 1',
+    air_flour_2: 'Air + Sensor 2',
+    flour_12: 'Sensors 1 & 2',
     air_flour_12: 'All sensors',
     chSelector: 'Channel selection',
     chfalse: 'I zone is set to cooling, II is set to heating',
     chtrue: 'I zone is set to heating, II is set to cooling',
 
     // Settings Zones
+    rename: 'Zone name',
+    name1: 'First zone name:',
+    name2: 'Second zone name:',
+    placeholder1: 'Enter new name',
+    namehelp: '20 symbols max is recommended.\nSometimes after renaming it needs to press on the name of the zone at the home screen.\nThe name of the zone is stored locally on your phone.\nIt doesn\'t shared between accounts.\nIt will be reset after removing the device.',
     ZonesScene: 'Zones settings',
     windowSw: 'Look up for open window',
     selflearnSw: 'Self-learning or preheat',
@@ -221,6 +235,13 @@ export default {
     intervala: 'Period',
   },
   ru_RU: {
+    // Initial screen
+    iniTitle: 'Выберите режим работы',
+    iniSubTitle: 'Выбор любого пункта локально отключит данное меню на вашем смартфоне до переподключения терморегулятора. Пожалуйста, ознакомьтесь с руководством пользователя перед началом эксплуатации. Если вы получили приглашение на управление, пропустите это окно.',
+    manual: 'Перейти к руководству (web)',
+    iniGone: 'Пропустить и продолжить',
+    inisettings: 'Открыть настройки',
+
     apl: 'Ждите применения..',
     apl2: 'Загрузка данных..',
 
@@ -234,6 +255,8 @@ export default {
     Nz2: 'Вторая зона',
     relaySS: 'Статус',
     pwrOFF: 'Питание выключено',
+
+    resetT: 'Нажать для сброса',
 
     now_temp: 'Датчик',
     now_temp_air: 'Воздух',
@@ -300,9 +323,9 @@ export default {
     nothing: 'Блокировка',
     btn1cli: 'Таймер не поддерживается в режиме климат-контроля',
     btn2cli: 'В режиме Климата Кнопка II управляет вентилятором',
-    tonePress: ' при первом нажатии',
-    ttwoPress: ' при втором нажатии',
-    tthreePress: ' при третьем нажатии',
+    tonePress: 'I установка: ',
+    ttwoPress: 'II установка: ',
+    tthreePress: 'III установка: ',
     choose_outsensor: 'Тип внешнего датчика',
     cancelText: 'Выход',
     confirmText: 'Сохранить',
@@ -329,17 +352,22 @@ export default {
       // eslint-disable-next-line max-len
       'Будьте внимательны при переключении режима работы!\nПереключение режима может быть небезопасно!',
     air: 'Датчик воздуха',
-    flour_1: 'Внешний датчик 1',
-    flour_2: 'Внешний датчик 2',
-    air_flour_1: 'Датчик воздуха + Внешний №1',
-    air_flour_2: 'Датчик воздуха + Внешний №2',
-    flour_12: 'Внешние датчики 1 + 2',
+    flour_1: 'Датчик 1',
+    flour_2: 'Датчик 2',
+    air_flour_1: 'Датчик воздуха + Датчик 1',
+    air_flour_2: 'Датчик воздуха + Датчик 2',
+    flour_12: 'Датчики 1 + 2',
     air_flour_12: 'Все доступные',
     chSelector: 'Настройка зон',
     chfalse: 'I зона - охлажение, II - нагрев',
     chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
+    rename: 'Наименование зоны',
+    name1: 'Имя первой зоны:',
+    name2: 'Имя второй зоны:',
+    placeholder1: 'Введите новое имя',
+    namehelp: 'Рекомендуется макс. 20 символов.\nДля отображения нового имени нужно нажать на имя зоны на главном экране.\nДанные сохраняются локально и не передаются между аккаунтами.\nПри удалении устройства данные будут сброшены.',
     ZonesScene: 'Настройка зон',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
@@ -348,8 +376,10 @@ export default {
     zone2: 'Зона II',
     cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
     // air: 'Датчик воздуха',
-    flour: 'Внешний датчик зоны',
-    air_flour: 'Датчик воздуха + Внешний',
+    flour: 'Датчик 1',
+    flour2: 'Датчик 2',
+    air_flour: 'Датчик воздуха + Датчик 1',
+    air_flour2: 'Датчик воздуха + Датчик 2',
     air_limit: 'Ограничение по темп. воздуха',
 
     // Сharts
@@ -437,6 +467,13 @@ export default {
     intervala: 'Интервал',
   },
   ru: {
+    // Initial screen
+    iniTitle: 'Выберите режим работы',
+    iniSubTitle: 'Выбор любого пункта локально отключит данное меню на вашем смартфоне до переподключения терморегулятора. Пожалуйста, ознакомьтесь с руководством пользователя перед началом эксплуатации. Если вы получили приглашение на управление, пропустите это окно.',
+    manual: 'Перейти к руководству (web)',
+    iniGone: 'Пропустить и продолжить',
+    inisettings: 'Открыть настройки',
+
     apl: 'Ждите применения..',
     apl2: 'Загрузка данных..',
 
@@ -450,6 +487,8 @@ export default {
     Nz2: 'Вторая зона',
     relaySS: 'Статус',
     pwrOFF: 'Питание выключено',
+
+    resetT: 'Нажать для сброса',
 
     now_temp: 'Датчик',
     now_temp_air: 'Воздух',
@@ -516,9 +555,9 @@ export default {
     nothing: 'Блокировка',
     btn1cli: 'Таймер не поддерживается в режиме климат-контроля',
     btn2cli: 'В режиме Климата Кнопка II управляет вентилятором',
-    tonePress: ' при первом нажатии',
-    ttwoPress: ' при втором нажатии',
-    tthreePress: ' при третьем нажатии',
+    tonePress: 'I установка: ',
+    ttwoPress: 'II установка: ',
+    tthreePress: 'III установка: ',
     choose_outsensor: 'Тип внешнего датчика',
     cancelText: 'Выход',
     confirmText: 'Сохранить',
@@ -545,17 +584,22 @@ export default {
       // eslint-disable-next-line max-len
       'Будьте внимательны при переключении режима работы!\nПереключение режима может быть небезопасно!',
     air: 'Датчик воздуха',
-    flour_1: 'Внешний датчик 1',
-    flour_2: 'Внешний датчик 2',
-    air_flour_1: 'Датчик воздуха + Внешний №1',
-    air_flour_2: 'Датчик воздуха + Внешний №2',
-    flour_12: 'Внешние датчики 1 + 2',
+    flour_1: 'Датчик 1',
+    flour_2: 'Датчик 2',
+    air_flour_1: 'Датчик воздуха + Датчик 1',
+    air_flour_2: 'Датчик воздуха + Датчик 2',
+    flour_12: 'Датчики 1 + 2',
     air_flour_12: 'Все доступные',
     chSelector: 'Настройка зон',
     chfalse: 'I зона - охлажение, II - нагрев',
     chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
+    rename: 'Наименование зоны',
+    name1: 'Имя первой зоны:',
+    name2: 'Имя второй зоны:',
+    placeholder1: 'Введите новое имя',
+    namehelp: 'Рекомендуется макс. 20 символов.\nДля отображения нового имени нужно нажать на имя зоны на главном экране.\nДанные сохраняются локально и не передаются между аккаунтами.\nПри удалении устройства данные будут сброшены.',
     ZonesScene: 'Настройка зон',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
@@ -564,8 +608,10 @@ export default {
     zone2: 'Зона II',
     cliwarn: 'Включен режим климат-контроля. Настройки не применяются.',
     // air: 'Датчик воздуха',
-    flour: 'Внешний датчик зоны',
-    air_flour: 'Датчик воздуха + Внешний',
+    flour: 'Датчик 1',
+    flour2: 'Датчик 2',
+    air_flour: 'Датчик воздуха + Датчик 1',
+    air_flour2: 'Датчик воздуха + Датчик 2',
     air_limit: 'Ограничение по темп. воздуха',
 
     // Сharts

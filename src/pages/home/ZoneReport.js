@@ -29,8 +29,6 @@ const {
 } = dpCodes;
 
 class ZoneReport extends React.PureComponent {
-  // в состояние вписываются значения datapoints,
-  // от которых будет зависеть отображается тот или иной компонент
   constructor(props) {
     super(props);
     this.state = {};

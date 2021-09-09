@@ -26,12 +26,12 @@ class Button1 extends React.PureComponent {
         ClimateSelector === true
           ? [
             { value: '00', label: Strings.getLang('buttonsmodenametemp') },
-            { value: '02', label: Strings.getLang('buttonsmodenamemode') },
+            // { value: '02', label: Strings.getLang('buttonsmodenamemode') },
           ]
           : [
             { value: '00', label: Strings.getLang('buttonsmodenametemp') },
             { value: '01', label: Strings.getLang('buttonsmodenametimer') },
-            { value: '02', label: Strings.getLang('buttonsmodenamemode') },
+            // { value: '02', label: Strings.getLang('buttonsmodenamemode') },
           ],
     };
   }

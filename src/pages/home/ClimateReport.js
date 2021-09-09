@@ -1,7 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 // отображение всех элементов типа (report only) в режиме климат-контроля
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
