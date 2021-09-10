@@ -17,14 +17,6 @@ import SensorsTypeZ2 from '../common/sensors/sensors2';
 const TYDevice = TYSdk.device;
 const { Preheat2: Preheat2Code, OpenWndW: OpenWndWCode, SensorSet2: SensorSet2Code } = dpCodes;
 
-const cache = new Cache({
-  namespace: 'ZNames',
-  policy: {
-    maxEntries: 5000,
-  },
-  backend: AsyncStorage,
-});
-
 const windowSw = Strings.getLang('windowSw');
 const selflearnSw = Strings.getLang('selflearnSw');
 
@@ -36,12 +28,19 @@ class ZoneIIScene extends React.PureComponent {
       overheat: this.props.Preheat2,
       name: undefined,
     };
+    this.cache = new Cache({
+      namespace: `ZNames_${TYSdk.devInfo.devId}`,
+      policy: {
+        maxEntries: 5000,
+      },
+      backend: AsyncStorage,
+    });
     this.getName();
   }
 
   getName() {
     let name = null;
-    cache.get('name2').then(response => {
+    this.cache.get('name2').then(response => {
       this.setState({ name: response });
     });
     name = this.state.name;
@@ -65,7 +64,7 @@ class ZoneIIScene extends React.PureComponent {
       selectionColor: '#999',
       onConfirm: (text, { close }) => {
         this.setState({ name: text });
-        cache.set('name2', text);
+        this.cache.set('name2', text);
         close();
       },
     });

@@ -17,14 +17,6 @@ import SensorsTypeZ1 from '../common/sensors/sensors1';
 
 const TYDevice = TYSdk.device;
 
-const cache = new Cache({
-  namespace: 'ZNames',
-  policy: {
-    maxEntries: 5000,
-  },
-  backend: AsyncStorage,
-});
-
 const { Preheat1: Preheat1Code, OpenWndW: OpenWndWCode, SensorSet1: SensorSet1Code } = dpCodes;
 
 const windowSw = Strings.getLang('windowSw');
@@ -38,12 +30,19 @@ class ZoneIScene extends React.PureComponent {
       overheat: this.props.Preheat1,
       name: undefined,
     };
+    this.cache = new Cache({
+      namespace: `ZNames_${TYSdk.devInfo.devId}`,
+      policy: {
+        maxEntries: 5000,
+      },
+      backend: AsyncStorage,
+    });
     this.getName();
   }
 
   getName() {
     let name = null;
-    cache.get('name1').then(response => {
+    this.cache.get('name1').then(response => {
       this.setState({ name: response });
     });
     name = this.state.name;
@@ -67,7 +66,7 @@ class ZoneIScene extends React.PureComponent {
       selectionColor: '#999',
       onConfirm: (text, { close }) => {
         this.setState({ name: text });
-        cache.set('name1', text);
+        this.cache.set('name1', text);
         close();
       },
     });

@@ -2,11 +2,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, StyleSheet, View, AsyncStorage, ActivityIndicator, Dimensions } from 'react-native';
+import { Text, StyleSheet, View, ActivityIndicator, Dimensions } from 'react-native';
 import { Slider, Divider, Stepper, TYSdk } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
-import { Cache } from 'react-native-cache';
 import Strings from '../../../../i18n/index.ts';
 import dpCodes from '../../../../config/dpCodes.ts';
 
@@ -19,14 +18,14 @@ const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 const tonePress = Strings.getLang('tonePress');
 const ttwoPress = Strings.getLang('ttwoPress');
 const tthreePress = Strings.getLang('tthreePress');
-const hrss = Strings.getLang('hrss');
-const minss = Strings.getLang('minss');
+// const hrss = Strings.getLang('hrss');
+// const minss = Strings.getLang('minss');
 
 const convertMinsToTime = mins => {
   const hours = Math.floor(mins / 60);
   let minutes = mins % 60;
   minutes = minutes < 10 ? `0${minutes}` : minutes;
-  return `${hours}${hrss}:${minutes}${minss}`;
+  return `${hours}:${minutes}`;
 };
 
 const convertMinsToTimeM = mins => {
@@ -35,14 +34,6 @@ const convertMinsToTimeM = mins => {
   minutes = minutes < 10 ? `0${minutes}` : minutes;
   return `${hours}:${minutes}`;
 };
-
-const cache = new Cache({
-  namespace: 'BtnsConfig',
-  policy: {
-    maxEntries: 50000
-  },
-  backend: AsyncStorage
-});
 
 class ButtonsTimer2S extends Component {
   constructor(props) {
@@ -269,7 +260,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     fontSize: 18,
-    color: 'black',
+    color: '#333',
     fontWeight: '400',
   },
   slider: {

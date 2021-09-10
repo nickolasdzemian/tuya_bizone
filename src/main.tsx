@@ -2,7 +2,6 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import { Dispatch } from 'redux';
 import {
-  TYSdk,
   NavigatorLayout,
   NavigationOptions,
   DeprecatedNavigator,
@@ -39,17 +38,19 @@ class MainLayout extends NavigatorLayout<Props> {
     const routeProps: NavigationOptions = {};
     switch (route.id) {
       case 'main':
+        routeProps.topbarTextStyle = { color: '#666', fontWeight: 'normal', fontSize: 20 };
         break;
       case 'setting':
         routeProps.title = 'Setting';
+        routeProps.topbarTextStyle = { color: '#333', fontWeight: 'bold', fontSize: 20 };
         routeProps.background = {
-          '3%': '#f82232',
-          '90%': '#FF624C',
+          '3%': '#FFFFFF',
+          '90%': '#FFFFFF',
         };
         break;
       case 'SettingScene':
         routeProps.title = Strings.getLang('mainSettings');
-        routeProps.topbarTextStyle = { color: '#474747', fontWeight: 'bold', fontSize: 20 };
+        routeProps.topbarTextStyle = { color: '#333', fontWeight: 'bold', fontSize: 20 };
         routeProps.background = {
           '3%': '#FFFFFF',
           '90%': '#FFFFFF',
@@ -57,7 +58,7 @@ class MainLayout extends NavigatorLayout<Props> {
         break;
       case 'ZonesScene':
         routeProps.title = Strings.getLang('ZonesScene');
-        routeProps.topbarTextStyle = { color: '#474747', fontWeight: 'bold', fontSize: 20 };
+        routeProps.topbarTextStyle = { color: '#333', fontWeight: 'bold', fontSize: 20 };
         routeProps.background = {
           '3%': '#FFFFFF',
           '90%': '#FFFFFF',
@@ -65,7 +66,7 @@ class MainLayout extends NavigatorLayout<Props> {
         break;
       case 'CounterChartsScene':
         routeProps.title = Strings.getLang('CounterChartsScene');
-        routeProps.topbarTextStyle = { color: '#474747', fontWeight: 'bold', fontSize: 20 };
+        routeProps.topbarTextStyle = { color: '#333', fontWeight: 'bold', fontSize: 20 };
         routeProps.background = {
           '3%': '#FFFFFF',
           '90%': '#FFFFFF',

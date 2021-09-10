@@ -34,7 +34,7 @@ import {
   faListOl,
   faCogs,
   faCopy,
-  faInfoCircle,
+  // faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { Cache } from 'react-native-cache';
 import Strings from '../../../i18n/index.ts';
@@ -1039,15 +1039,15 @@ const styles = StyleSheet.create({
     margin: 30,
     alignSelf: 'center',
   },
-  annotation: {
-    textAlign: 'center',
-    fontWeight: '200',
-    fontSize: 10,
-    color: 'black',
-    justifyContent: 'center',
-    paddingBottom: 10,
-    letterSpacing: 1,
-  },
+  // annotation: {
+  //   textAlign: 'center',
+  //   fontWeight: '200',
+  //   fontSize: 10,
+  //   color: 'black',
+  //   justifyContent: 'center',
+  //   paddingBottom: 10,
+  //   letterSpacing: 1,
+  // },
   wait: {
     textAlign: 'center',
     fontWeight: '200',

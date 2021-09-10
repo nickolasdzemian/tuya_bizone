@@ -21,9 +21,9 @@ const { convertY: cy } = Utils.RatioUtils;
 const cache = new Cache({
   namespace: 'Capacity',
   policy: {
-    maxEntries: 50000
+    maxEntries: 50000,
   },
-  backend: AsyncStorage
+  backend: AsyncStorage,
 });
 
 class LoadCapacity extends Component {

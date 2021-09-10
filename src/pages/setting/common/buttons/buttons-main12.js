@@ -17,7 +17,7 @@ class ButtonsModeS extends React.PureComponent {
     super(props);
     this.state = {
       activeKey1: '1',
-      d1:[
+      d1: [
         { value: '1', label: Strings.getLang('buttonsmodetap1') },
         { value: '2', label: Strings.getLang('buttonsmodetap2') },
       ],

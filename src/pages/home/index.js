@@ -16,13 +16,13 @@ const { isIos } = Utils.RatioUtils;
 const TYDevice = TYSdk.device;
 const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
-const cache = new Cache({
-  namespace: 'InitialStart',
-  policy: {
-    maxEntries: 10,
-  },
-  backend: AsyncStorage,
-});
+// const cache = new Cache({
+//   namespace: TYSdk.devInfo.devId,
+//   policy: {
+//     maxEntries: 10,
+//   },
+//   backend: AsyncStorage,
+// });
 
 class ClimateMain extends React.PureComponent {
   constructor(props) {
@@ -30,17 +30,23 @@ class ClimateMain extends React.PureComponent {
     this.state = {
       ini: 'false',
     };
+    this.cache = new Cache({
+      namespace: `ini_${TYSdk.devInfo.devId}`,
+      policy: {
+        maxEntries: 10,
+      },
+      backend: AsyncStorage,
+    });
     this.getName();
   }
 
   // Получение данных из хранилища, если данные получены, то меню первого запуска не открывается
   getName() {
     let ini = undefined;
-    cache.get('ini').then(response => {
+    this.cache.get('ini').then(response => {
       this.setState({ ini: response });
     });
     ini = this.state.ini;
-    console.log(ini, 'djvdkjnkjskjvjn dveiuo');
     return ini;
   }
 
@@ -62,7 +68,7 @@ class ClimateMain extends React.PureComponent {
             TYDevice.putDeviceData({
               [ClimateSelectorCode]: true,
             });
-            cache.set('ini', 'false');
+            this.cache.set('ini', 'false');
             setTimeout(() => {
               this.setState({ ini: 'false' });
               TYSdk.native.hideLoading();
@@ -78,7 +84,7 @@ class ClimateMain extends React.PureComponent {
             TYDevice.putDeviceData({
               [ClimateSelectorCode]: false,
             });
-            cache.set('ini', 'false');
+            this.cache.set('ini', 'false');
             setTimeout(() => {
               this.setState({ ini: 'false' });
               TYSdk.native.hideLoading();
@@ -91,7 +97,7 @@ class ClimateMain extends React.PureComponent {
         <TouchableOpacity
           onPress={() => {
             TYSdk.native.showLoading({ title: Strings.getLang('load') });
-            cache.set('ini', 'false');
+            this.cache.set('ini', 'false');
             setTimeout(() => {
               this.setState({ ini: 'false' });
               TYSdk.native.hideLoading();
@@ -109,7 +115,7 @@ class ClimateMain extends React.PureComponent {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            cache.set('ini', 'false');
+            this.cache.set('ini', 'false');
             this.setState({ ini: 'false' });
             TYSdk.Navigator.push({
               id: 'SettingScene',

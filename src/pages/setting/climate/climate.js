@@ -219,22 +219,22 @@ class ClimateScene extends React.PureComponent {
 
 ClimateScene.propTypes = {
   ClimateSelector: PropTypes.bool,
-  Zone: PropTypes.string,
-  ButtonSettings: PropTypes.string,
-  chart_1_part_1: PropTypes.string,
-  chart_1_part_2: PropTypes.string,
-  chart_1_part_3: PropTypes.string,
-  chart_1_part_4: PropTypes.string,
+  // Zone: PropTypes.string,
+  // ButtonSettings: PropTypes.string,
+  // chart_1_part_1: PropTypes.string,
+  // chart_1_part_2: PropTypes.string,
+  // chart_1_part_3: PropTypes.string,
+  // chart_1_part_4: PropTypes.string,
 };
 
 ClimateScene.defaultProps = {
   ClimateSelector: false,
-  Zone: '010101',
-  ButtonSettings: '0000',
-  chart_1_part_1: '000000',
-  chart_1_part_2: '000000',
-  chart_1_part_3: '000000',
-  chart_1_part_4: '000000',
+  // Zone: '010101',
+  // ButtonSettings: '0000',
+  // chart_1_part_1: '000000',
+  // chart_1_part_2: '000000',
+  // chart_1_part_3: '000000',
+  // chart_1_part_4: '000000',
 };
 
 const styles = StyleSheet.create({

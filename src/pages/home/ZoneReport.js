@@ -276,13 +276,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  titlekwh: {
-    textAlign: 'center',
-    fontWeight: '500',
-    fontSize: 10,
-    color: 'black',
-    justifyContent: 'center',
-  },
   titleWWW: {
     textAlign: 'center',
     fontWeight: '500',

@@ -21,14 +21,6 @@ import dpCodes from '../../../config/dpCodes.ts';
 
 const TYDevice = TYSdk.device;
 
-const cache = new Cache({
-  namespace: 'ZNames',
-  policy: {
-    maxEntries: 5000,
-  },
-  backend: AsyncStorage,
-});
-
 const {
   Zone: ZoneCode,
   SetTemperature: SetTemperatureCode,
@@ -62,6 +54,13 @@ class Zone2 extends PureComponent {
       bar: true,
       name: undefined,
     };
+    this.cache = new Cache({
+      namespace: `ZNames_${TYSdk.devInfo.devId}`,
+      policy: {
+        maxEntries: 1000,
+      },
+      backend: AsyncStorage,
+    });
     this.getName();
   }
 
@@ -142,7 +141,7 @@ class Zone2 extends PureComponent {
 
   getName() {
     let name = null;
-    cache.get('name2').then(response => {
+    this.cache.get('name2').then(response => {
       this.setState({ name: response });
     });
     name = this.state.name;

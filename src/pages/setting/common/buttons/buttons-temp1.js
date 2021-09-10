@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     fontSize: 18,
-    color: 'black',
+    color: '#333',
     fontWeight: '400',
   },
   slider: {
