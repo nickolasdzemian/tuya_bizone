@@ -653,6 +653,7 @@ class ChartClimateT extends PureComponent {
                   >
                     <FontAwesomeIcon icon={faTrashAlt} color="#FF4040" size={18} />
                     <TYText style={styles.title}>{Strings.getLang('eraseday')}</TYText>
+                    <Divider style={{width: 500, marginBottom: 10, marginTop: 10}} />
                   </TouchableOpacity>
                   {/* <View>
                     <Divider style={{marginBottom: 10, marginTop: 10}} />

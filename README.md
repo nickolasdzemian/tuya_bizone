@@ -1,4 +1,7 @@
 # Tuya 'BiZone' thermostat panel（React Native 0.59）
+
+### Two heating zones or climate control with fan support, programm modes with 336 intervals per week, statistics and a lot of other features
+
 #### by nickolashka
 
 English | [简体中文](./README-zh_CN.md)
@@ -6,9 +9,10 @@ English | [简体中文](./README-zh_CN.md)
 for docs, please visit [tuya docs](https://docs.tuya.com)
 for more information visit CHANGELOG
 
-![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_cli.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_zone.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_chart.jpg)
+![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/3sex_first.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_cli.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_zone.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_set_zm.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_chart.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_stat-iOS.jpg)
 
 ## Connection
+
 To connect device scan QR-code via Tuya app and see manual.
 
 ![QR-code](https://github.com/nickolasdzemian/res/blob/main/blobs/2sexQRconn.jpg)
@@ -16,10 +20,10 @@ To connect device scan QR-code via Tuya app and see manual.
 ## Download example manually
 
 ```bash
-$ curl https://codeload.github.com/tuya/tuya-panel-demo/tar.gz/master | tar -xz --strip=2 tuya-panel-demo-master/examples/basic-ts-0.59
-$ mv basic tuya-panel-basic-ts-0.59-example
-$ cd tuya-panel-basic-ts-0.59-example
-$ npm install react-native-vector-icons && @fortawesome/free-solid-svg-icons && @fortawesome/react-native-fontawesome
+curl https://codeload.github.com/tuya/tuya-panel-demo/tar.gz/master | tar -xz --strip=2 tuya-panel-demo-master/examples/basic-ts-0.59
+mv basic tuya-panel-basic-ts-0.59-example
+cd tuya-panel-basic-ts-0.59-example
+npm install react-native-vector-icons && @fortawesome/free-solid-svg-icons && @fortawesome/react-native-fontawesome
 ```
 
 ## Introduction
@@ -40,6 +44,10 @@ $ npm install && npm run start
 # or
 $ yarn && yarn start
 ```
+
+### Concept
+
+![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_concept.jpg)
 
 ## License
 

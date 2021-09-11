@@ -18,6 +18,11 @@ All notable changes to this project will be documented in this file. See [standa
 * invisible elements in system status bar in dark theme | при включенной темной теме элементы системного статусбара невидимы
 
 
+#### 3.3.3
+
+* обновлен внешний вид контекстного меню Опции во всех программных режимах
+* исправлены отступы контекстного меню Опции во всех программных режимах
+
 #### 3.3.2
 
 • тестирование UI на предмет ошибок
