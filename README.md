@@ -9,7 +9,7 @@ English | [简体中文](./README-zh_CN.md)
 for docs, please visit [tuya docs](https://docs.tuya.com)
 for more information visit CHANGELOG
 
-![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/3sex_first.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_cli.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_zone.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_set_zm.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_chart.jpg)![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_stat-iOS.jpg)
+![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/3sex_first.jpg) ![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_cli.jpg) ![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_zone.jpg) ![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_set_zm.jpg) ![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex_screen_chart.jpg) ![Screenshots](https://github.com/nickolasdzemian/res/blob/main/blobs/2sex3_stat-iOS.jpg)
 
 ## Connection
 
