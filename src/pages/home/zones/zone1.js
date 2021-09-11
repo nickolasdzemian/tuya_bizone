@@ -62,6 +62,7 @@ class Zone1 extends PureComponent {
       backend: AsyncStorage,
     });
     this.getName();
+    console.log(TYSdk.devInfo.devId, 'Monitoring the name of the storage');
   }
 
   componentWillReceiveProps(nextProps) {

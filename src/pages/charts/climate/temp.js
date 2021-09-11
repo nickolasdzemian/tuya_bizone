@@ -779,6 +779,7 @@ class ChartClimateT extends PureComponent {
               scrollEnabled={G === 0 || monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -789,7 +790,7 @@ class ChartClimateT extends PureComponent {
               previewOpenDelay={3000}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -801,6 +802,7 @@ class ChartClimateT extends PureComponent {
               scrollEnabled={G === 0 || tueDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -808,7 +810,7 @@ class ChartClimateT extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -820,6 +822,7 @@ class ChartClimateT extends PureComponent {
               scrollEnabled={G === 0 || wedDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -827,7 +830,7 @@ class ChartClimateT extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -839,6 +842,7 @@ class ChartClimateT extends PureComponent {
               scrollEnabled={G === 0 || thuDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -846,7 +850,7 @@ class ChartClimateT extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -858,6 +862,7 @@ class ChartClimateT extends PureComponent {
               scrollEnabled={G === 0 || friDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -865,7 +870,7 @@ class ChartClimateT extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -877,6 +882,7 @@ class ChartClimateT extends PureComponent {
               scrollEnabled={G === 0 || satDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -884,7 +890,7 @@ class ChartClimateT extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -896,6 +902,7 @@ class ChartClimateT extends PureComponent {
               scrollEnabled={G === 0 || sunDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -903,7 +910,7 @@ class ChartClimateT extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />

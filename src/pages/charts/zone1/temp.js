@@ -426,21 +426,12 @@ class ChartTemp1 extends PureComponent {
       let part1 = DATA2.slice(0, 84);
       part1 = part1.map(a => (Object.values(a)).join('')).join('');
       part1 = JSON.parse(JSON.stringify(part1));
-      // TYDevice.putDeviceData({
-      //   [chart_1_part_1Code]: part1.length === 0 ? String(`${L}00`) : String(L + part1),
-      // });
       let part2 = DATA2.slice(84, 168);
       part2 = part2.map(a => (Object.values(a)).join('')).join('');
       part2 = JSON.parse(JSON.stringify(part2));
-      // TYDevice.putDeviceData({
-      //   [chart_1_part_2Code]: part2.length === 0 ? String(`${L}00`) : String(L + part2),
-      // });
       let part3 = DATA2.slice(168, 252);
       part3 = part3.map(a => (Object.values(a)).join('')).join('');
       part3 = JSON.parse(JSON.stringify(part3));
-      // TYDevice.putDeviceData({
-      //   [chart_1_part_3Code]: part3.length === 0 ? String(`${L}00`) : String(L + part3),
-      // });
       let part4 = DATA2.slice(252, 336); 
       part4 = part4.map(a => (Object.values(a)).join('')).join('');
       part4 = JSON.parse(JSON.stringify(part4));
@@ -767,6 +758,7 @@ class ChartTemp1 extends PureComponent {
               scrollEnabled={G === 0 || monDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -777,7 +769,7 @@ class ChartTemp1 extends PureComponent {
               previewOpenDelay={3000}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -789,6 +781,7 @@ class ChartTemp1 extends PureComponent {
               scrollEnabled={G === 0 || tueDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -796,7 +789,7 @@ class ChartTemp1 extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -808,6 +801,7 @@ class ChartTemp1 extends PureComponent {
               scrollEnabled={G === 0 || wedDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -815,7 +809,7 @@ class ChartTemp1 extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -827,6 +821,7 @@ class ChartTemp1 extends PureComponent {
               scrollEnabled={G === 0 || thuDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -834,7 +829,7 @@ class ChartTemp1 extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -846,6 +841,7 @@ class ChartTemp1 extends PureComponent {
               scrollEnabled={G === 0 || friDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -853,7 +849,7 @@ class ChartTemp1 extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -865,6 +861,7 @@ class ChartTemp1 extends PureComponent {
               scrollEnabled={G === 0 || satDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -872,7 +869,7 @@ class ChartTemp1 extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />
@@ -884,6 +881,7 @@ class ChartTemp1 extends PureComponent {
               scrollEnabled={G === 0 || sunDATA.length > 7}
               renderItem={renderItem}
               renderHiddenItem={renderHiddenItem}
+              closeOnScroll={true}
               leftOpenValue={82} 
               stopLeftSwipe={100}
               rightOpenValue={-70}
@@ -891,7 +889,7 @@ class ChartTemp1 extends PureComponent {
               keyExtractor={item => item.id}
               onRowOpen={(rowKey, rowMap) => {
                 setTimeout(() => {
-                  rowKey === null ? null : rowMap[rowKey].closeRow();
+                  rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
                 }, 2300);
               }}
             />

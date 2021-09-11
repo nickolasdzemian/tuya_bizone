@@ -779,7 +779,7 @@
 //               previewOpenDelay={3000}
 //               onRowOpen={(rowKey, rowMap) => {
 //                 setTimeout(() => {
-//                   rowKey === null ? null : rowMap[rowKey].closeRow();
+//                   rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
 //                 }, 2300);
 //               }}
 //             />
@@ -798,7 +798,7 @@
 //               keyExtractor={item => item.id}
 //               onRowOpen={(rowKey, rowMap) => {
 //                 setTimeout(() => {
-//                   rowKey === null ? null : rowMap[rowKey].closeRow();
+//                   rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
 //                 }, 2300);
 //               }}
 //             />
@@ -817,7 +817,7 @@
 //               keyExtractor={item => item.id}
 //               onRowOpen={(rowKey, rowMap) => {
 //                 setTimeout(() => {
-//                   rowKey === null ? null : rowMap[rowKey].closeRow();
+//                   rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
 //                 }, 2300);
 //               }}
 //             />
@@ -836,7 +836,7 @@
 //               keyExtractor={item => item.id}
 //               onRowOpen={(rowKey, rowMap) => {
 //                 setTimeout(() => {
-//                   rowKey === null ? null : rowMap[rowKey].closeRow();
+//                   rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
 //                 }, 2300);
 //               }}
 //             />
@@ -855,7 +855,7 @@
 //               keyExtractor={item => item.id}
 //               onRowOpen={(rowKey, rowMap) => {
 //                 setTimeout(() => {
-//                   rowKey === null ? null : rowMap[rowKey].closeRow();
+//                   rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
 //                 }, 2300);
 //               }}
 //             />
@@ -874,7 +874,7 @@
 //               keyExtractor={item => item.id}
 //               onRowOpen={(rowKey, rowMap) => {
 //                 setTimeout(() => {
-//                   rowKey === null ? null : rowMap[rowKey].closeRow();
+//                   rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
 //                 }, 2300);
 //               }}
 //             />
@@ -893,7 +893,7 @@
 //               keyExtractor={item => item.id}
 //               onRowOpen={(rowKey, rowMap) => {
 //                 setTimeout(() => {
-//                   rowKey === null ? null : rowMap[rowKey].closeRow();
+//                   rowKey === null || rowMap[rowKey] === null ? null : rowMap[rowKey].closeRow();
 //                 }, 2300);
 //               }}
 //             />
