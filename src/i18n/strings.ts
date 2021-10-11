@@ -133,6 +133,7 @@ export default {
     chtrue: 'I zone is set to heating, II is set to cooling',
 
     // Settings Zones
+    hide12: 'Hide on homescreen',
     rename: 'Zone name',
     name1: 'First zone name:',
     name2: 'Second zone name:',
@@ -147,7 +148,9 @@ export default {
     cliwarn: 'The climate mode is on. Setup will no take effect.',
     // air: 'Air sensor',
     flour: 'Zone external sensor',
-    air_flour: 'Air + external sensor',
+    flour2: 'Sensor 2',
+    air_flour2: 'Air + external sensor 2',
+    air_flour: 'Air + external sensor 1',
     air_limit: 'Limitation by air temp.',
 
     // Сharts
@@ -363,6 +366,7 @@ export default {
     chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
+    hide12: 'Скрыть на главном экране',
     rename: 'Наименование зоны',
     name1: 'Имя первой зоны:',
     name2: 'Имя второй зоны:',
@@ -595,6 +599,7 @@ export default {
     chtrue: 'I зона - нагрев, II - охлаждение',
 
     // Settings Zones
+    hide12: 'Скрыть на главном экране',
     rename: 'Наименование зоны',
     name1: 'Имя первой зоны:',
     name2: 'Имя второй зоны:',

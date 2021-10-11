@@ -6,7 +6,7 @@ import React from 'react';
 import { View, StyleSheet, SafeAreaView, AsyncStorage, TouchableOpacity } from 'react-native';
 import { Divider, SwitchButton, TYSdk, TYText, Dialog } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faDoorOpen, faBrain, faChevronRight, faItalic } from '@fortawesome/free-solid-svg-icons';
+import { faDoorOpen, faBrain, faChevronRight, faItalic, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Cache } from 'react-native-cache';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
@@ -27,6 +27,7 @@ class ZoneIIScene extends React.PureComponent {
       wind: this.props.OpenWndW.substring(2, 4) === '01',
       overheat: this.props.Preheat2,
       name: undefined,
+      hide: false,
     };
     this.cache = new Cache({
       namespace: `ZNames_${TYSdk.devInfo.devId}`,
@@ -36,6 +37,7 @@ class ZoneIIScene extends React.PureComponent {
       backend: AsyncStorage,
     });
     this.getName();
+    this.getHide();
   }
 
   getName() {
@@ -45,6 +47,15 @@ class ZoneIIScene extends React.PureComponent {
     });
     name = this.state.name;
     return name;
+  }
+
+  getHide() {
+    let hide = null;
+    this.cache.get('hide2').then(response => {
+      this.setState({ hide: response });
+    });
+    hide = this.state.hide;
+    return hide;
   }
 
   renameZone() {
@@ -73,9 +84,26 @@ class ZoneIIScene extends React.PureComponent {
   render() {
     const { Preheat2, SensorSet2 } = this.props;
     const value = this.state.wind;
+    const hide = this.state.hide;
     return (
       <View style={styles.container}>
         <Divider />
+        <View style={styles.view}>
+          <SafeAreaView style={styles.area}>
+            <FontAwesomeIcon icon={faEyeSlash} color="#333" size={20} />
+            <TYText style={styles.items}>{Strings.getLang('hide12')}</TYText>
+          </SafeAreaView>
+          <SwitchButton
+            style={styles.switch}
+            tintColor="green"
+            onTintColor="red"
+            value={hide}
+            onValueChange={() => {
+              this.setState({ hide: !hide });
+              this.cache.set('hide2', !hide);
+            }}
+          />
+        </View>
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faDoorOpen} color="#333" size={20} />

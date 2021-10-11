@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, AsyncStorage } from 'react-native';
 import { Tabs } from 'tuya-panel-kit';
 import Zone1 from './zone1';
 import Zone2 from './zone2';
