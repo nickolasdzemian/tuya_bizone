@@ -16,14 +16,6 @@ const { isIos } = Utils.RatioUtils;
 const TYDevice = TYSdk.device;
 const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
-// const cache = new Cache({
-//   namespace: TYSdk.devInfo.devId,
-//   policy: {
-//     maxEntries: 10,
-//   },
-//   backend: AsyncStorage,
-// });
-
 class ClimateMain extends React.PureComponent {
   constructor(props) {
     super(props);
