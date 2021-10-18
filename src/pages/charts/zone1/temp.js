@@ -60,7 +60,8 @@ const {
 const cache = new Cache({
   namespace: 'ChartTemp1',
   policy: {
-    maxEntries: 50000
+    maxEntries: 50000,
+    stdTTL: 20,
   },
   backend: AsyncStorage
 });

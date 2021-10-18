@@ -22,6 +22,21 @@ const {
 
 const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
+// Программирование вентиялтора
+// TYSdk.native.gotoDpAlarm({
+//   category: "schedule",
+//   repeat: 0, // 0 indicates that cycle timing is required, and 1 indicates one-off timing
+//   data: [
+//     {
+//       dpId: 149,
+//       dpName: 'SEXFORSEX',
+//       selected: 0, // Index of DP default value
+//       rangeKeys: ['FAN_OFF', 'FAN_LOW', 'FAN_MID', 'FAN_HIGH', 'FAN_AUTO'],
+//       rangeValues: ['FAN_OFF', 'FAN_LOW', 'FAN_MID', 'FAN_HIGH', 'FAN_AUTO'],
+//     },
+//   ],
+//  })
+
 class ClimateM extends PureComponent {
   constructor(props) {
     super(props);

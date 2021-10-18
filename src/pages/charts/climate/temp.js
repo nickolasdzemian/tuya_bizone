@@ -62,7 +62,8 @@ const {
 const cache = new Cache({
   namespace: 'ChartClimateT',
   policy: {
-    maxEntries: 50000
+    maxEntries: 50000,
+    stdTTL: 20,
   },
   backend: AsyncStorage
 });

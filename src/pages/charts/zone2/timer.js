@@ -60,7 +60,8 @@
 // const cache = new Cache({
 //   namespace: 'ChartTime2',
 //   policy: {
-//     maxEntries: 50000
+//     maxEntries: 50000,
+//    stdTTL: 20,
 //   },
 //   backend: AsyncStorage
 // });

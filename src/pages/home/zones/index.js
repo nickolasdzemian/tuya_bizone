@@ -50,7 +50,6 @@ class Zones extends React.PureComponent {
       </View>
     ) : (
       <Tabs
-        // activeKey={this.state.activeKey1}
         dataSource={
           hide1 === true
             ? [{ value: '2', label: '2' }]

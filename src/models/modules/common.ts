@@ -17,6 +17,13 @@ interface DpState {
   [dpCode: string]: DpValue;
 }
 
+type hideValue = string | boolean;
+
+interface HideState {
+  switch: boolean;
+  [hideCode: string]: hideValue;
+}
+
 interface Log {
   strCodes: string;
   strIds: string;
@@ -27,7 +34,9 @@ interface Log {
 type Logs = Array<Log>;
 
 type UpdateDevInfoPayload = DevInfo;
-type UpdateDpStatePayload = Partial<DpState> & { [key: string]: DpValue }; // 保证起码有一个键值对存在
+type UpdateDpStatePayload = Partial<DpState> & { [key: string]: DpValue }; // Гарантированно, что существует ключевое значение для существования
+
+type Hide = Partial<HideState> & { [key: string]: hideValue };
 
 /**
  * actions
@@ -38,6 +47,7 @@ const responseUpdateDp = createAction<UpdateDpStatePayload>('RESPONSE_UPDATE_DP'
 const updateDp = createAction<UpdateDpStatePayload>('CHANGE_DP');
 const consoleChange = createAction('CONSOLECHNAGE');
 const clearConsole = createAction('CLEARCONSOLE');
+const updateHide = createAction<Hide>('HIDECHANGED');
 
 export const actions = {
   devInfoChange,
@@ -46,6 +56,7 @@ export const actions = {
   updateDp,
   consoleChange,
   clearConsole,
+  updateHide,
 };
 
 export type Actions = { [K in keyof typeof actions]: ReturnType<typeof actions[K]> };
@@ -83,6 +94,23 @@ const devInfo = handleActions<DevInfo<DpState>>(
     }),
   },
   {} as DevInfo<DpState>
+);
+
+const hideState = handleActions<HideState>(
+  {
+    [updateHide.toString()]: (state, action: Actions['updateHide']) => {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+
+    [updateHide.toString()]: (state, action: Actions['updateHide']) => ({
+      ...state,
+      ...action.payload,
+    }),
+  },
+  {} as HideState
 );
 
 let isSend = false;
@@ -127,6 +155,11 @@ const logs = handleActions<Logs, undefined | UpdateDpStatePayload | DevInfo>(
       return formatLogs(state, action, isSend);
     },
 
+    [updateHide.toString()]: (state, action: Actions['updateHide']) => {
+      isSend = false;
+      return formatLogs(state, action, isSend);
+    },
+
     [clearConsole.toString()]: () => [],
   },
   []
@@ -136,6 +169,7 @@ export const reducers = {
   dpState,
   devInfo,
   logs,
+  hideState,
 };
 
 /**
@@ -149,10 +183,24 @@ const dpUpdateEpic$ = (action$: ActionsObservable<Actions['updateDp']>) => {
       .partition((x: { success: boolean }) => x.success);
 
     return Observable.merge(
-      success.map(() => responseUpdateDp(payload)), // 如果每次操作都必须等到上报以后再更新，可以注释掉本段代码
+      success.map(() => responseUpdateDp(payload)), // Если каждая операция должна подождать, пока отчет не будет обновлен, вы можете прокомментировать этот код абзаца
       error.map(() => responseUpdateDp({}))
     );
   });
 };
 
-export const epics = [dpUpdateEpic$];
+const hideUpdateEpic$ = (action$: ActionsObservable<Actions['updateHide']>) => {
+  return action$.ofType(updateHide.toString()).mergeMap(action => {
+    const { payload } = action;
+    const [success, error] = Observable.fromPromise(putDeviceData(payload))
+      .catch(() => Observable.of(updateHide({})))
+      .partition((x: { success: boolean }) => x.success);
+
+    return Observable.merge(
+      success.map(() => updateHide(payload)), // Если каждая операция должна подождать, пока отчет не будет обновлен, вы можете прокомментировать этот код абзаца
+      error.map(() => updateHide({}))
+    );
+  });
+};
+
+export const epics = [dpUpdateEpic$, hideUpdateEpic$];
