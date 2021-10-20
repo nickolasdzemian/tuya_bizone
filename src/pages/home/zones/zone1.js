@@ -16,6 +16,7 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { Cache } from 'react-native-cache';
+import { EventRegister } from 'react-native-event-listeners';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
@@ -62,7 +63,14 @@ class Zone1 extends PureComponent {
       backend: AsyncStorage,
     });
     this.getName();
-    console.log(TYSdk.devInfo.devId, 'Monitoring the name of the storage');
+  }
+
+  componentWillMount() {
+    this.listener1 = EventRegister.addEventListener('name1', data => {
+      this.setState({
+        name: data,
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -303,7 +311,6 @@ class Zone1 extends PureComponent {
   }
 
   render() {
-    this.getName();
     const { Relay1flag, OpenWindowStatus, FaultAlarm, SensorSet1, OpenWndW } = this.props;
 
     const OpenWndW1 = OpenWndW.substring(0, 2);

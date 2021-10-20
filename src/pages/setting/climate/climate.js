@@ -3,7 +3,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  AsyncStorage,
+} from 'react-native';
 import { TYSdk, TYText, Notification, Popup, Divider } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -16,6 +23,8 @@ import {
   faBorderStyle,
   faThermometerEmpty,
 } from '@fortawesome/free-solid-svg-icons';
+import { Cache } from 'react-native-cache';
+import { EventRegister } from 'react-native-event-listeners';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 import ClimateMode from './climatemode';
@@ -26,12 +35,7 @@ const TYDevice = TYSdk.device;
 const {
   Zone: ZoneCode,
   ClimateSelector: ClimateSelectorCode,
-  chSelector: chSelectorCode,
   ButtonSettings: ButtonSettingsCode,
-  chart_1_part_1: chart_1_part_1Code,
-  chart_1_part_2: chart_1_part_2Code,
-  chart_1_part_3: chart_1_part_3Code,
-  chart_1_part_4: chart_1_part_4Code,
 } = dpCodes;
 
 const cancelText = Strings.getLang('cancelText');
@@ -57,7 +61,31 @@ class ClimateScene extends React.PureComponent {
     this.state = {
       apl: false,
       bar: true,
+      name1: undefined,
+      name2: undefined,
     };
+    this.cache = new Cache({
+      namespace: `ZNames_${TYSdk.devInfo.devId}`,
+      policy: {
+        maxEntries: 5000,
+      },
+      backend: AsyncStorage,
+    });
+    this.getName1();
+    this.getName2();
+  }
+
+  componentWillMount() {
+    this.listener1 = EventRegister.addEventListener('name1', data => {
+      this.setState({
+        name1: data,
+      });
+    });
+    this.listener1 = EventRegister.addEventListener('name2', data => {
+      this.setState({
+        name2: data,
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,6 +98,24 @@ class ClimateScene extends React.PureComponent {
         this.setState({ apl: false });
       }, 3000);
     }
+  }
+
+  getName1() {
+    let name = null;
+    this.cache.get('name1').then(response => {
+      this.setState({ name1: response });
+    });
+    name = this.state.name1;
+    return name;
+  }
+
+  getName2() {
+    let name = null;
+    this.cache.get('name2').then(response => {
+      this.setState({ name2: response });
+    });
+    name = this.state.name2;
+    return name;
   }
 
   diablo() {
@@ -86,10 +132,17 @@ class ClimateScene extends React.PureComponent {
     });
   }
 
-  goToSettingsZZZ = () => {
+  goToSettingsZ1 = () => {
     TYSdk.Navigator.push({
-      id: 'ZonesScene',
-      title: Strings.getLang('ZonesScene'),
+      id: 'ZoneIScene',
+      title: Strings.getLang('ZoneIScene'),
+    });
+  };
+
+  goToSettingsZ2 = () => {
+    TYSdk.Navigator.push({
+      id: 'ZoneIIScene',
+      title: Strings.getLang('ZoneIIScene'),
     });
   };
 
@@ -103,6 +156,7 @@ class ClimateScene extends React.PureComponent {
   render() {
     const { ClimateSelector } = this.props;
     const hidden = this.state.bar;
+    const { name1, name2 } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.viewUp}>
@@ -155,13 +209,6 @@ class ClimateScene extends React.PureComponent {
                     [ZoneCode]: '000000',
                     [ButtonSettingsCode]: '0000',
                   });
-                  // ClimateSelector === true ?
-                  //   TYDevice.putDeviceData({
-                  //     [chart_1_part_1Code]: '000000',
-                  //     [chart_1_part_2Code]: '000000',
-                  //     [chart_1_part_3Code]: '000000',
-                  //     [chart_1_part_4Code]: '000000',
-                  //   }) : null;
                   close();
                 },
               });
@@ -179,19 +226,42 @@ class ClimateScene extends React.PureComponent {
         {ClimateSelector === true ? (
           <ClimateMode />
         ) : (
-          <TouchableOpacity
-            style={[styles.area2, { justifyContent: 'space-between' }]}
-            activeOpacity={0.8}
-            onPress={() => this.goToSettingsZZZ()}
-          >
-            <View style={styles.area0}>
-              <FontAwesomeIcon icon={faOutdent} color="#333" size={18} />
-              <TYText style={styles.items2}>{Strings.getLang('ZonesScene')}</TYText>
-            </View>
-            <View style={styles.area0}>
-              <FontAwesomeIcon icon={faChevronRight} color="#ff7300" size={15} />
-            </View>
-          </TouchableOpacity>
+          // Go to zones settings
+          <View>
+            <TouchableOpacity
+              style={[styles.area2, { justifyContent: 'space-between' }]}
+              activeOpacity={0.8}
+              onPress={() => this.goToSettingsZ1()}
+            >
+              <View style={styles.area0}>
+                <FontAwesomeIcon icon={faOutdent} color="#333" size={18} />
+                <View>
+                  <TYText style={styles.items2}>{Strings.getLang('ZoneIScene')}</TYText>
+                  {name1 !== undefined ? <TYText style={styles.subitems2}>{name1}</TYText> : null}
+                </View>
+              </View>
+              <View style={styles.area0}>
+                <FontAwesomeIcon icon={faChevronRight} color="#ff7300" size={15} />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.area2, { justifyContent: 'space-between' }]}
+              activeOpacity={0.8}
+              onPress={() => this.goToSettingsZ2()}
+            >
+              <View style={styles.area0}>
+                <FontAwesomeIcon icon={faOutdent} color="#333" size={18} />
+                <View>
+                  <TYText style={styles.items2}>{Strings.getLang('ZoneIIScene')}</TYText>
+                  {name2 !== undefined ? <TYText style={styles.subitems2}>{name2}</TYText> : null}
+                </View>
+              </View>
+              <View style={styles.area0}>
+                <FontAwesomeIcon icon={faChevronRight} color="#ff7300" size={15} />
+              </View>
+            </TouchableOpacity>
+            <Divider style={{ marginTop: 8 }} />
+          </View>
         )}
         {ClimateSelector === true ? <Channel /> : null}
         {/* Переход в статистику (почему здесь - одному боженьке известно) */}
@@ -219,22 +289,10 @@ class ClimateScene extends React.PureComponent {
 
 ClimateScene.propTypes = {
   ClimateSelector: PropTypes.bool,
-  // Zone: PropTypes.string,
-  // ButtonSettings: PropTypes.string,
-  // chart_1_part_1: PropTypes.string,
-  // chart_1_part_2: PropTypes.string,
-  // chart_1_part_3: PropTypes.string,
-  // chart_1_part_4: PropTypes.string,
 };
 
 ClimateScene.defaultProps = {
   ClimateSelector: false,
-  // Zone: '010101',
-  // ButtonSettings: '0000',
-  // chart_1_part_1: '000000',
-  // chart_1_part_2: '000000',
-  // chart_1_part_3: '000000',
-  // chart_1_part_4: '000000',
 };
 
 const styles = StyleSheet.create({
@@ -259,13 +317,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: 20,
     paddingTop: 14,
-    paddingLeft: 14,
+    paddingLeft: 10,
   },
   subitems: {
     alignItems: 'center',
     color: '#949494',
-    paddingLeft: 14,
+    paddingLeft: 10,
     paddingBottom: 14,
+  },
+  subitems2: {
+    alignItems: 'center',
+    color: '#949494',
+    marginLeft: 10,
   },
   area2: {
     flexDirection: 'row',
@@ -290,10 +353,5 @@ const styles = StyleSheet.create({
 
 export default connect(({ dpState }) => ({
   ClimateSelector: dpState[ClimateSelectorCode],
-  chSelector: dpState[chSelectorCode],
   ButtonSettings: dpState[ButtonSettingsCode],
-  chart_1_part_1: dpState[chart_1_part_1Code],
-  chart_1_part_2: dpState[chart_1_part_2Code],
-  chart_1_part_3: dpState[chart_1_part_3Code],
-  chart_1_part_4: dpState[chart_1_part_4Code],
 }))(ClimateScene);

@@ -3,10 +3,10 @@
 import PropTypes, { number } from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Dimensions, TouchableOpacity } from 'react-native';
 import { Slider, TYSdk, TYText } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faFan, faThermometerQuarter } from '@fortawesome/free-solid-svg-icons';
+import { faFan, faThermometerQuarter, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
@@ -21,21 +21,6 @@ const {
 } = dpCodes;
 
 const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
-
-// Программирование вентиялтора
-// TYSdk.native.gotoDpAlarm({
-//   category: "schedule",
-//   repeat: 0, // 0 indicates that cycle timing is required, and 1 indicates one-off timing
-//   data: [
-//     {
-//       dpId: 149,
-//       dpName: 'SEXFORSEX',
-//       selected: 0, // Index of DP default value
-//       rangeKeys: ['FAN_OFF', 'FAN_LOW', 'FAN_MID', 'FAN_HIGH', 'FAN_AUTO'],
-//       rangeValues: ['FAN_OFF', 'FAN_LOW', 'FAN_MID', 'FAN_HIGH', 'FAN_AUTO'],
-//     },
-//   ],
-//  })
 
 class ClimateM extends PureComponent {
   constructor(props) {
@@ -68,17 +53,18 @@ class ClimateM extends PureComponent {
 
     if (this.props.FanSpeed !== nextProps.FanSpeed) {
       const fanValue0 = nextProps.FanSpeed;
-      const fanValue = fanValue0 === 'FAN_OFF'
-        ? 0
-        : fanValue0 === 'FAN_LOW'
-          ? 1
-          : fanValue0 === 'FAN_MID'
-            ? 2
-            : fanValue0 === 'FAN_HIGH'
-              ? 3
-              : fanValue0 === 'FAN_AUTO'
-                ? 4
-                : null;
+      const fanValue =
+        fanValue0 === 'FAN_OFF'
+          ? 0
+          : fanValue0 === 'FAN_LOW'
+            ? 1
+            : fanValue0 === 'FAN_MID'
+              ? 2
+              : fanValue0 === 'FAN_HIGH'
+                ? 3
+                : fanValue0 === 'FAN_AUTO'
+                  ? 4
+                  : null;
       this.setState({ fan: fanValue });
     }
 
@@ -89,17 +75,18 @@ class ClimateM extends PureComponent {
 
     if (nextProps.FanSpeed) {
       const fanValue0 = nextProps.FanSpeed;
-      const fanValue = fanValue0 === 'FAN_OFF'
-        ? 0
-        : fanValue0 === 'FAN_LOW'
-          ? 1
-          : fanValue0 === 'FAN_MID'
-            ? 2
-            : fanValue0 === 'FAN_HIGH'
-              ? 3
-              : fanValue0 === 'FAN_AUTO'
-                ? 4
-                : null;
+      const fanValue =
+        fanValue0 === 'FAN_OFF'
+          ? 0
+          : fanValue0 === 'FAN_LOW'
+            ? 1
+            : fanValue0 === 'FAN_MID'
+              ? 2
+              : fanValue0 === 'FAN_HIGH'
+                ? 3
+                : fanValue0 === 'FAN_AUTO'
+                  ? 4
+                  : null;
       this.setState({ fan: fanValue });
     }
   }
@@ -128,6 +115,29 @@ class ClimateM extends PureComponent {
                 : 'FAN_OFF';
     TYDevice.putDeviceData({
       [FanSpeedCode]: sendValue,
+    });
+  }
+
+  // Программирование вентилятора
+  goToFanTimer() {
+    TYSdk.native.gotoDpAlarm({
+      category: 'schedule',
+      repeat: 0, // 0 indicates that cycle timing is required, and 1 indicates one-off timing
+      data: [
+        {
+          dpId: 149,
+          dpName: Strings.getLang('fantimertitle'),
+          selected: 0, // Index of DP default value
+          rangeKeys: ['FAN_OFF', 'FAN_LOW', 'FAN_MID', 'FAN_HIGH', 'FAN_AUTO'],
+          rangeValues: [
+            Strings.getLang(0),
+            Strings.getLang(1),
+            Strings.getLang(2),
+            Strings.getLang(3),
+            Strings.getLang(4),
+          ],
+        },
+      ],
     });
   }
 
@@ -179,7 +189,12 @@ class ClimateM extends PureComponent {
     return C === '01' ? (
       <SafeAreaView style={styles.container}>
         <View style={styles.area}>
-          <TYText style={[styles.num, { fontSize: windowHeight === 'normal' ? 20 : 15, color: '#949494', marginTop: 8 }]}>
+          <TYText
+            style={[
+              styles.num,
+              { fontSize: windowHeight === 'normal' ? 20 : 15, color: '#949494', marginTop: 8 },
+            ]}
+          >
             {Strings.getLang(displayMode)}
           </TYText>
           <View style={styles.title}>
@@ -265,12 +280,32 @@ class ClimateM extends PureComponent {
           </View>
         </View>
         <View style={styles.area}>
-          <TYText style={[styles.num, { fontSize: windowHeight === 'normal' ? 20 : 15, color: '#949494', marginTop: 8 }]}>
+          <TYText
+            style={[
+              styles.num,
+              { fontSize: windowHeight === 'normal' ? 20 : 15, color: '#949494', marginTop: 8 },
+            ]}
+          >
             {Strings.getLang('fantitle')}
           </TYText>
           <View style={styles.title}>
-            <FontAwesomeIcon icon={faFan} color="#57BCFB" size={windowHeight === 'normal' ? 25 : 18} marginRight={10} />
+            <FontAwesomeIcon
+              icon={faFan}
+              color="#57BCFB"
+              size={windowHeight === 'normal' ? 25 : 18}
+              marginRight={10}
+            />
             <TYText style={styles.num}>{Strings.getLang(this.state.fan)}</TYText>
+            <TouchableOpacity
+              style={{ marginLeft: 15, padding: 2, alignSelf: 'center' }}
+              onPress={() => this.goToFanTimer()}
+            >
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                color="#949494"
+                size={windowHeight === 'normal' ? 20 : 15}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.title}>
             <Slider.Horizontal

@@ -5,7 +5,7 @@
   "name": "2sex2",
   "pid": [],
   "uiid": "",
-  "version": "3.3.2",
+  "version": "3.4.0",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "prettier --write '**/*.{js,jsx,ts,tsx}'",
@@ -37,6 +37,7 @@
     "react-native": "0.59.10",
     "react-native-cache": "^2.0.1",
     "react-native-chart-kit": "^6.11.0",
+    "react-native-event-listeners": "^1.0.7",
     "react-native-svg": "5.5.1",
     "react-native-swipe-list-view": "^3.2.6",
     "react-native-vector-icons": "^8.1.0",
@@ -51,7 +52,8 @@
     "style-equal": "^1.0.0",
     "tuya-panel-kit": "^4.7.7",
     "tuya-panel-kit-types": "^2.0.0",
-    "victory-native": "^35.3.1"
+    "victory-native": "^35.3.1",
+    "yarn": "^1.22.17"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.12.1",

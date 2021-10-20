@@ -11,7 +11,7 @@ interface Props {
   devInfo: DevInfo;
   preload?: boolean;
 }
-type hideValue = string | boolean;
+// type hideValue = string | boolean;
 const TYEvent = TYSdk.event;
 const TYDevice = TYSdk.device;
 
@@ -40,15 +40,16 @@ const composeLayout = (store: Store, component: React.ComponentType) => {
     }
   });
 
-  TYEvent.on('NAVIGATOR_ON_DID_FOCUS', data => {
-    switch (data.type) {
-      case 'hideData':
-        dispatch(actions.common.updateHide(data.payload as Record<string, hideValue>));
-        break;
-      default:
-        break;
-    }
-  });
+  // TYEvent.on('HIDECHANGED', data => {
+  //   switch (data.type) {
+  //     case 'hideData':
+  //       dispatch(actions.common.updateHide(data.payload as Record<string, hideValue>));
+  //       break;
+  //     default:
+  //       dispatch(actions.common.updateHide(data.payload as Record<string, hideValue>));
+  //       break;
+  //   }
+  // });
 
   /**
    * 此处监听了`网络状态变更事件`事件，

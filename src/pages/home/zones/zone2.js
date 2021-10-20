@@ -16,6 +16,7 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { Cache } from 'react-native-cache';
+import { EventRegister } from 'react-native-event-listeners';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 
@@ -64,6 +65,14 @@ class Zone2 extends PureComponent {
     this.getName();
   }
 
+  componentWillMount() {
+    this.listener1 = EventRegister.addEventListener('name2', data => {
+      this.setState({
+        name: data,
+      });
+    });
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.SetTemperature !== nextProps.SetTemperature) {
       const V = parseInt(nextProps.SetTemperature.substring(6, 8), 16);
@@ -89,7 +98,7 @@ class Zone2 extends PureComponent {
     const modeI = this.props.ModeChannel.substring(4, 6);
     const modeII = this.props.ModeChannel.substring(0, 2);
     const modeZ = this.props.ModeChannel.substring(2, 4);
-    const modeZTime = '02';
+    // const modeZTime = '02';
     const modeZProg = '01';
     const modeZMan = '00';
     Popup.list({
@@ -310,7 +319,6 @@ class Zone2 extends PureComponent {
   }
 
   render() {
-    this.getName();
     const { Relay2flag, OpenWindowStatus, FaultAlarm, SensorSet2, OpenWndW } = this.props;
 
     const OpenWndW1 = OpenWndW.substring(2, 4);

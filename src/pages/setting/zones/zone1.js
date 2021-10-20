@@ -5,10 +5,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import { View, StyleSheet, SafeAreaView, AsyncStorage, TouchableOpacity } from 'react-native';
-import { Divider, SwitchButton, TYSdk, TYText, Dialog } from 'tuya-panel-kit';
+import { SwitchButton, TYSdk, TYText, Dialog, GlobalToast } from 'tuya-panel-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faDoorOpen, faBrain, faChevronRight, faItalic, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faDoorOpen,
+  faBrain,
+  faChevronRight,
+  faItalic,
+  faEyeSlash,
+} from '@fortawesome/free-solid-svg-icons';
 import { Cache } from 'react-native-cache';
+import { EventRegister } from 'react-native-event-listeners';
 import Strings from '../../../i18n/index.ts';
 import dpCodes from '../../../config/dpCodes.ts';
 import Zone1Mode from './zone1mode';
@@ -60,6 +67,12 @@ class ZoneIScene extends React.PureComponent {
     return hide;
   }
 
+  setHide(hide) {
+    this.setState({ hide });
+    this.cache.set('hide1', hide);
+    EventRegister.emit('hide1', hide);
+  }
+
   renameZone() {
     this.getName();
     Dialog.prompt({
@@ -70,7 +83,7 @@ class ZoneIScene extends React.PureComponent {
       confirmText: Strings.getLang('confirmText'),
       confirmTextStyle: { color: '#ffb700' },
       inputStyle: { color: 'black' },
-      defaultValue: this.state.name !== undefined ? this.state.name : Strings.getLang('zone1'),
+      defaultValue: this.state.name !== undefined ? this.state.name : null,
       placeholder: Strings.getLang('placeholder1'),
       maxLength: 20,
       autoCorrect: false,
@@ -78,7 +91,23 @@ class ZoneIScene extends React.PureComponent {
       onConfirm: (text, { close }) => {
         this.setState({ name: text });
         this.cache.set('name1', text);
-        close();
+        EventRegister.emit('name1', text);
+        Dialog.close();
+      },
+    });
+  }
+
+  reset() {
+    this.cache.remove('name1');
+    this.setState({ name: null });
+    EventRegister.emit('name1', undefined);
+    GlobalToast.show({
+      text: Strings.getLang('done'),
+      showIcon: false,
+      contentStyle: {},
+      showPosition: 'bottom',
+      onFinish: () => {
+        GlobalToast.hide();
       },
     });
   }
@@ -89,7 +118,6 @@ class ZoneIScene extends React.PureComponent {
     const hide = this.state.hide;
     return (
       <View style={styles.container}>
-        <Divider />
         <View style={styles.view}>
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faEyeSlash} color="#666" size={20} />
@@ -101,8 +129,7 @@ class ZoneIScene extends React.PureComponent {
             onTintColor="red"
             value={hide}
             onValueChange={() => {
-              this.setState({ hide: !hide });
-              this.cache.set('hide1', !hide);
+              this.setHide(!hide);
             }}
           />
         </View>
@@ -144,7 +171,11 @@ class ZoneIScene extends React.PureComponent {
           />
         </View>
 
-        <TouchableOpacity style={styles.view} onPress={() => this.renameZone()}>
+        <TouchableOpacity
+          style={styles.view}
+          onPress={() => this.renameZone()}
+          onLongPress={() => this.reset()}
+        >
           <SafeAreaView style={styles.area}>
             <FontAwesomeIcon icon={faItalic} color="#666" size={20} />
             <TYText style={styles.items}>{Strings.getLang('rename')}</TYText>
@@ -175,13 +206,13 @@ ZoneIScene.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    marginTop: 8,
+    // justifyContent: 'center',
   },
   area: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 20,
-    // alignContent: 'space-between',
   },
   view: {
     flexDirection: 'row',

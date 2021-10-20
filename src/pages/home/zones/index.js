@@ -2,9 +2,11 @@ import React from 'react';
 import { View, StyleSheet, Dimensions, AsyncStorage } from 'react-native';
 import { Tabs, TYSdk } from 'tuya-panel-kit';
 import { Cache } from 'react-native-cache';
+import { EventRegister } from 'react-native-event-listeners';
 import Zone1 from './zone1';
 import Zone2 from './zone2';
 
+// const TYEvent = TYSdk.event;
 const windowHeight = Dimensions.get('window').height < 700 ? 'small' : 'normal';
 
 class Zones extends React.PureComponent {
@@ -24,29 +26,56 @@ class Zones extends React.PureComponent {
     });
     this.getHide1();
     this.getHide2();
+    // // Обновление состояния при изменении данных на сервере
+    // TYEvent.on('deviceDataChange', data => {
+    //   switch (data.type) {
+    //     case 'dpData':
+    //       this.getHide1();
+    //       this.getHide2();
+    //       break;
+    //     default:
+    //       this.getHide1();
+    //       this.getHide2();
+    //       break;
+    //   }
+    // });
   }
 
+  // Прослушивание изменений в меню настроек
+  componentWillMount() {
+    this.listener1 = EventRegister.addEventListener('hide1', data => {
+      this.setState({
+        hide1: data,
+      });
+    });
+    this.listener2 = EventRegister.addEventListener('hide2', data => {
+      this.setState({
+        hide2: data,
+      });
+    });
+  }
+
+  // Получение данных о настройке скрытия зоны 1 и 2
   getHide1() {
     this.cache.get('hide1').then(response => {
-      this.setState({ hide1: response });
+      this.setState({ hide1: response === undefined ? false : response });
     });
   }
 
   getHide2() {
     this.cache.get('hide2').then(response => {
-      this.setState({ hide2: response });
+      this.setState({ hide2: response === undefined ? false : response });
     });
   }
 
   render() {
     const value = this.state.activeKey;
-    const hide1 = this.state.hide1;
-    const hide2 = this.state.hide2;
-    console.log(hide1, hide2, 'HHHHHHHHHHHHHHHHHHHHH');
+    const { hide1 } = this.state;
+    const { hide2 } = this.state;
     return windowHeight === 'normal' ? (
       <View style={styles.container}>
-        {hide1 === undefined || hide1 === false ? <Zone1 /> : null}
-        {hide2 === undefined || hide2 === false ? <Zone2 /> : null}
+        {hide1 === false ? <Zone1 /> : null}
+        {hide2 === false ? <Zone2 /> : null}
       </View>
     ) : (
       <Tabs

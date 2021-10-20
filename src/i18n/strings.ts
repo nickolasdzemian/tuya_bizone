@@ -2,6 +2,8 @@
 export default {
   en: {
 
+    done: 'Done',
+
     // Initial screen
     iniTitle: 'Choose device mode to continue',
     iniSubTitle: 'Pressing any of these buttons hides this window locally on your phone until the device will be reconnected. There\'s two-zones mode when you turn it on for the first time. If you don\'t know what to choose, please read user\'s manual. If you\'re invited, skip this window.',
@@ -42,7 +44,8 @@ export default {
     off: 'Stand by',
     alarma: 'Warning!',
     manualtemp: 'Selected manual temperature',
-    fantitle: 'Selected speed',
+    fantitle: 'Fan speed',
+    fantimertitle: 'Fan mode',
     0: 'Off',
     1: 'Low',
     2: 'Mid',
@@ -138,8 +141,10 @@ export default {
     name1: 'First zone name:',
     name2: 'Second zone name:',
     placeholder1: 'Enter new name',
-    namehelp: '20 symbols max is recommended.\nSometimes after renaming it needs to press on the name of the zone at the home screen.\nThe name of the zone is stored locally on your phone.\nIt doesn\'t shared between accounts.\nIt will be reset after removing the device or cleaning cache.',
+    namehelp: '20 symbols max is recommended.\nFor deletion long press on \'Zone name\' menu item.\nThe name of the zone is stored locally on your phone.\nIt doesn\'t shared between accounts.\nIt will be reset after removing the device or cleaning cache.',
     ZonesScene: 'Zones settings',
+    ZoneIScene: 'Zone 1 settings',
+    ZoneIIScene: 'Zone 2 settings',
     windowSw: 'Look up for open window',
     selflearnSw: 'Self-learning or preheat',
     zoneSens: 'Select controlling sensors',
@@ -238,6 +243,7 @@ export default {
     intervala: 'Period',
   },
   ru_RU: {
+    done: 'Выполнено',
     // Initial screen
     iniTitle: 'Выберите режим работы',
     iniSubTitle: 'Выбор любого пункта локально отключит данное меню на вашем смартфоне до переподключения терморегулятора. При первом включении терморегулятор запускается в двухзонном режиме. Пожалуйста, ознакомьтесь с руководством пользователя перед началом эксплуатации. Если вы получили приглашение на управление, пропустите это окно.',
@@ -276,6 +282,7 @@ export default {
     alarma: 'Ошибка!',
     manualtemp: 'Температура поддержания',
     fantitle: 'Cкорость вентилятора',
+    fantimertitle: 'Режим вентилятора',
     0: 'Выкл',
     1: 'Мин',
     2: 'Средн',
@@ -371,8 +378,10 @@ export default {
     name1: 'Имя первой зоны:',
     name2: 'Имя второй зоны:',
     placeholder1: 'Введите новое имя',
-    namehelp: 'Рекомендуется макс. 20 символов.\nДля отображения нового имени нужно нажать на имя зоны на главном экране.\nДанные сохраняются локально и не передаются между аккаунтами.\nПри удалении устройства или при очистке кеша данные будут сброшены.',
+    namehelp: 'Рекомендуется макс. 20 символов.\nДля сброса имени удерживайте пункт меню \'Наименование\'\nДанные сохраняются локально и не передаются между аккаунтами.\nПри удалении устройства или при очистке кеша данные будут сброшены.',
     ZonesScene: 'Настройка зон',
+    ZoneIScene: 'Настройка зоны #1',
+    ZoneIIScene: 'Настройка зоны #2',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
@@ -471,6 +480,7 @@ export default {
     intervala: 'Интервал',
   },
   ru: {
+    done: 'Выполнено',
     // Initial screen
     iniTitle: 'Выберите режим работы',
     iniSubTitle: 'Выбор любого пункта локально отключит данное меню на вашем смартфоне до переподключения терморегулятора. При первом включении терморегулятор запускается в двухзонном режиме. Пожалуйста, ознакомьтесь с руководством пользователя перед началом эксплуатации. Если вы получили приглашение на управление, пропустите это окно.',
@@ -509,6 +519,7 @@ export default {
     alarma: 'Ошибка!',
     manualtemp: 'Температура поддержания',
     fantitle: 'Скорость вентилятора',
+    fantimertitle: 'Режим вентилятора',
     0: 'Выкл',
     1: 'Мин',
     2: 'Средн',
@@ -604,8 +615,10 @@ export default {
     name1: 'Имя первой зоны:',
     name2: 'Имя второй зоны:',
     placeholder1: 'Введите новое имя',
-    namehelp: 'Рекомендуется макс. 20 символов.\nДля отображения нового имени нужно нажать на имя зоны на главном экране.\nДанные сохраняются локально и не передаются между аккаунтами.\nПри удалении устройства или при очистке кеша данные будут сброшены.',
+    namehelp: 'Рекомендуется макс. 20 символов.\nДля сброса имени удерживайте пункт меню \'Наименование\'\nДанные сохраняются локально и не передаются между аккаунтами.\nПри удалении устройства или при очистке кеша данные будут сброшены.',
     ZonesScene: 'Настройка зон',
+    ZoneIScene: 'Настройка зоны #1',
+    ZoneIIScene: 'Настройка зоны #2',
     windowSw: 'Проверка открытого окна',
     selflearnSw: 'Самообучение',
     zoneSens: 'Выбрать управляющие датчики',
