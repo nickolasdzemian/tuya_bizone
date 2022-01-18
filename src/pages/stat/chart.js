@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCalendarTimes, faCalendarAlt, faWeight, faBars, faChartBar, faChartLine, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 // import { BarChart } from 'react-native-chart-kit';
 import { VictoryChart, VictoryBar, VictoryLine, Background, VictoryTheme, VictoryLegend, VictoryLabel } from 'victory-native';
+import materialTheme from './ios-material';
 // import { decode } from '../../utils/base-64';
 import dpCodes from '../../config/dpCodes.ts';
 import LoadCapacity from '../setting/common/loadcap/loadcap';
@@ -749,8 +750,8 @@ class ChartView extends Component {
               {isIos ? 
                 <VictoryChart
                   maxDomain={{ y: maxY < 1 ? 10 : maxY, x: maxX < 1 ? 10 : maxX }}
-                  theme={VictoryTheme.material}
-                  style={{ background: { fill: '#fff' } }}
+                  theme={materialTheme}
+                  style={{ background: { fill: '#fff' },}}
                   height={Dimensions.get('window').height - (Dimensions.get('window').height * 0.5)}
                   width={Dimensions.get('window').width}
                   backgroundComponent={<Background y={0} x={0} height={Dimensions.get('window').height} width={Dimensions.get('window').width} />}
@@ -796,7 +797,7 @@ class ChartView extends Component {
                         strokeWidth: maxX < 90 ? 3 : 1, 
                         strokeLinecap: 'round'
                       },
-                      parent: { border: '1px solid #fff'}
+                      parent: { border: '1px solid #fff'},
                     }}
                     animate={true}
                     interpolation="natural"
@@ -864,7 +865,8 @@ class ChartView extends Component {
               style={{ marginTop: 10 }}
               data={Zopa ? this.state.dataVictory : this.state.dataVictory2}
               renderItem={renderItem}
-              keyExtractor={item => item.id}
+              // There're a bug when changing data for the flatlist via state
+              // keyExtractor={item => item.id}
             />
           )}
       </SafeAreaView>

@@ -744,7 +744,7 @@ class ChartTemp2 extends PureComponent {
           // swipeable={L === 0}
           swipeable={false}
           onChange={this._handleD1Change}
-          preload={true}
+          preload={false}
           preloadTimeout={G * 15}
           renderPlaceholder={empty}
           animationConfig={{duration: 10000, delay: 10, useNativeDriver: false}}
