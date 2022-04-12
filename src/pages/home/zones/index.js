@@ -95,7 +95,7 @@ class Zones extends React.PureComponent {
         }
         underlineWidth={100}
         onChange={tab => this.setState({ activeKey: tab.value })}
-        swipeable={false}
+        swipeable={true}
         maxItem={hide1 === true || hide2 === true ? 1 : 2}
       >
         <Tabs.TabPanel>

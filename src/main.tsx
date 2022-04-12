@@ -6,6 +6,7 @@ import {
   NavigationOptions,
   DeprecatedNavigator,
   DeprecatedNavigatorRoute,
+  Utils,
 } from 'tuya-panel-kit';
 import composeLayout from './composeLayout';
 import { store, ReduxState } from './models';
@@ -29,6 +30,8 @@ type Props = ReduxState & { dispatch: Dispatch };
 // if (__DEV__) {
 //   console.log('TYSdk :', TYSdk);
 // }
+
+const { isIos } = Utils.RatioUtils;
 
 class MainLayout extends NavigatorLayout<Props> {
   /**
@@ -124,7 +127,13 @@ class MainLayout extends NavigatorLayout<Props> {
 
     return {
       ...routeProps,
-      renderStatusBar: () => <StatusBar barStyle="default" />,
+      renderStatusBar: () => (
+        <StatusBar
+          barStyle={isIos ? 'default' : 'dark-content'}
+          backgroundColor="#fff"
+          showHideTransition="slide"
+        />
+      ),
     };
   }
 

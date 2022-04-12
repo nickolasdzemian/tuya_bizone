@@ -329,8 +329,8 @@ class ChartView extends Component {
             x: xLable[i], y: valuesNum[i],
           };
         };
-
-        const maxY = Math.max.apply(null, (victoryData.map(item => item.y)));
+        let maxY = Math.max.apply(null, (victoryData.map(item => item.y)));
+        maxY += maxY / 10;
         const maxX = victoryData.length;
         console.log('dataLog', dataLog, dataLog.labels.length);
         console.log('victoryData', victoryData, victoryData.length);
@@ -559,7 +559,8 @@ class ChartView extends Component {
           };
         };
 
-        const maxY2 = Math.max.apply(null, (victoryData.map(item => item.y)));
+        let maxY2 = Math.max.apply(null, (victoryData.map(item => item.y)));
+        maxY2 += maxY2 / 10;
         const maxX2 = victoryData.length;
         console.log('dataLog2', dataLog, dataLog.labels.length);
         console.log('victoryData2', victoryData, victoryData.length);
@@ -589,6 +590,7 @@ class ChartView extends Component {
     const maxY = Math.max.apply(null, [this.state.maxY + 1, this.state.maxY2 + 1]);
     const maxX = this.state.maxX || this.state.maxX2;
     const Zopa = this.state.zone;
+    console.log(this.state.dataVictory);
 
     const Item = ({ id, x, y }) => (
       <View style={{ flexDirection: 'row', backgroundColor: '#fff', padding: 10, borderRadius: 7, marginBottom: 5, marginHorizontal: 20, justifyContent: 'space-between' }}>
@@ -602,6 +604,7 @@ class ChartView extends Component {
         </View>
       </View>
     );
+
     const renderItem = ({ item }) => (
       item.y > 0 ?
         <View>
@@ -751,7 +754,7 @@ class ChartView extends Component {
                 <VictoryChart
                   maxDomain={{ y: maxY < 1 ? 10 : maxY, x: maxX < 1 ? 10 : maxX }}
                   theme={materialTheme}
-                  style={{ background: { fill: '#fff' },}}
+                  style={{ background: { fill: '#fff' }, }}
                   height={Dimensions.get('window').height - (Dimensions.get('window').height * 0.5)}
                   width={Dimensions.get('window').width}
                   backgroundComponent={<Background y={0} x={0} height={Dimensions.get('window').height} width={Dimensions.get('window').width} />}
@@ -858,7 +861,7 @@ class ChartView extends Component {
                     labelComponent={<VictoryLabel dy={-20} />}
                   />
                 </VictoryChart>}
-              <TYText style={{ alignSelf: 'center', textAlign: 'center', color: '#666'}}>{Strings.getLang('chartLegend')}</TYText>
+              <TYText style={{ marginTop: 150, alignSelf: 'center', textAlign: 'center', color: '#666'}}>{Strings.getLang('chartLegend')}</TYText>
             </View>
           ) : (
             <FlatList
